@@ -6,11 +6,11 @@
 
 ## Team Members
 
-| Team Member | Role | Responsibilities | Contact |
-| --- | --- | --- | --- |
-| Aabha Borle | Backend & Evaluation Lead | Backend APIs, synthetic data, policy handling, testing, and evaluation | aborle2@illinois.edu |
-| Anisha Kango | Frontend & UI/UX Lead | Adaptive UI, user flows, usability, and accessibility | kango2@illinois.edu |
-| Sakshi Katolkar | GenAI & Agent Logic Lead | Intent interpretation, prompt workflows, task planning, and AI evaluation | srk12@illinois.edu |
+| Team Member     | Role                      | Responsibilities                                                          | Contact              |
+| ---             | ---                       | ---                                                                       | ---                  |
+| Aabha Borle     | Backend & Evaluation Lead | Backend APIs, synthetic data, policy handling, testing, and evaluation    | aborle2@illinois.edu |
+| Anisha Kango    | Frontend & UI/UX Lead     | Adaptive UI, user flows, usability, and accessibility                     | kango2@illinois.edu  |
+| Sakshi Katolkar | GenAI & Agent Logic Lead  | Intent interpretation, prompt workflows, task planning, and AI evaluation | srk12@illinois.edu   |
 
 **Course:** IS 492: Generative AI & Human-AI Systems  
 **Semester:** Fall 2026  
