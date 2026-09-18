@@ -49,3 +49,8 @@ This paper investigates why some adaptive interfaces improve the user experience
 ### One Concrete Inspiration for InterfaceDNA
 
 Instead of constantly rearranging an existing university portal, InterfaceDNA can generate a **separate task-focused view while keeping the original system structure available**, giving users the benefit of adaptation without making the interface unpredictable.
+
+
+## Overall Connection to InterfaceDNA
+
+Together, these two papers changed how I think about adaptive AI interfaces. It is not enough for an interface to automatically change based on the user's goal; those changes also need to be predictable, understandable, and easy to correct. For InterfaceDNA, this means using GenAI to simplify the user's task while still keeping important actions transparent and under the user's control.
