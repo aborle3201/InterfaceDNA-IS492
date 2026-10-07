@@ -75,7 +75,7 @@ Confirmed and refined: The interview supported the assumption that students woul
 ## Interview 2
 
 **Participant:** Parnavi Kulkarni
-**Student type:** International student on F-1 visa  
+**Student type:** Graduate student
 **Date:** 2026-10-07
 
 ### Current experience
