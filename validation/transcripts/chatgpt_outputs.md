@@ -332,7 +332,7 @@ For a fictional policy-analysis task, the correct conclusion is: **there is a co
 
 ### Evidence
 
-`screenshots/chatgpt/E02_chatgpt_rerun.png`
+`screenshots/chatgpt/E02_chatgpt.png`
 
 ### Initial design implication
 
@@ -419,7 +419,7 @@ So giving either **September 25, 2026** or **September 30, 2026** as the officia
 
 ### Evidence
 
-`screenshots/chatgpt/F01_chatgpt_rerun.png`
+`screenshots/chatgpt/F01_chatgpt.png`
 
 ### Initial design implication
 
