@@ -84,19 +84,35 @@ Taken together, the interview evidence suggests that students are not simply ask
 | **Trust calibration** | Interview participants wanted source visibility, verification indicators, and clear distinctions between confirmed and possible consequences. | Anisha Interviews 1–2 | **Reasoning + memory:** humans need enough visibility into the AI's evidence to calibrate trust rather than simply accept a confident answer. | Label important information with states such as **Verified from Registrar**, **Verified from student record**, **Policy conflict**, or **Needs confirmation**. |
 | **Latency / performance** | Interviewees were generally willing to wait longer when the delay represented meaningful verification, but wanted the system to communicate what it was doing. | Aabha Interviews; Anisha Interview 1; Sakshi Interviews | **Attention + coordination:** latency is more acceptable when users understand why it exists and what additional reliability it provides. | Show a lightweight verification state such as "Checking student record and applicable policies" and consider progressive loading for already-verified information. |
 | **Cost / efficiency** | Participants were less interested in paying separately for the tool, but saw value if it reduced repeated searching, email exchanges, and advisor workload. | Aabha Interviews; Anisha Interviews; Sakshi Interview 2 | **Complementarity:** efficiency should be measured across the human-AI team, not only by model speed or compute cost. | Evaluate whether InterfaceDNA reduces repeated navigation, redundant questions, unnecessary office contacts, and staff follow-up effort. |
+---
+
+## 5. Priority for Checkpoint 3
+The gaps are not equally important for the next prototype and evaluation. Based on the prompting receipts and interview findings, we will prioritize three gaps for Checkpoint 3.
+
+1. Grounding in verified student state and institutional policy
+
+The most important requirement is ensuring that InterfaceDNA does not treat generic model knowledge or remembered context as verified institutional truth. The prototype should demonstrate that student status, deadlines, thresholds, holds, and policy conditions come from controlled sources and are visibly distinguishable from AI-generated interpretation.
+
+2. Confirmation and consequence-review boundary
+
+Checkpoint 3 should test whether InterfaceDNA can preserve student decision rights without allowing consequential actions to bypass required safeguards. The student should remain the final decision-maker, but the system should require relevant consequence review and explicit confirmation before any permanent action.
+
+3. Attention load and focused interface composition
+The third priority is reducing the filtering work currently left to the student. Instead of returning a long list of every possible consequence, the prototype should use verified student context to surface the few facts, warnings, and next actions that actually apply.
+The remaining gaps are still relevant design requirements, but they are secondary for CP3. They should inform the prototype where practical without displacing the three core evaluation priorities above.
 
 ---
 
-## 5. Main Gaps Identified
+## 6. Main Gaps Identified
 The evidence suggests that current general-purpose AI tools are already capable of useful reasoning for these scenarios. In many cases, they correctly identify the information that matters, recognize missing context, perform simple dependency reasoning, and resist obvious hallucination or prompt-injection pressure.
 
-The more important gaps appeared around grounding, attention, and coordination.
+The more important gaps appeared around grounding, attention, reliability, and coordination.
 
 * First, the AI often knows what information should be checked but does not have reliable access to the student's actual institutional state. As a result, the answer becomes a checklist for the student rather than a resolved task view.
 
 * Second, generic model knowledge can be difficult to distinguish from verified institutional policy. This is especially problematic for deadlines, enrollment thresholds, degree requirements, and administrative procedures.
 
-* Third, even correct responses can create unnecessary cognitive load. A long answer containing every possible consequence still leaves the student responsible for deciding which items matter.
+* Third, even correct responses can create unnecessary cognitive load. A long answer containing every possible consequence still leaves the student responsible for deciding which items matter. The study also showed that output behavior can depend on memory, conversational history, and retrieval conditions. This makes reliability and traceability important even when the final answer appears reasonable.
 
 * Finally, the prompting study and interviews both showed that clear role boundaries are necessary. The AI can interpret goals, retrieve and organize relevant information, explain consequences, and prepare supported actions. However, deterministic software should control authorization and confirmation requirements, while the student should retain authority over consequential decisions.
 
@@ -104,7 +120,7 @@ These gaps refine our original InterfaceDNA concept. The project should not focu
 
 ---
 
-## 6.Resulting Design Direction
+## 7.Resulting Design Direction
 
 Based on the combined prompting and interview evidence, the next version of InterfaceDNA should prioritize the following:
 
@@ -116,4 +132,4 @@ Based on the combined prompting and interview evidence, the next version of Inte
 * Clear decision rights — AI may interpret and prepare; deterministic software validates and executes; the student confirms consequential actions.
 * Structured escalation — preserve context and provide a clean handoff when a case requires advisor, Registrar, financial-aid, or other institutional review.
 
-Overall, the evidence did not suggest that InterfaceDNA needs to replace human judgment or make the underlying AI more autonomous. Instead, it suggests that the strongest opportunity lies in coordinating AI reasoning with trusted institutional data, focused interface composition, proper safeguards, and clear human decision authority.
+Overall, the evidence did not suggest that InterfaceDNA needs to replace human judgment or make the underlying AI more autonomous. Instead, it suggests that the strongest opportunity lies in coordinating AI reasoning with trusted institutional data, focused interface composition, deterministic safeguards, and clear human decision authority.
