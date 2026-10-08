@@ -2,13 +2,13 @@
 
 ## Interview 1
 
-**Participant:** Shreyash Bhatkar  
-**Student type:** International student on F-1 visa  
+**Participant 3:**
+**Student type:** International student
 **Date:** 2026-10-06
 
 ### Current experience
 
-Shreyash said university tasks like dropping a course or checking graduation requirements can be frustrating because the information is spread across the student portal, academic calendar, department websites, and advising offices.
+Participant 3 said university tasks like dropping a course or checking graduation requirements can be frustrating because the information is spread across the student portal, academic calendar, department websites, and advising offices.
 
 ### Accuracy
 
@@ -40,7 +40,7 @@ He suggested showing a short summary of the important consequences before an act
 
 ### Main finding
 
-Shreyash values **verified sources, concise consequence summaries, and less navigation across university systems**.
+Participant 3 values **verified sources, concise consequence summaries, and less navigation across university systems**.
 
 ### Assumption confirmed or changed
 
@@ -50,13 +50,13 @@ Shreyash values **verified sources, concise consequence summaries, and less navi
 
 ## Interview 2
 
-**Participant:** Ayush Shukla  
-**Student type:** International student on F-1 visa  
+**Participant 4:** 
+**Student type:** International student
 **Date:** 2026-10-06
 
 ### Current experience
 
-Ayush said academic decisions can also affect immigration status. For something like dropping a course, he may need to check with an advisor, the registrar, and the international student office before taking action.
+Participant 4 said academic decisions can also affect immigration status. For something like dropping a course, he may need to check with an advisor, the registrar, and the international student office before taking action.
 
 ### Accuracy
 
@@ -88,7 +88,7 @@ He suggested showing a clear warning whenever an action could affect visa or enr
 
 ### Main finding
 
-For Ayush, **personalized consequence checking and escalation to the correct authority** are especially important.
+For Participant 4, **personalized consequence checking and escalation to the correct authority** are especially important.
 
 ### Assumption confirmed or changed
 

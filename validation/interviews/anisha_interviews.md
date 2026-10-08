@@ -2,7 +2,7 @@
 
 ## Interview 1
 
-**Participant:** Participant 1
+**Participant:** Participant 5
 
 **Student type:** International student 
 
@@ -76,7 +76,7 @@ Confirmed and refined: The interview supported the assumption that students woul
 
 ## Interview 2
 
-**Participant:** Participant 2
+**Participant:** Participant 6
 
 **Student type:** Graduate student
 
