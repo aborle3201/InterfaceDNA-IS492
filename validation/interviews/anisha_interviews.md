@@ -3,7 +3,7 @@
 ## Interview 1
 
 **Participant:** Shreyas Kulkarni
-**Student type:** International student on F-1 visa  
+**Student type:** International student 
 **Date:** 2026-10-07
 
 ### Current experience
@@ -88,7 +88,8 @@ The participant said InterfaceDNA would need to correctly distinguish between fa
 For example, if the system knows that a student will move from 15 credits to 11 credits, it can show that calculation confidently. However, it should not say that financial aid, housing, or another benefit will definitely be affected unless the applicable policy has actually been verified.
 They said this distinction would make the system feel more trustworthy.
 
-### The participant said the system should be comfortable saying “I cannot verify this” when information is missing or conflicting.
+### Latency
+The participant said the system should be comfortable saying “I cannot verify this” when information is missing or conflicting.
 
 They felt that uncertainty should be visible rather than hidden.
 
