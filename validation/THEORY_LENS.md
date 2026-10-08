@@ -1,5 +1,7 @@
 # InterfaceDNA — Theory Lens
 ## 1. Working Theory Claim
+Our hybrid should beat human-alone and AI-alone at completing complex university tasks accurately and efficiently because humans own judgment, personal trade-offs, and final decisions, while AI owns information retrieval, consequence analysis, dependency checking, and task-focused interface composition.
+
 Our working theory is that InterfaceDNA can create human-AI complementarity by combining AI's ability to interpret goals, organize information, identify dependencies, and generate task-specific views with the student's judgment and authority over consequential decisions.
 
 The goal is not for the AI to replace the student or make academic decisions independently. Instead, InterfaceDNA should reduce the student's effort in finding and interpreting information while preserving human control where personal judgment, uncertainty, or institutional approval is involved.
