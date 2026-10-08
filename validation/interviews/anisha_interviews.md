@@ -2,8 +2,10 @@
 
 ## Interview 1
 
-**Participant:** Shreyas Kulkarni
+**Participant:** Participant 1
+
 **Student type:** International student 
+
 **Date:** 2026-10-07
 
 ### Current experience
@@ -74,8 +76,10 @@ Confirmed and refined: The interview supported the assumption that students woul
 
 ## Interview 2
 
-**Participant:** Parnavi Kulkarni
+**Participant:** Participant 2
+
 **Student type:** Graduate student
+
 **Date:** 2026-10-07
 
 ### Current experience
