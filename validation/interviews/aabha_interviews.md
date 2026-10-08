@@ -3,7 +3,9 @@
 ## Interview 1
 
 **Participant 3:**
+
 **Student type:** International student
+
 **Date:** 2026-10-06
 
 ### Current experience
@@ -51,7 +53,9 @@ Participant 3 values **verified sources, concise consequence summaries, and less
 ## Interview 2
 
 **Participant 4:** 
+
 **Student type:** International student
+
 **Date:** 2026-10-06
 
 ### Current experience
