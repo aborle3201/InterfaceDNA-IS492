@@ -1,4 +1,4 @@
-# Sakshi — User Interviews
+# Sakshi - User Interviews
 
 ## Interview 1
 
@@ -9,8 +9,7 @@
 **Date:** 2026-10-07
 
 ### Current experience
-The participant said that one of the biggest problems with university systems is not always finding information, but understanding it quickly. They explained that academic portals often use administrative terms that students do not fully understand, especially during stressful situations such as registration, holds, deadlines, or graduation checks.
-They said that even when the correct information is available, it may be presented in a way that feels too technical, dense, or difficult to scan.
+The participant said the main problem with university systems isn’t finding information but understanding it quickly. Student portals often use office jargon that students don’t fully understand, and that’s worst in stressful moments like registering, dealing with holds, meeting deadlines, or checking graduation progress. Even when the right information is there, it can feel too technical, too packed, or too hard to skim.
 
 ### Accuracy
 The participant said accuracy is important, but the system should also explain important information in plain language.
