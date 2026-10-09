@@ -116,10 +116,10 @@ No permanent academic action should happen without student confirmation.
 
 ## Current Opportunity
 
-InterfaceDNA is not intended to replace advisors or student judgment.
+InterfaceDNA shouldn't replace advisors or student judgment, and it shouldn't be only a nicer way to generate screens. The opportunity is to shorten the distance between a student's goal and an informed decision by combining:
 
-The opportunity is to reduce the work between a student's goal and an informed decision by combining:
+verified context + visible sources + focused consequences + explicit uncertainty + enforced student control
 
-**verified context + official policy + focused consequences + clear uncertainty + student control**
+In CP3 we will test this against two baselines: a student working alone in the portal, and a student using a general-purpose chatbot alone.
 
-This is the main direction we will carry into Checkpoint 3.
+Limits: six short interviews and one run per prompt per platform. This is directional evidence, not proof.
