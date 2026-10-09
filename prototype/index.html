@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InterfaceDNA — Checkpoint 2 Prototype</title>
+  <meta name="description" content="Interactive prototype of InterfaceDNA, a goal-adaptive student interface that combines verified student context, approved policy sources, and explicit decision rights.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="demo-bar" aria-label="Prototype controls">
+    <div class="demo-bar-inner">
+      <strong>Prototype controls</strong>
+      <div class="demo-group" role="group" aria-label="Choose a journey">
+        <span>Journey</span>
+        <button type="button" data-journey="drop">J1 Course drop</button>
+        <button type="button" data-journey="grad">J2 Graduation</button>
+        <button type="button" data-journey="hold">J3 Registration hold</button>
+      </div>
+      <label class="demo-group">
+        <span>Play as</span>
+        <select id="persona">
+          <option value="alex">Alex · enrollment-sensitive</option>
+          <option value="maya">Maya · graduating senior</option>
+          <option value="jordan">Jordan · registration hold</option>
+        </select>
+      </label>
+      <label class="demo-group">
+        <span>Failure / edge case</span>
+        <select id="failure">
+          <option value="">None</option>
+          <option value="policy-conflict">Conflicting drop policies</option>
+          <option value="missing-record">Missing degree-audit record</option>
+          <option value="service-outage">University service unavailable</option>
+        </select>
+      </label>
+      <button type="button" id="theme" class="theme" aria-pressed="false">Dark</button>
+      <button type="button" id="reset" class="theme">Reset</button>
+    </div>
+  </nav>
+
+  <div class="shell">
+    <header class="masthead">
+      <div>
+        <div class="wordmark">InterfaceDNA</div>
+        <div class="tagline">Goal-adaptive interfaces for complex student decisions</div>
+      </div>
+      <ol class="stages" id="stages" aria-label="Current task progress"></ol>
+    </header>
+
+    <p class="sample-banner" role="note">
+      <b>Synthetic Demo University scenario.</b> This is a scripted proof-of-concept. No real student record is accessed and no university action is submitted.
+    </p>
+
+    <div class="layout">
+      <main class="content" id="content" tabindex="-1"></main>
+      <aside class="rail" id="rail" aria-label="Prototype context"></aside>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script src="data/run.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
