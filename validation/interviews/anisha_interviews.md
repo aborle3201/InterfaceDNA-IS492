@@ -9,8 +9,7 @@
 **Date:** 2026-10-07
 
 ### Current experience
-The participant said that university systems are usually manageable for simple tasks, but become difficult when one decision depends on several pieces of information. For example, dropping a class may require checking the course deadline, current credit load, degree requirements, financial implications, and sometimes approval from an advisor or another university office.
-They said the most frustrating part is that this information is rarely available in one place. They may need to move between the student portal, academic calendar, department webpages, degree audit, and email communication before feeling confident enough to take action.
+The participant said university systems work fine for simple tasks but get hard when one decision depends on several things. Dropping a class, for example, can mean checking the deadline, their current credit load, degree requirements, money effects, and sometimes getting approval from an advisor or another office. The most frustrating part is that this information is almost never in one place. They might have to jump between the student portal, the academic calendar, department pages, the degree audit, and their email before they feel sure enough to act.
 
 ### Accuracy
 The participant said they would only trust an AI-supported university system if the important information was clearly based on official university records.
