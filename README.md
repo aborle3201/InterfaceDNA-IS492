@@ -272,6 +272,93 @@ InterfaceDNA/
 - Set up GitHub Project Board
 - Finalize Checkpoint 1 presentation
 
+### Checkpoint 2
+
+- Completed controlled prompting study across ChatGPT, Claude, and Gemini.
+- Completed six short user interviews.
+- Documented cross-platform prompting results and failure cases.
+- Completed `GAP_ANALYSIS.md`.
+- Completed `THEORY_LENS.md`.
+- Identified the top three gaps for Checkpoint 3.
+- Refined the human-AI role partition and confirmation boundaries.
+- Developed the updated InterfaceDNA storyboard.
+- Completed individual validation reflections.
+
+---
+
+## Checkpoint 2 Outcomes
+
+Checkpoint 2 shifted the project from an initial concept into an evidence-informed design direction.
+The team completed a controlled prompting study across **ChatGPT, Claude, and Gemini**, using the same typical, edge, and failure scenarios to examine reasoning, grounding, memory, attention, uncertainty handling, and action boundaries.
+The team also conducted **six short student interviews** to understand how students currently experience complex academic tasks and what they would need in order to trust an AI-supported university interface.
+
+The combined validation produced several important findings:
+
+- General-purpose AI tools were usually good at identifying what information mattered, but they often still required the student to manually gather information from multiple systems.
+- Reasoning was generally stronger when all relevant facts were explicitly provided.
+- Models sometimes mixed verified facts with generic institutional assumptions.
+- Conversational memory or personalization could introduce context that had not been verified against the student's current institutional record.
+- Conflicting policies were not handled consistently across models.
+- Long chatbot-style responses often created additional cognitive load rather than reducing it.
+- Students consistently preferred verified information, visible uncertainty, and clear source information over fast but generic answers.
+- Consequential actions such as dropping a course should remain under student control and require consequence review and explicit confirmation.
+- Students also valued consistent interface patterns and clear escalation to a human when the system could not safely resolve a case.
+
+These findings refined the original InterfaceDNA concept. The project is no longer focused only on generating a personalized interface from a natural-language goal. The interface must also be **grounded, selective, source-aware, predictable, and explicit about uncertainty and decision rights**.
+
+### Checkpoint 2 Priority Gaps
+
+Three gaps were selected as the highest priority for the next checkpoint:
+
+1. **Grounding in verified student state and institutional policy**  
+   InterfaceDNA should distinguish between verified institutional facts and general model knowledge. Student status, deadlines, thresholds, holds, and policy rules should come from controlled and traceable sources.
+
+2. **Confirmation and consequence-review boundaries**  
+   The student should remain the final decision-maker, while the system must preserve required consequence review and explicit confirmation before consequential actions.
+
+3. **Attention load and focused interface composition**  
+   Instead of presenting every possible consequence, InterfaceDNA should use verified student context to show only the most relevant information, warnings, and next actions.
+
+---
+
+## Checkpoint 3 Direction
+
+Checkpoint 3 will focus on turning the validated design principles into a more integrated InterfaceDNA prototype.
+
+The next prototype will test whether a hybrid system can outperform both:
+
+- a student navigating a traditional university-style interface without AI support; and
+- a student using a general-purpose AI assistant without verified institutional context.
+
+### Planned Checkpoint 3 Focus
+
+The team plans to implement and evaluate:
+
+- verified retrieval of synthetic student records and controlled policy data;
+- task-specific interface generation using a fixed library of trusted components;
+- visible source and verification indicators;
+- explicit handling of missing or conflicting information;
+- consequence summaries that prioritize only relevant risks;
+- mandatory review and confirmation before state-changing actions;
+- deterministic backend validation for permissions and execution;
+- structured escalation when human review is required; and
+- consistent interface patterns across different student goals.
+
+### Checkpoint 3 Evaluation
+
+The Checkpoint 3 evaluation will compare:
+
+1. **Human-alone baseline**  
+   Student completes the task using a traditional portal-style workflow.
+
+2. **AI-alone baseline**  
+   Student uses a general-purpose conversational AI without verified student records or controlled institutional policies.
+
+3. **Hybrid InterfaceDNA condition**  
+   Student uses InterfaceDNA with verified context, focused interface composition, explicit uncertainty states, and controlled action              boundaries.
+
+The goal for Checkpoint 3 is not simply to make InterfaceDNA more autonomous. It is to test whether a clearer division of responsibility between the **AI, trusted system logic, and the student** creates a safer and more useful experience.
+
 ## Project Vision
 
 InterfaceDNA explores a different way of thinking about digital interfaces.
