@@ -125,13 +125,4 @@ See `EVIDENCE_MAP.md` for a compact screen-to-evidence map.
 | `data/run.js` | Same fixture as a browser script so the prototype works when opened directly from the file system |
 | `EVIDENCE_MAP.md` | Receipt → theory → prototype traceability |
 
-## Suggested 60–90 second Slide 6 demo
 
-1. Open **J1 Course drop**.
-2. Click **Check my situation** → show verified student record + approved policy source.
-3. Continue → open one **Why?** panel to demonstrate interrogation.
-4. Use the top **Failure → Conflicting drop policies** option → show the “I’m not sure” state and escalation.
-5. Simulate clarification, continue to review, and show the **explicit confirmation gate**.
-6. Briefly use the Journey controls to show that the same interaction model extends to **Graduation** and **Registration hold**.
-
-That sequence demonstrates the Checkpoint 2 heart of the project: **receipt → theory → design** through decision rights, interrogation, provenance, uncertainty, and role partitioning.

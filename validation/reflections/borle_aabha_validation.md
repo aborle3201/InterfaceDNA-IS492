@@ -1,3 +1,5 @@
+# Validation Reflection
+
 # Aabha Borle — Validation Reflection
 
 ## Key Finding
@@ -29,10 +31,12 @@ I would especially test whether verified sources and personalized consequence su
 **Student goal:** “Can I drop CS 411?”
 
 1. The student enters the goal in natural language.
-2. InterfaceDNA retrieves the student’s current credit load and relevant course information.
-3. It checks the approved university drop policy.
-4. The system shows the consequences of dropping the course in one focused view.
-5. Any uncertain or conflicting information is clearly marked.
-6. The student reviews the source and consequences.
-7. The student decides whether to continue.
-8. No consequential action happens without explicit confirmation.
+2. InterfaceDNA receives the request and begins gathering the necessary information.
+3. It retrieves the student’s current credit load, course details, and degree information.
+4. It checks the approved university drop policy and verifies the source.
+5. The system presents a concise summary of the consequences of dropping the course.
+6. Any uncertain or conflicting information is clearly flagged, with guidance on where to verify it.
+7. The student reviews the consequences and supporting sources.
+8. The student makes the final decision, and no consequential action happens without explicit confirmation.
+
+<img width="1448" height="1086" alt="InterfaceDNA Class Storyboard" src="https://github.com/user-attachments/assets/bd8c1a05-78e7-428e-9cf1-75f9792d6148" />
