@@ -1,54 +1,99 @@
 # Individual Validation Reflection — Anisha Kango
+## What I Assumed Before Validation
 
-## My Validation Work
+At the beginning of the project, I was mostly thinking about InterfaceDNA as an interface-generation problem.
+The idea seemed straightforward: a student states a goal in natural language, the AI understands what they are trying to do, and the system builds a simpler interface containing the information and actions relevant to that goal.
+I expected the difficult part to be whether the AI could correctly interpret broad requests such as:
 
-* For Checkpoint 2, my main contributions to validation were testing **Gemini** using the team's controlled prompting scenarios and conducting **two short user interviews**. I also reviewed the team's storyboard and used the validation findings to think about how InterfaceDNA should change from our original concept.
+> "Can I drop CS 411?"
 
-* The prompting study helped me look at the project from a different perspective. Instead of asking whether an AI model could simply answer a student's question, I focused more on whether the response was grounded in the right information, whether the AI introduced assumptions, and whether the student still had to do most of the work manually.
+or
 
-* One pattern I noticed with Gemini was that it often understood the task correctly, but sometimes mixed reliable reasoning with generic institutional assumptions. For example, in T02 it correctly calculated that dropping a 4-credit course from 15 credits would leave the student with 11 credits, but it then treated a 12-credit full-time threshold as if it definitely applied to Demo University. In other scenarios, Gemini provided useful guidance but still left the student responsible for checking portals, policies, and university offices.
+> "What do I still need to graduate?"
 
-* At the same time, some results were encouraging. In E03, Gemini did not attempt to determine course-drop eligibility without enough information and instead asked for the missing course, semester, and credit-load details. It also resisted the direct hallucination prompt in F01 and correctly recognized the prompt-injection attempt in F02.
-  
-* These results showed me that the problem is not simply that current AI systems are "bad" at these tasks. The larger problem is deciding **what information the AI should be allowed to trust and what role it should have in the final decision**.
-
----
-
-## What I Learned from the User Interviews
-
-* My two interviews supported the overall InterfaceDNA idea, but they also made the trust problem more concrete. Both participants cared strongly about information being connected to official university sources rather than simply receiving a confident AI answer.
-* One participant specifically preferred a slightly slower response if the extra time was being used to retrieve verified university information. They also wanted important facts such as deadlines, credit counts, degree requirements, and approvals to come from official records rather than being guessed. 
-* The second interview helped me think more carefully about the difference between a **confirmed fact** and a **possible consequence**. For example, if the system knows that the student's credit load changes from 15 to 11, it can show that calculation confidently. However, it should not automatically state that financial aid, housing, or another benefit will be affected unless the relevant policy has actually been verified.
-* Both participants also wanted the student to remain in control of important academic decisions. They were comfortable with the AI retrieving information, calculating consequences, and preparing an action, but they did not want it to make a permanent decision on the student's behalf.
-* These interviews made the importance of **trust calibration** much clearer to me. A useful system should not only provide information; it should help the student understand why that information can be trusted and when uncertainty still remains.
+After doing the validation, I realized that understanding the goal was actually not the biggest problem.
+The harder problem was deciding **what information the AI should trust once it understands the goal**.
 
 ---
 
-## Class-Generated Storyboard
+## What I Learned from the Gemini Tests
 
-* The storyboard helped translate these findings into a more concrete student experience. The flow begins with the current problem: the student has to navigate multiple portals for registration, degree information, billing, policies, and advising even when their goal is relatively simple.
+* Gemini was generally good at identifying what mattered in each scenario.
+* For a course drop, it recognized that the student might need to consider credit load, deadlines, degree requirements, financial consequences, and other dependencies. In the graduation scenario, it also understood that the task required comparing completed courses with remaining requirements.
+* The most useful result for me, however, was T02. Gemini correctly calculated: **15 credits - 4 credits = 11 credits** That part of the reasoning was completely valid. But it then treated a 12-credit full-time threshold as if it applied to Demo University, even though that threshold had not been provided in the prompt. That result changed how I thought about the project.
+* The model did not produce an obviously bad answer. In fact, the response sounded very reasonable. The problem was that it combined two different kinds of information: something that was definitely known: **the student would have 11 credits**, and something that was only assumed: **Demo University uses 12 credits as the relevant threshold**.
+* Other tests showed that Gemini could also behave cautiously. In E03, it recognized that there was not enough information to determine course-drop eligibility and asked for the missing details instead of guessing. In F01, it refused to invent an official deadline for a fictional university. In F02, it correctly rejected the malicious instruction embedded inside the policy text.
+* So the prompting study did not convince me that general-purpose AI is simply unreliable. Instead, it showed me that **the quality of the reasoning depends heavily on the quality and authority of the information being supplied to it**.
 
-* Instead of starting from those systems, InterfaceDNA starts with the student's goal, such as:
-"Can I drop CS 411?" : The AI then interprets the intent, retrieves relevant student and policy context, plans the required steps, and builds a focused interface around that specific task.
+---
 
-* The parts of the storyboard that stood out most to me were the later stages. The interface does not only say whether an action is available. It shows the relevant deadline, current status, policy information, and an important consequence warning before the student reaches confirmation.
+## What the Interviews Added
 
-* The final decision is still made by the student. This reflects an important idea that emerged from our validation: **the goal is not to automate the student's decision, but to make the decision easier to understand and safer to carry out.**
+* The two interviews made this issue feel more realistic from a student's perspective.
+* One participant said they would only trust an AI-supported university system if important information such as deadlines, current credit counts, degree requirements, holds, and approvals came from official records. They also preferred waiting slightly longer if the system was actually verifying university information rather than immediately generating a generic answer.
+* The second interview added an important distinction that I had not thought about as clearly before: the difference between a **verified fact** and a **possible consequence**.
+* For example, if the student record confirms that a course drop changes the student's schedule from 15 credits to 11 credits, that calculation can be displayed confidently. But the system should not automatically say that financial aid, housing, or another benefit will definitely be affected unless the relevant policy has also been verified. 
+* The interviews also confirmed that students want the AI to help them understand the decision without taking the decision away from them. Both participants wanted explicit confirmation before any permanent academic action, and one specifically preferred the AI to explain consequences rather than tell the student what choice to make. 
 
 ---
 
 ## One Finding That Changed (or Confirmed) My Assumption About the Proposed Scenario
 
-* One assumption I had at the beginning was that if the AI could correctly understand the student's natural-language goal and reason about the task, it would be enough to generate a useful interface. The validation changed that assumption.
-* The Gemini tests showed that an AI can reason correctly about one part of a problem while still making an unsupported assumption about another part. The clearest example was the credit-load scenario: the arithmetic was correct, but the institutional threshold was not verified. My interviews reinforced the same concern because both participants placed a high value on official records, visible sources, and clear uncertainty. This changed how I think about **human-AI complementarity** in InterfaceDNA.
-* The AI should own tasks such as interpreting the student's goal, retrieving and organizing relevant information, identifying dependencies, and reducing unnecessary information. However, the student should continue to own personal judgment and the final decision, while trusted university data and deterministic system rules should establish what is actually true and what actions are allowed.
-* For me, this is also a question of **trust calibration**. A student should not trust InterfaceDNA simply because the response sounds confident. The interface should make it clear which information is verified, which consequences are possible rather than certain, and when human review is still needed.
-* The validation therefore confirmed the value of the InterfaceDNA concept, but refined what I think makes it useful. The strongest version of the project is not simply an AI that generates a better-looking interface. It is a system where **AI reasoning, verified institutional information, and student decision-making each have a clearly defined role**.
+* The main finding that changed my assumption was that **a personalized interface is only useful if the information inside it is trustworthy**.
+* Before validation, I thought the main improvement over existing university systems would come from reducing navigation. Instead of making students move between registration, degree audit, billing, advising, and policy pages, InterfaceDNA would bring the relevant information together automatically. I still think that is important, but the validation showed me that reducing navigation alone is not enough.
+* If InterfaceDNA gathers the wrong context, relies on generic model knowledge, or presents uncertain information as verified fact, then the interface may actually make the student more confident in an incorrect conclusion.
+* This connects most directly to **trust calibration** and the **memory and reasoning pillars** from the complementarity framework.
+
+For InterfaceDNA, this means the system should separate three things clearly:
+
+- **verified student facts**, such as current enrollment or holds;
+- **verified institutional rules**, such as deadlines or enrollment requirements; and
+- **AI interpretation**, such as which consequences are relevant or what next step may make sense.
+
+This also clarified the human-AI division of responsibility for me. The AI should help interpret the student's goal, organize information, calculate consequences, and reduce unnecessary cognitive work. The student should still own personal judgment and the final decision. The underlying system should be responsible for verifying records, enforcing permissions, and making sure required confirmation steps cannot simply be skipped.
 
 ---
 
-## Final Reflection
+## How the Storyboard Reflects This Finding
 
-Overall, the validation work made our original idea feel more specific and realistic.
-The prompting study showed that general-purpose AI already performs several parts of these tasks reasonably well, especially when the required facts are provided. The interviews showed that students are open to AI assistance, but their trust depends on verification, transparency, and control. The main takeaway I am carrying into the next checkpoint is that InterfaceDNA should focus less on making the AI appear autonomous and more on making the **human-AI partnership clear and dependable**.
-If the AI can reduce search and cognitive effort, the system can provide verified institutional context and safeguards, and the student can retain meaningful control over the final decision, then the hybrid system has a stronger chance of being better than either a traditional portal or a general-purpose chatbot alone.
+* The class storyboard helped make this distinction visible. The first panel shows the current problem: one student goal is spread across several systems such as registration, degree audit, billing, policy, and advising.
+* The second and third panels show the original InterfaceDNA idea: the student begins with a natural-language goal and the AI interprets the request. For me, the most important panels are actually the middle ones.
+* The system retrieves **relevant context only**, including the course, current credit load, drop deadline, hold status, and applicable policy. It then creates a focused interface instead of returning a long chatbot answer.
+* More importantly, the consequence is shown before the action:
+> Dropping this course will reduce your credit hours and may affect full-time status.
+* The storyboard therefore represents more than a simpler interface. It represents a clearer division of responsibility between the AI, the system, and the student.
+
+---
+
+## What I Would Change in the Design
+
+Based on my validation, I would make the following parts of InterfaceDNA explicit in the next prototype:
+
+- Student information should come from verified institutional records rather than conversational memory.
+- Important policies and deadlines should visibly show their source.
+- The interface should distinguish verified facts from possible consequences.
+- Only consequences that are relevant to the student's current context should be emphasized.
+- High-impact actions should always include a consequence-review step.
+- The student should explicitly confirm any permanent action.
+
+One feature I would especially like to see is a small verification indicator beside important information, such as:
+
+- **Verified from student record**
+- **Verified from Registrar**
+- **Policy conflict**
+- **Needs confirmation**
+
+This would make trust part of the interface itself rather than something the student has to infer from the wording of the AI response.
+
+---
+
+## What I Would Carry into Checkpoint 3
+
+For Checkpoint 3, I would not only test whether students complete the task faster.
+I would want to compare whether InterfaceDNA helps students make a **better-grounded decision** than either:
+
+1. navigating university systems without AI; or
+2. asking a general-purpose AI assistant.
+
+My biggest takeaway from this checkpoint is that InterfaceDNA should not try to make the AI look more autonomous.
+The better goal is to make the system **more coordinated**. The AI should handle interpretation and organization, trusted university systems should provide the facts and rules, and the student should retain judgment and final control. That is what I now see as the real value of InterfaceDNA.
