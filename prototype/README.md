@@ -10,11 +10,15 @@ The prototype demonstrates the full Checkpoint 2 interaction model across three 
 
 > **Important:** This is a fixed-scenario simulation using fictional **Demo University** data. It does not access a real student record, university system, or policy source, and it never submits a real action.
 
-## Open it
+## Live prototype
 
-Open `index.html` directly in a browser. No build step or package installation is required.
+**Hosted demo:** https://interfacedna-is492-prototype.vercel.app/
 
-The page can also be served with any static server, for example:
+The hosted version is the recommended way to review and demo the prototype.
+
+You can also run the prototype locally by opening `index.html` directly in a browser. No build step or package installation is required.
+
+Alternatively, serve it with any static server, for example:
 
 ```bash
 python3 -m http.server 8000
