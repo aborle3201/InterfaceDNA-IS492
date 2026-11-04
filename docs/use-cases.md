@@ -4,8 +4,6 @@
 
 ## UC-01 — Alex: Can I drop CS 411?
 
-## UC-01 — Alex: Can I drop CS 411?
-
 - **Setup:** Journey J1, persona Alex, failure `None`.
 - **Input:** `Can I drop CS 411?`
 - **Live action:** Click **Analyze using live AI**. The frontend calls `/api/start`, Groq classifies the intent as `drop`, and the backend checks the synthetic course-drop policy and student records.
