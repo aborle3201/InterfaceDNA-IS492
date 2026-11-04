@@ -3,12 +3,22 @@
 **All student and policy data are fictional.** These scripts document actual code paths; the status of hands-on checks is specified separately.
 
 ## UC-01 — Alex: Can I drop CS 411?
+
+## UC-01 — Alex: Can I drop CS 411?
+
 - **Setup:** Journey J1, persona Alex, failure `None`.
 - **Input:** `Can I drop CS 411?`
-- **Live action:** Click **Analyze using live AI**. The frontend calls `/api/start`, Groq classifies `drop`, and the backend calculates consequences from synthetic records.
-- **Expected:** 16 credits before, 12 after, 12-credit synthetic full-time threshold, sourced synthetic course-drop policy.
-- **Confirmation:** Check explicit acknowledgment; click **Confirm synthetic backend action**. Expected: simulated receipt, completed session, and a clear statement that no university system changed.
-- **Observed:** Model output and structured view shown in user screenshots. A receipt was also observed for other workflows. Date eligibility rule **not yet enforced**: the sample deadline is September 30, 2026.
+- **Live action:** Click **Analyze using live AI**. The frontend calls `/api/start`, Groq classifies the intent as `drop`, and the backend checks the synthetic course-drop policy and student records.
+- **Synthetic policy deadline:** September 30, 2026.
+- **Expected behavior before deadline:** The system calculates the consequences of dropping CS 411: 16 credits before, 12 after, and a 12-credit full-time threshold. The student can review and explicitly confirm a simulated request.
+- **Expected behavior on deadline:** Requests dated September 30, 2026, remain eligible for review.
+- **Expected behavior after deadline:** Requests are blocked. The interface displays the expired-deadline warning, provides the synthetic policy source, and prevents confirmation.
+- **Confirmation safeguard:** The backend rechecks the deadline before recording any simulated action. An expired request cannot generate a receipt.
+- **Observed (November 3, 2026):** Live Groq inference successfully classified Alex's request as `drop`. The backend blocked the action because the September 30 deadline had passed. The interface displayed the policy warning and no confirmation controls were available.
+- **Automated verification:** All 8 tests passed, including checks for requests before, on, and after the deadline, and confirmation-time validation.
+- **Limitation:** The deadline is fictional and is evaluated against the server's local calendar date. No real university enrollment system is accessed.
+
+---
 
 ## UC-02 — Maya: What do I still need to graduate?
 - **Setup:** Journey J2, persona Maya, failure `None`.
