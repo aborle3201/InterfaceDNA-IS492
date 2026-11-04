@@ -1,4 +1,4 @@
-"""Checkpoint 3 API: live model classification + deterministic verified demo workflows.
+"""Checkpoint 3 API: live model intent/entity extraction + deterministic verified workflows.
 Only synthetic student data and simulated university actions are supported.
 """
 from __future__ import annotations
@@ -7,9 +7,10 @@ import json
 import logging
 import os
 import pathlib
+import re
 import time
 import uuid
-from threading import Lock
+from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
@@ -19,17 +20,20 @@ from pydantic import BaseModel, Field
 
 BASE = pathlib.Path(__file__).parent
 load_dotenv(BASE / '.env')
-DATA = json.loads((BASE / 'demo_data.json').read_text())
+
+import db  # noqa: E402  (reads INTERFACEDNA_DB from .env)
+import rules  # noqa: E402
+
 SYSTEM = (BASE / 'prompts' / 'system.txt').read_text()
 SETTINGS = json.loads((BASE / 'prompts' / 'settings.json').read_text())
+INTENTS = ('drop', 'graduation', 'hold', 'unknown')
+COURSE = re.compile(r'\b([A-Za-z]{2,4})\s*-?\s*(\d{3})\b')
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s %(message)s',
 )
 log = logging.getLogger('interfacedna')
-SESSIONS = {}
-GUARD = Lock()
 
 
 class Start(BaseModel):
@@ -48,131 +52,17 @@ class Fault(BaseModel):
         pattern=r'^(none|policy_conflict|missing_record|service_outage)$')
 
 
-def facts(intent, persona, fault='none'):
-    st = DATA['students'][persona]
-    if fault == 'service_outage':
-        return {
-            'status': 'blocked',
-            'reason': 'Synthetic records service unavailable. Retry later; no action executed.',
-            'sources': [],
-        }
-
-    if intent == 'drop':
-        if fault == 'policy_conflict':
-            return {
-                'status': 'blocked',
-                'reason': 'Two synthetic policy sources conflict. Ask the registrar before proceeding.',
-                'sources': [DATA['policies']['courseDropConflict']],
-            }
-        course = next(
-            (
-                c for c in st.get('courses', [])
-                if c['code'] == 'CS 411' and c['status'] == 'Enrolled'
-            ),
-            None,
-        )
-        if not course:
-            return {
-                'status': 'blocked',
-                'reason': 'CS 411 not enrolled for this persona.',
-                'sources': [],
-            }
-        policy = DATA['policies']['courseDrop']
-        remaining = st['currentCredits'] - course['credits']
-        return {
-            'status': 'ready',
-            'summary': (
-                f'Dropping CS 411 changes enrolled credits from '
-                f'{st["currentCredits"]} to {remaining}.'
-            ),
-            'details': {
-                'before_credits': st['currentCredits'],
-                'after_credits': remaining,
-                'full_time_threshold': policy['threshold'],
-                'below_threshold': remaining < policy['threshold'],
-                'policy_deadline': policy['deadline'],
-            },
-            'sources': [{
-                'title': policy['title'],
-                'source': policy['source'],
-                'version': policy['version'],
-                'synthetic': True,
-            }],
-            'action': 'Submit synthetic course-drop request',
-        }
-
-    if intent == 'graduation':
-        if fault == 'missing_record':
-            return {
-                'status': 'blocked',
-                'reason': 'Synthetic degree audit unavailable. Do not infer graduation status.',
-                'sources': [],
-            }
-        grad = st.get('graduation')
-        if not grad:
-            return {
-                'status': 'blocked',
-                'reason': 'No degree audit for this persona.',
-                'sources': [],
-            }
-        policy = DATA['policies']['graduation']
-        return {
-            'status': 'ready',
-            'summary': (
-                f'{grad["completed"]} credits completed; '
-                f'{grad["inProgress"]} in progress; '
-                f'{grad["totalRequired"]} required.'
-            ),
-            'details': {
-                'requirements': grad['requirements'],
-                'remaining_if_in_progress_pass': max(
-                    0,
-                    grad['totalRequired'] -
-                    grad['completed'] - grad['inProgress'],
-                ),
-            },
-            'sources': [{
-                'title': policy['title'],
-                'source': policy['source'],
-                'version': policy['version'],
-                'synthetic': True,
-            }],
-            'action': 'Save synthetic graduation review plan',
-        }
-
-    if intent == 'hold':
-        holds = st.get('holds', [])
-        if not holds:
-            return {
-                'status': 'blocked',
-                'reason': 'No holds found for this synthetic student.',
-                'sources': [],
-            }
-        policy = DATA['policies']['registration']
-        return {
-            'status': 'ready',
-            'summary': (
-                f'{len(holds)} active synthetic registration hold(s). '
-                'Review the responsible offices.'
-            ),
-            'details': {'holds': holds},
-            'sources': [{
-                'title': policy['title'],
-                'source': policy['source'],
-                'version': policy['version'],
-                'synthetic': True,
-            }],
-            'action': 'Submit synthetic advising-review request',
-        }
-
-    return {
-        'status': 'blocked',
-        'reason': (
-            'Please ask about dropping CS 411, graduation readiness, '
-            'or registration holds.'
-        ),
-        'sources': [],
-    }
+def normalize_course(raw, message):
+    """Model entities are untrusted: keep a course code only if it is well-formed
+    and the student actually typed it."""
+    if not isinstance(raw, str):
+        return None
+    m = COURSE.fullmatch(raw.strip())
+    if not m:
+        return None
+    code = f'{m[1].upper()} {m[2]}'
+    typed = {f'{a.upper()} {b}' for a, b in COURSE.findall(message)}
+    return code if code in typed else None
 
 
 def groq_api_key():
@@ -184,7 +74,8 @@ def groq_api_key():
 
 
 def classify_live(message):
-    """Classify using a real Groq API call; never silently substitute a mock response."""
+    """Extract intent and entities using a real Groq API call; never silently
+    substitute a mock response."""
     from openai import OpenAI  # Groq provides an OpenAI-compatible API.
 
     client = OpenAI(
@@ -205,10 +96,14 @@ def classify_live(message):
     )
     output = json.loads(resp.choices[0].message.content or '{}')
     intent = output.get('intent', 'unknown')
-    if intent not in ('drop', 'graduation', 'hold', 'unknown'):
+    if intent not in INTENTS:
         raise RuntimeError('Model produced an invalid task classification.')
+    entities = output.get('entities')
+    entities = entities if isinstance(entities, dict) else {}
+    course = normalize_course(entities.get('course_code'), message)
     return (
         intent,
+        {'course_code': course} if intent == 'drop' else {},
         str(output.get('explanation', ''))[:500],
         {
             'model': resp.model,
@@ -218,7 +113,14 @@ def classify_live(message):
     )
 
 
-app = FastAPI(title='InterfaceDNA CP3', version='0.1.0')
+@asynccontextmanager
+async def lifespan(_app):
+    db.ensure()
+    log.info('database=%s rules_date=%s', db.DB_PATH, rules.today())
+    yield
+
+
+app = FastAPI(title='InterfaceDNA CP3', version='0.2.0', lifespan=lifespan)
 
 # Serve the original InterfaceDNA frontend CSS and JavaScript.
 app.mount('/assets', StaticFiles(directory=BASE / 'assets'), name='assets')
@@ -258,6 +160,8 @@ def health():
         'model_configured': bool(key) and key != 'gsk_your_actual_api_key_here',
         'provider': 'Groq',
         'model': os.getenv('GROQ_MODEL', 'openai/gpt-oss-120b'),
+        'database': db.DB_PATH.name,
+        'rules_date': rules.today().isoformat(),
     }
 
 
@@ -265,7 +169,7 @@ def health():
 def start(body: Start):
     tic = time.perf_counter()
     try:
-        intent, explanation, usage = classify_live(body.message)
+        intent, entities, explanation, usage = classify_live(body.message)
     except Exception as exc:
         log.exception('Groq model call failed')
         raise HTTPException(
@@ -276,19 +180,15 @@ def start(body: Start):
             ),
         ) from exc
 
-    result = facts(intent, body.persona)
+    result = rules.evaluate(intent, body.persona, entities)
     sid = str(uuid.uuid4())
     state = 'review' if result['status'] == 'ready' else 'blocked'
-    with GUARD:
-        SESSIONS[sid] = {
-            'intent': intent,
-            'persona': body.persona,
-            'state': state,
-            'fault': 'none',
-        }
+    db.create_session(sid, body.persona, intent, entities, state)
     log.info(
-        'inference intent=%s model=%s input_tokens=%s output_tokens=%s latency_ms=%.0f',
+        'inference intent=%s entities=%s model=%s input_tokens=%s '
+        'output_tokens=%s latency_ms=%.0f',
         intent,
+        entities,
         usage['model'],
         usage['input_tokens'],
         usage['output_tokens'],
@@ -297,6 +197,7 @@ def start(body: Start):
     return {
         'session_id': sid,
         'intent': intent,
+        'entities': entities,
         'interpretation': explanation,
         'model_usage': usage,
         'result': result,
@@ -306,45 +207,48 @@ def start(body: Start):
 
 @app.post('/api/fault')
 def fault(body: Fault):
-    with GUARD:
-        sess = SESSIONS.get(body.session_id)
-        if not sess:
-            raise HTTPException(404, 'Session not found')
-        if sess['state'] == 'completed':
-            raise HTTPException(409, 'Cannot mutate completed session')
-        sess['fault'] = body.mode
-        result = facts(sess['intent'], sess['persona'], body.mode)
-        sess['state'] = 'review' if result['status'] == 'ready' else 'blocked'
-        return {
-            'state': sess['state'],
-            'result': result,
-            'session_id': body.session_id,
-        }
+    sess = db.get_session(body.session_id)
+    if not sess:
+        raise HTTPException(404, 'Session not found')
+    if sess['state'] == 'completed':
+        raise HTTPException(409, 'Cannot mutate completed session')
+    result = rules.evaluate(
+        sess['intent'], sess['student_id'], sess['entities'], body.mode)
+    state = 'review' if result['status'] == 'ready' else 'blocked'
+    if not db.update_session(body.session_id, state, body.mode):
+        raise HTTPException(409, 'Cannot mutate completed session')
+    return {'state': state, 'result': result, 'session_id': body.session_id}
 
 
 @app.post('/api/confirm')
 def confirm(body: Confirm):
-    with GUARD:
-        sess = SESSIONS.get(body.session_id)
-        if not sess:
-            raise HTTPException(404, 'Session not found')
-        if not body.confirmation:
-            raise HTTPException(400, 'Explicit confirmation required')
-        if sess['state'] != 'review':
-            raise HTTPException(
-                409, 'Task is not confirmable in current state')
-        current = facts(sess['intent'], sess['persona'], sess['fault'])
-        if current['status'] != 'ready':
-            raise HTTPException(409, 'Source validation failed')
-        # Synthetic backend action only; no university connectivity or enrollment changes.
-        sess['state'] = 'completed'
-        return {
-            'state': 'completed',
-            'receipt': str(uuid.uuid4()),
-            'description': current['action'],
-            'synthetic': True,
-            'message': (
-                'Synthetic backend action recorded. '
-                'No university system was changed.'
-            ),
-        }
+    sess = db.get_session(body.session_id)
+    if not sess:
+        raise HTTPException(404, 'Session not found')
+    if not body.confirmation:
+        raise HTTPException(400, 'Explicit confirmation required')
+    if sess['state'] != 'review':
+        raise HTTPException(409, 'Task is not confirmable in current state')
+    # Recheck every fact at confirmation time (deadline, enrollment, faults).
+    current = rules.evaluate(
+        sess['intent'], sess['student_id'], sess['entities'], sess['fault'])
+    if current['status'] != 'ready':
+        db.update_session(body.session_id, 'blocked', sess['fault'])
+        raise HTTPException(
+            409, f'Source validation failed: {current["reason"]}')
+    # Synthetic backend action only; no university connectivity or enrollment changes.
+    receipt = str(uuid.uuid4())
+    if not db.complete_session(
+            body.session_id, receipt, sess['intent'],
+            {'description': current['action'], **sess['entities']}):
+        raise HTTPException(409, 'Task is not confirmable in current state')
+    return {
+        'state': 'completed',
+        'receipt': receipt,
+        'description': current['action'],
+        'synthetic': True,
+        'message': (
+            'Synthetic backend action recorded. '
+            'No university system was changed.'
+        ),
+    }

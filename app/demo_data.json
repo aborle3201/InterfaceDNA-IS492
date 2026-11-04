@@ -58,7 +58,12 @@
       "currentCredits": 14,
       "completedCredits": 54,
       "gpa": 3.21,
-      "courses": [],
+      "courses": [
+        {"code":"ECE 220","title":"Computer Systems & Programming","credits":4,"status":"Enrolled","requirement":"Major required"},
+        {"code":"MATH 241","title":"Calculus III","credits":4,"status":"Enrolled","requirement":"Supporting coursework"},
+        {"code":"PHYS 212","title":"University Physics: Electricity & Magnetism","credits":4,"status":"Enrolled","requirement":"Supporting coursework"},
+        {"code":"ENG 100","title":"Engineering Orientation","credits":2,"status":"Enrolled","requirement":"College required"}
+      ],
       "holds": [
         {"type":"Advising hold","office":"Academic Advising","reason":"Required semester planning check-in","status":"Action needed","canRequest":true},
         {"type":"Student account hold","office":"Student Accounts","reason":"Outstanding account review","status":"Action needed","canRequest":false}
@@ -72,7 +77,7 @@
       "version": "2026.09",
       "approved": true,
       "urlLabel": "Academic Regulations → Enrollment → Course Drops",
-      "deadline": "September 30, 2026",
+      "deadline": "2026-09-30",
       "threshold": 12,
       "notes": [
         "Students must review academic and enrollment consequences before submitting a course-drop request.",
@@ -81,8 +86,8 @@
       ]
     },
     "courseDropConflict": {
-      "sourceA": {"title":"Academic Calendar PDF","date":"September 25, 2026","version":"2026.08"},
-      "sourceB": {"title":"Academic Regulations","date":"September 30, 2026","version":"2026.09"}
+      "sourceA": {"title":"Academic Calendar PDF","source":"Demo University Academic Calendar","date":"2026-09-25","version":"2026.08"},
+      "sourceB": {"title":"Academic Regulations","source":"Demo University Academic Regulations","date":"2026-09-30","version":"2026.09"}
     },
     "graduation": {
       "title": "Bachelor's Degree Requirements",

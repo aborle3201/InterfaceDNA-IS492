@@ -13,7 +13,7 @@
 - **Expected behavior after deadline:** Requests are blocked. The interface displays the expired-deadline warning, provides the synthetic policy source, and prevents confirmation.
 - **Confirmation safeguard:** The backend rechecks the deadline before recording any simulated action. An expired request cannot generate a receipt.
 - **Observed (November 3, 2026):** Live Groq inference successfully classified Alex's request as `drop`. The backend blocked the action because the September 30 deadline had passed. The interface displayed the policy warning and no confirmation controls were available.
-- **Automated verification:** All 8 tests passed, including checks for requests before, on, and after the deadline, and confirmation-time validation.
+- **Automated verification:** All 11 tests in `tests/test_api.py` passed (November 4, 2026), including checks for requests before, on, and after the deadline, and confirmation-time validation.
 - **Limitation:** The deadline is fictional and is evaluated against the server's local calendar date. No real university enrollment system is accessed.
 
 ---
@@ -24,7 +24,7 @@
 - **Expected:** `graduation` intent; 112 completed credits, 12 in progress, 120 required; 0 potentially remaining **if in-progress classes pass**, plus requirement status and source.
 - **Confirmation:** Save a **synthetic review plan**, not graduation approval.
 - **Observed:** Live model classification, progress data, and a simulated receipt were shown in screenshots.
-- **UI follow-up:** Requirement details currently appear as JSON-like text in some cards; improve rendering.
+- **UI:** Each requirement card shows its name, status and detail.
 
 ## UC-03 — Jordan: Why can't I register?
 - **Setup:** Journey J3, persona Jordan, failure `None`.
