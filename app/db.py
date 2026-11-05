@@ -1,5 +1,9 @@
-"""SQLite store for InterfaceDNA: synthetic university records, sessions and simulated actions.
-Seeded from demo_data.json. Every record is fictional.
+"""SQLite store for InterfaceDNA.
+
+Real UIUC data: courses (sources/courses.json), policy facts with verbatim
+quotes (sources/policies.json) and degree requirements (sources/programs.json).
+Synthetic data: students, transcripts, enrollments and holds (generate_students.py).
+Also stores sessions and simulated actions.
 
 Rebuild the database:  python db.py
 """
@@ -12,66 +16,68 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
+import generate_students
+
 BASE = pathlib.Path(__file__).parent
-SEED = BASE / 'demo_data.json'
+SOURCES = BASE / 'sources'
 DB_PATH = pathlib.Path(
     os.getenv('INTERFACEDNA_DB', BASE / 'data' / 'interfacedna.db'))
+CURRENT_TERM = generate_students.CURRENT_TERM
 
 SCHEMA = """
-CREATE TABLE students (
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    persona TEXT,
-    major TEXT,
-    catalog_year TEXT,
-    completed_credits INTEGER NOT NULL,
-    gpa REAL
-);
 CREATE TABLE courses (
     code TEXT PRIMARY KEY,
     title TEXT NOT NULL,
-    credits INTEGER NOT NULL
+    credits_text TEXT NOT NULL,
+    credits_min INTEGER NOT NULL,
+    credits_max INTEGER NOT NULL,
+    prerequisite TEXT,
+    source_document TEXT NOT NULL,
+    source_page INTEGER
+);
+CREATE TABLE programs (
+    code TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    level TEXT NOT NULL,
+    data TEXT NOT NULL      -- JSON from sources/programs.json
+);
+CREATE TABLE policy_sources (
+    key TEXT PRIMARY KEY,
+    data TEXT NOT NULL      -- JSON: title, publisher, url, document, retrieved
+);
+CREATE TABLE policy_facts (
+    key TEXT PRIMARY KEY,
+    source TEXT NOT NULL REFERENCES policy_sources(key),
+    page INTEGER,
+    quote TEXT NOT NULL,
+    vals TEXT               -- JSON
+);
+CREATE TABLE students (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    level TEXT NOT NULL CHECK (level IN ('UG', 'GR')),
+    program TEXT NOT NULL REFERENCES programs(code),
+    visa TEXT,
+    assistantship INTEGER NOT NULL DEFAULT 0,
+    admit_term TEXT NOT NULL,
+    gpa REAL
 );
 CREATE TABLE enrollments (
     student_id TEXT NOT NULL REFERENCES students(id),
     course_code TEXT NOT NULL REFERENCES courses(code),
     term TEXT NOT NULL,
-    status TEXT NOT NULL,
-    requirement TEXT,
+    credits INTEGER NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('Enrolled', 'Completed')),
+    grade TEXT,
     PRIMARY KEY (student_id, course_code, term)
 );
 CREATE TABLE holds (
     id INTEGER PRIMARY KEY,
     student_id TEXT NOT NULL REFERENCES students(id),
     hold_type TEXT NOT NULL,
-    office TEXT NOT NULL,
-    reason TEXT,
-    status TEXT,
-    can_request INTEGER NOT NULL DEFAULT 0,
+    detail TEXT,
+    placed_term TEXT,
     active INTEGER NOT NULL DEFAULT 1
-);
-CREATE TABLE degree_audits (
-    student_id TEXT PRIMARY KEY REFERENCES students(id),
-    total_required INTEGER NOT NULL,
-    completed INTEGER NOT NULL,
-    in_progress INTEGER NOT NULL
-);
-CREATE TABLE degree_requirements (
-    id INTEGER PRIMARY KEY,
-    student_id TEXT NOT NULL REFERENCES students(id),
-    name TEXT NOT NULL,
-    status TEXT NOT NULL,
-    detail TEXT
-);
-CREATE TABLE policies (
-    key TEXT PRIMARY KEY,
-    title TEXT NOT NULL,
-    source TEXT NOT NULL,
-    version TEXT NOT NULL,
-    url_label TEXT,
-    deadline TEXT,          -- ISO date, inclusive
-    threshold INTEGER,
-    notes TEXT              -- JSON list
 );
 CREATE TABLE sessions (
     id TEXT PRIMARY KEY,
@@ -92,13 +98,6 @@ CREATE TABLE actions (
     created_at TEXT NOT NULL
 );
 """
-
-# demo_data.json policy name -> database key
-POLICY_KEYS = {
-    'courseDrop': 'course_drop',
-    'graduation': 'graduation',
-    'registration': 'registration',
-}
 
 
 def now():
@@ -125,59 +124,46 @@ def transaction():
         conn.close()
 
 
-def seed(conn, data):
-    term = data['meta']['term']
-    for sid, st in data['students'].items():
-        conn.execute(
-            'INSERT INTO students VALUES (?, ?, ?, ?, ?, ?, ?)',
-            (sid, st['name'], st['persona'], st['major'], st['catalogYear'],
-             st['completedCredits'], st['gpa']),
-        )
-        for c in st.get('courses', []):
-            conn.execute(
-                'INSERT OR IGNORE INTO courses VALUES (?, ?, ?)',
-                (c['code'], c['title'], c['credits']),
-            )
-            conn.execute(
-                'INSERT INTO enrollments VALUES (?, ?, ?, ?, ?)',
-                (sid, c['code'], term, c['status'], c['requirement']),
-            )
-        for h in st.get('holds', []):
-            conn.execute(
-                'INSERT INTO holds (student_id, hold_type, office, reason, status, can_request)'
-                ' VALUES (?, ?, ?, ?, ?, ?)',
-                (sid, h['type'], h['office'], h['reason'], h['status'],
-                 int(h['canRequest'])),
-            )
-        grad = st.get('graduation')
-        if grad:
-            conn.execute(
-                'INSERT INTO degree_audits VALUES (?, ?, ?, ?)',
-                (sid, grad['totalRequired'], grad['completed'], grad['inProgress']),
-            )
-            for r in grad['requirements']:
-                conn.execute(
-                    'INSERT INTO degree_requirements (student_id, name, status, detail)'
-                    ' VALUES (?, ?, ?, ?)',
-                    (sid, r['name'], r['status'], r['detail']),
-                )
+def load(name):
+    return json.loads((SOURCES / name).read_text())
 
-    policies = data['policies']
-    for name, key in POLICY_KEYS.items():
-        p = policies[name]
+
+def seed(conn):
+    for c in load('courses.json'):
         conn.execute(
-            'INSERT INTO policies VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            (key, p['title'], p['source'], p['version'], p.get('urlLabel'),
-             p.get('deadline'), p.get('threshold'), json.dumps(p.get('notes', []))),
+            'INSERT INTO courses VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            (c['code'], c['title'], c['credits_text'], c['credits_min'],
+             c['credits_max'], c['prerequisite'], c['source']['document'],
+             c['source']['page']),
         )
-    # The older calendar edition is stored but only consulted by the
-    # policy_conflict demonstration fault.
-    cal = policies['courseDropConflict']['sourceA']
-    conn.execute(
-        'INSERT INTO policies VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        ('course_drop_calendar', cal['title'], cal['source'], cal['version'],
-         None, cal['date'], None, '[]'),
-    )
+    for code, p in load('programs.json')['programs'].items():
+        conn.execute('INSERT INTO programs VALUES (?, ?, ?, ?)',
+                     (code, p['name'], p['level'], json.dumps(p)))
+    policies = load('policies.json')
+    for key, s in policies['sources'].items():
+        conn.execute('INSERT INTO policy_sources VALUES (?, ?)', (key, json.dumps(s)))
+    for key, f in policies['facts'].items():
+        conn.execute('INSERT INTO policy_facts VALUES (?, ?, ?, ?, ?)',
+                     (key, f['source'], f['page'], f['quote'],
+                      json.dumps(f.get('values'))))
+
+    for s in generate_students.generate():
+        conn.execute(
+            'INSERT INTO students VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            (s['id'], s['name'], s['level'], s['program'], s['visa'],
+             int(s['assistantship']), s['admit_term'], s['gpa']),
+        )
+        for e in s['enrollments']:
+            conn.execute(
+                'INSERT INTO enrollments VALUES (?, ?, ?, ?, ?, ?)',
+                (s['id'], e['code'], e['term'], e['credits'], e['status'], e['grade']),
+            )
+        for h in s['holds']:
+            conn.execute(
+                'INSERT INTO holds (student_id, hold_type, detail, placed_term)'
+                ' VALUES (?, ?, ?, ?)',
+                (s['id'], h['type'], h['detail'], h['placed_term']),
+            )
 
 
 def reset():
@@ -185,7 +171,7 @@ def reset():
     DB_PATH.unlink(missing_ok=True)
     with transaction() as conn:
         conn.executescript(SCHEMA)
-        seed(conn, json.loads(SEED.read_text()))
+        seed(conn)
 
 
 def ensure():
@@ -193,68 +179,96 @@ def ensure():
         reset()
 
 
-# ---- Synthetic university records -------------------------------------------
+# ---- Real university data ---------------------------------------------------
+
+def get_fact(key):
+    """A policy fact with its quote and full source citation."""
+    with transaction() as conn:
+        row = conn.execute(
+            'SELECT f.*, s.data AS source_data FROM policy_facts f'
+            ' JOIN policy_sources s ON s.key = f.source WHERE f.key = ?',
+            (key,)).fetchone()
+        if not row:
+            return None
+        return {
+            'key': row['key'],
+            'quote': row['quote'],
+            'page': row['page'],
+            'values': json.loads(row['vals']) if row['vals'] else None,
+            **json.loads(row['source_data']),
+        }
+
+
+def get_dated(kind, level):
+    """Dated entries of one kind (e.g. 'no_w', 'refund') that apply to a level,
+    each with the key of the fact that quotes it."""
+    with transaction() as conn:
+        rows = conn.execute(
+            "SELECT key, vals FROM policy_facts WHERE vals LIKE '[%'").fetchall()
+    return [dict(v, key=row['key']) for row in rows for v in json.loads(row['vals'])
+            if v.get('kind') == kind and level in v.get('levels', ())]
+
+
+def get_program(code):
+    with transaction() as conn:
+        row = conn.execute('SELECT data FROM programs WHERE code = ?', (code,)).fetchone()
+        return json.loads(row['data']) if row else None
+
+
+def get_course(code):
+    with transaction() as conn:
+        row = conn.execute('SELECT * FROM courses WHERE code = ?', (code,)).fetchone()
+        return dict(row) if row else None
+
+
+# ---- Synthetic student records ----------------------------------------------
 
 def get_student(student_id):
     with transaction() as conn:
         row = conn.execute(
-            'SELECT * FROM students WHERE id = ?', (student_id,)).fetchone()
-        return dict(row) if row else None
+            'SELECT s.*, p.name AS program_name FROM students s'
+            ' JOIN programs p ON p.code = s.program WHERE s.id = ?',
+            (student_id,)).fetchone()
+        return dict(row, assistantship=bool(row['assistantship'])) if row else None
+
+
+def list_students():
+    with transaction() as conn:
+        rows = conn.execute(
+            'SELECT s.id, s.name, s.level, s.program, p.name AS program_name, s.visa,'
+            ' (SELECT COUNT(*) FROM holds h WHERE h.student_id = s.id AND h.active = 1) AS holds'
+            ' FROM students s JOIN programs p ON p.code = s.program ORDER BY s.id'
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+
+def get_records(student_id):
+    """Every enrollment row (completed and current) joined with course data."""
+    with transaction() as conn:
+        rows = conn.execute(
+            'SELECT e.course_code AS code, c.title, e.term, e.credits, e.status, e.grade'
+            ' FROM enrollments e JOIN courses c ON c.code = e.course_code'
+            ' WHERE e.student_id = ? ORDER BY e.term, e.course_code',
+            (student_id,)).fetchall()
+        return [dict(r) for r in rows]
+
+
+def get_current(student_id):
+    return [r for r in get_records(student_id)
+            if r['status'] == 'Enrolled' and r['term'] == CURRENT_TERM]
 
 
 def get_enrollment(student_id, course_code):
-    with transaction() as conn:
-        row = conn.execute(
-            'SELECT e.course_code AS code, c.title, c.credits, e.term, e.status, e.requirement'
-            ' FROM enrollments e JOIN courses c ON c.code = e.course_code'
-            " WHERE e.student_id = ? AND e.course_code = ? AND e.status = 'Enrolled'",
-            (student_id, course_code),
-        ).fetchone()
-        return dict(row) if row else None
-
-
-def current_credits(student_id):
-    with transaction() as conn:
-        return conn.execute(
-            'SELECT COALESCE(SUM(c.credits), 0) FROM enrollments e'
-            ' JOIN courses c ON c.code = e.course_code'
-            " WHERE e.student_id = ? AND e.status = 'Enrolled'",
-            (student_id,),
-        ).fetchone()[0]
+    return next((r for r in get_current(student_id) if r['code'] == course_code), None)
 
 
 def get_active_holds(student_id):
     with transaction() as conn:
         rows = conn.execute(
-            'SELECT hold_type AS type, office, reason, status, can_request'
-            ' FROM holds WHERE student_id = ? AND active = 1 ORDER BY id',
-            (student_id,),
-        ).fetchall()
-        return [dict(r, canRequest=bool(r['can_request'])) for r in rows]
-
-
-def get_degree_audit(student_id):
-    with transaction() as conn:
-        audit = conn.execute(
-            'SELECT * FROM degree_audits WHERE student_id = ?',
-            (student_id,)).fetchone()
-        if not audit:
-            return None
-        reqs = conn.execute(
-            'SELECT name, status, detail FROM degree_requirements'
-            ' WHERE student_id = ? ORDER BY id',
-            (student_id,),
-        ).fetchall()
-        return dict(audit, requirements=[dict(r) for r in reqs])
-
-
-def get_policy(key):
-    with transaction() as conn:
-        row = conn.execute(
-            'SELECT * FROM policies WHERE key = ?', (key,)).fetchone()
-        if not row:
-            return None
-        return dict(row, notes=json.loads(row['notes'] or '[]'))
+            'SELECT hold_type AS type, detail, placed_term FROM holds'
+            ' WHERE student_id = ? AND active = 1 ORDER BY id',
+            (student_id,)).fetchall()
+        return [dict(r) for r in rows]
 
 
 # ---- Sessions and simulated actions -----------------------------------------
@@ -319,8 +333,8 @@ def get_action(session_id):
 if __name__ == '__main__':
     reset()
     with transaction() as conn:
-        for table in ('students', 'courses', 'enrollments', 'holds',
-                      'degree_requirements', 'policies'):
+        for table in ('courses', 'programs', 'policy_facts', 'students',
+                      'enrollments', 'holds'):
             count = conn.execute(f'SELECT COUNT(*) FROM {table}').fetchone()[0]
-            print(f'{table:20} {count}')
+            print(f'{table:14} {count}')
     print(f'Seeded {DB_PATH}')

@@ -1,5 +1,6 @@
 """Checkpoint 3 API: live model intent/entity extraction + deterministic verified workflows.
-Only synthetic student data and simulated university actions are supported.
+University facts are quoted from real UIUC sources; student records are synthetic
+and university actions are simulated.
 """
 from __future__ import annotations
 
@@ -38,7 +39,7 @@ log = logging.getLogger('interfacedna')
 
 class Start(BaseModel):
     message: str = Field(min_length=3, max_length=1000)
-    persona: str = Field(pattern=r'^(alex|maya|jordan)$')
+    student_id: str = Field(pattern=r'^S\d{5}$')
 
 
 class Confirm(BaseModel):
@@ -165,6 +166,26 @@ def health():
     }
 
 
+@app.get('/api/students')
+def students():
+    return db.list_students()
+
+
+@app.get('/api/students/{student_id}')
+def student(student_id: str):
+    s = db.get_student(student_id)
+    if not s:
+        raise HTTPException(404, 'Student not found')
+    current = db.get_current(student_id)
+    return {
+        **s,
+        'current_term': db.CURRENT_TERM,
+        'current_courses': current,
+        'current_credits': sum(c['credits'] for c in current),
+        'holds': db.get_active_holds(student_id),
+    }
+
+
 @app.post('/api/start')
 def start(body: Start):
     tic = time.perf_counter()
@@ -180,10 +201,12 @@ def start(body: Start):
             ),
         ) from exc
 
-    result = rules.evaluate(intent, body.persona, entities)
+    if not db.get_student(body.student_id):
+        raise HTTPException(404, 'Student not found')
+    result = rules.evaluate(intent, body.student_id, entities)
     sid = str(uuid.uuid4())
     state = 'review' if result['status'] == 'ready' else 'blocked'
-    db.create_session(sid, body.persona, intent, entities, state)
+    db.create_session(sid, body.student_id, intent, entities, state)
     log.info(
         'inference intent=%s entities=%s model=%s input_tokens=%s '
         'output_tokens=%s latency_ms=%.0f',
@@ -235,7 +258,7 @@ def confirm(body: Confirm):
     if current['status'] != 'ready':
         db.update_session(body.session_id, 'blocked', sess['fault'])
         raise HTTPException(
-            409, f'Source validation failed: {current["reason"]}')
+            409, f'Source validation failed: {current.get("reason", "not confirmable")}')
     # Synthetic backend action only; no university connectivity or enrollment changes.
     receipt = str(uuid.uuid4())
     if not db.complete_session(

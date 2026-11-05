@@ -1,0 +1,4346 @@
+[
+ {
+  "code": "AAS 100",
+  "title": "Intro Asian American Studies",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 136
+  }
+ },
+ {
+  "code": "ACCY 201",
+  "title": "Accounting and Accountancy I",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "AFRO 100",
+  "title": "Intro to African American St",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 26
+  }
+ },
+ {
+  "code": "ANTH 101",
+  "title": "Introduction to Anthropology",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 326
+  }
+ },
+ {
+  "code": "BADM 310",
+  "title": "Mgmt and Organizational Beh",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CHEM 102",
+  "title": "General Chemistry I",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 22
+  }
+ },
+ {
+  "code": "CHEM 103",
+  "title": "General Chemistry Lab I",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 22
+  }
+ },
+ {
+  "code": "CMN 101",
+  "title": "Public Speaking",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 100",
+  "title": "Computer Science Orientation",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 101",
+  "title": "Intro Computing: Engrg & Sci",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "One of MATH 220 or MATH 221 or MATH 231 or MATH 241.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 102",
+  "title": "Little Bits to Big Ideas",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 105",
+  "title": "Intro Computing: Non-Tech",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "MATH 112.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 107",
+  "title": "Data Science Discovery",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 124",
+  "title": "Introduction to Computer Science I",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "Three years of high school mathematics or MATH 112.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 125",
+  "title": "Introduction to Computer Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Three years of high school mathematics or MATH 112.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 126",
+  "title": "Software Design Studio",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 125.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 128",
+  "title": "Introduction to Computer Science II",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 124 or CS 125.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 173",
+  "title": "Discrete Structures",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "One of CS 124, CS 125, ECE 220; one of MATH 220, MATH 221.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 196",
+  "title": "First-Year Student Honors",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": "Concurrent registration in another 100-level computer science course (see Schedule).",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 199",
+  "title": "Undergraduate Open Seminar in Computer Science",
+  "credits_text": "0 to 5",
+  "credits_min": 0,
+  "credits_max": 5,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 210",
+  "title": "Ethical & Professional Issues",
+  "credits_text": "2",
+  "credits_min": 2,
+  "credits_max": 2,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 211",
+  "title": "Ethical and Professional Conduct",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "CS 222",
+  "title": "Software Design Lab",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": "CS 128; credit or concurrent registration in CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 225",
+  "title": "Data Structures",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 126 or CS 128 or ECE 220; One of CS 173, CS 413, MATH 213, MATH 314, MATH 347, MATH 412, or MATH 413.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 233",
+  "title": "Computer Architecture",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 125 or CS 128; CS 173 or MATH 213; credit or concurrent enrollment in CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 242",
+  "title": "Programming Studio",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 241.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 265",
+  "title": "Innovation Illinois: From Accessible Design to Supercomputing Cultures",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 266",
+  "title": "Community Innovation",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 277",
+  "title": "Algorithms and Data Structures for Data Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "STAT 207; one of MATH 220, MATH 221, MATH 234.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 296",
+  "title": "Honors Course",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": "Concurrent registration in another 200-level computer science course (see Schedule).",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 307",
+  "title": "Modeling and Learning in Data Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "STAT 207; one of MATH 225, MATH 227, MATH 257, MATH 415, MATH 416, ASRM 406.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 340",
+  "title": "Introduction to Computer Systems",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 128 and CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 341",
+  "title": "System Programming",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 225 and CS 233.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 357",
+  "title": "Numerical Methods I",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "One of CS 101, CS 105, CS 124, CS 125 or ECE 220; MATH 241; one of MATH 225, MATH 227, MATH 257, MATH 415, MATH 416, ASRM 406 or BIOE 210.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "CS 361",
+  "title": "Probability & Statistics for Computer Science",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "MATH 220 or MATH 221.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 374",
+  "title": "Introduction to Algorithms & Models of Computation",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 173, MATH 213; CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 397",
+  "title": "Individual Study",
+  "credits_text": "1 to 3",
+  "credits_min": 1,
+  "credits_max": 3,
+  "prerequisite": "Consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 398",
+  "title": "Special Topics",
+  "credits_text": "1 to 4",
+  "credits_min": 1,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 400",
+  "title": "Accelerated Fundamentals of Computing I",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "Current enrollment in the Illinois Computing Accelerator for Non- specialists (iCAN) program or consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 401",
+  "title": "Accelerated Fundamentals of Algorithms I",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "Current enrollment in the Illinois Computing Accelerator for Non-specialists (iCAN) program or consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 402",
+  "title": "Accelerated Fundamentals of Computing II",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 400 or consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 403",
+  "title": "Accelerated Fundamentals of Algorithms II",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 401 or consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 407",
+  "title": "Cryptography",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 409",
+  "title": "The Art of Web Programming",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 410",
+  "title": "Text Information Systems",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 411",
+  "title": "Database Systems",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "CS 412",
+  "title": "Introduction to Data Mining",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 413",
+  "title": "Intro to Combinatorics",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 414",
+  "title": "Multimedia Systems",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 240, CS 241, CS 340, CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 415",
+  "title": "Game Development",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 416",
+  "title": "Data Visualization",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 417",
+  "title": "Introduction to Extended Reality",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 128; one of MATH 257, MATH 225, MATH 227, MATH 415, MATH 416, ASRM 406 or BIOE 210.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 418",
+  "title": "Interactive Computer Graphics",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; One of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406, or BIOE 210; MATH 241.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 419",
+  "title": "Production Computer Graphics",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 418 or CSE 427.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 420",
+  "title": "Parallel Progrmg: Sci & Engrg",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 421",
+  "title": "Programming Languages & Compilers",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 233, CS 240, CS 340 or ECE 391; CS 374 or ECE 374; one of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406, or BIOE 210.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 422",
+  "title": "Programming Language Design",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 421.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 423",
+  "title": "Operating Systems Design",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 241, CS 341, or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 424",
+  "title": "Real-Time Systems",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 241, CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 425",
+  "title": "Distributed Systems",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "Credit or concurrent enrollment in one of CS 240, CS 241, CS 340, CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "CS 426",
+  "title": "Compiler Construction",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "Credit or concurrent enrollment in CS 421.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 427",
+  "title": "Software Engineering I",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 222, CS 240, CS 241, CS 340, CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 428",
+  "title": "Software Engineering II",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 427 or CSE 426.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 429",
+  "title": "Software Engineering II, ACP",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 427 or CSE 426.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 431",
+  "title": "Embedded Systems",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 241, CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 433",
+  "title": "Computer System Organization",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 233.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 434",
+  "title": "Real World Algorithms for IoT and Data Science",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 435",
+  "title": "Cloud Networking",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 240, CS 241, CS 340, CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 436",
+  "title": "Computer Networking Laboratory",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 240, CS 241, CS 340, CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 437",
+  "title": "Topics in Internet of Things",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 241 or CS 341.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 438",
+  "title": "Computer Networks",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 241, CS 341 or ECE 391; strongly recommend one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 439",
+  "title": "Wireless Networks",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "CS 440",
+  "title": "Arti\ufb01cial Intelligence",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463, STAT 400 or BIOE 310.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "CS 441",
+  "title": "Applied Machine Learning",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 225 or CS 277, and one of CS 361, STAT 361, ECE 313, BIOE 310, MATH 362, MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "CS 442",
+  "title": "Trustworthy Machine Learning",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; one of CS 440, ECE 448, CS 441, CS 446 or ECE 449; one of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406 or BIOE 210.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "CS 443",
+  "title": "Reinforcement Learning",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; MATH 241; one of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406 or BIOE 210; one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "CS 444",
+  "title": "Deep Learning for Computer Vision",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "MATH 241; one of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406, or BIOE 210; CS 225; one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "CS 445",
+  "title": "Computational Photography",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225, MATH 225, and MATH 231.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "CS 446",
+  "title": "Machine Learning",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; One of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406 or BIOE 210; one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463, STAT 400 or BIOE 310.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "CS 447",
+  "title": "Natural Language Processing",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 173 or MATH 213; CS 225; CS 374 or ECE 374; one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463, STAT 400 or BIOE 310; one of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406 or BIOE 210.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 448",
+  "title": "Audio Computing Laboratory",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 240, CS 241, CS 340, CS 341, or ECE 391; one of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406, or BIOE 210.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 450",
+  "title": "Numerical Analysis",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One of CS 101, CS 124 or CS 125; one of CS 357, MATH 257, MATH 357, MATH 415, or MATH 416; MATH 285.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 452",
+  "title": "Topics in Robotics",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "(CS 128 or ECE 220) and CS 225 and (CS 241 or CS 341 or ECE 391).",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 460",
+  "title": "Security Laboratory",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 461 or ECE 422 or a combination of CS 463 and one of CS 340, CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 461",
+  "title": "Computer Security I",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 241, CS 341 or ECE 391, or a combination of CS 233 and CS 340.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 462",
+  "title": "Issues of Law and Policy in Computer Science",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 340 or CS 341 or ECE 391.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 463",
+  "title": "Computer Security II",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225 and one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 464",
+  "title": "Topics in Societal and Ethical Impacts of Computer Technology credit: 3 Hours. (https://courses.illinois.edu/schedule/terms/CS/464/) Topics selected from key current areas of impact of computer technology on aspects of society and ethics such as: freedom versus the rule of law in cyberspace; social discourse; privacy; livelihoods and automation; fairness; security; political change; business models; technology divide. 3 undergraduate hours. No graduate credit. May be repeated if topics vary. Credit is not given towards a degree from multiple offerings of this course, if those offerings have signi\ufb01cant overlap, as determined by the CS department. Prerequisite: CS 225. One of CS 210 or CS 211 or ECE 316 or PHIL 316. One of CS 361 or STAT 400 or STAT 200. Restricted to students with senior standing. CS 465 User Interface Design",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 466",
+  "title": "Introduction to Bioinformatics",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 467",
+  "title": "Social Visualization",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 468",
+  "title": "Tech and Advertising Campaigns",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 469",
+  "title": "Computational Advertising Infrastructure",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 173; CS 225; one of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406 or BIOE 210; one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 470",
+  "title": "Social and Information Networks",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; CS 173; one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463 or STAT 400; one of MATH 225, MATH 257, MATH 415, MATH 416, ASRM 406, or BIOE 210.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 473",
+  "title": "Algorithms",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 374 or ECE 374, and one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 474",
+  "title": "Logic in Computer Science",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 173; CS 225; one of CS 374 or ECE 374.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 475",
+  "title": "Formal Models of Computation",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 374 or ECE 374.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 476",
+  "title": "Program Veri\ufb01cation",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; one of CS 374, ECE 374 or MATH 414.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 477",
+  "title": "Formal Software Development Methods",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; one of CS 374, ECE 374 or MATH 414.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 478",
+  "title": "Quantum Algorithms and Complexity",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 225; one of MATH 257, MATH 415 or MATH 416; one of CS 361, STAT 361, ECE 313, MATH 362, MATH 461, MATH 463, STAT 400, PHYS 214 or PHYS 486.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "CS 481",
+  "title": "Advanced Topics in Stochastic Processes & Applications credit: 3 or 4 Hours. (https://courses.illinois.edu/schedule/terms/ CS/481/) Same as IE 410. See IE 410. CS 482 Simulation",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 483",
+  "title": "Applied Parallel Programming",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 484",
+  "title": "Parallel Programming",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "CS 241 or CS 341.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 491",
+  "title": "Seminar",
+  "credits_text": "0 to 4",
+  "credits_min": 0,
+  "credits_max": 4,
+  "prerequisite": "As speci\ufb01ed for each topic offering, see Class Schedule or departmental course description.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 492",
+  "title": "Senior Project I",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "For Computer Science majors with senior standing.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 493",
+  "title": "Senior Project II, ACP",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 492.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 494",
+  "title": "Senior Project II",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 492.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 497",
+  "title": "CS Team Project",
+  "credits_text": "1 to 3",
+  "credits_min": 1,
+  "credits_max": 3,
+  "prerequisite": "For majors only; junior or senior standing required.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 498",
+  "title": "Special Topics",
+  "credits_text": "1 to 4",
+  "credits_min": 1,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 499",
+  "title": "Senior Thesis",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "Consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 500",
+  "title": "Current Topics in Computing Education Research",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 507",
+  "title": "Topics in Cryptography",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Offerings in separate semesters may specify additional prerequisites each term, depending on the speci\ufb01c topic offered.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 508",
+  "title": "Manycore Parallel Algorithms",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 510",
+  "title": "Advanced Information Retrieval",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 410, CS 412, CS 446, ECE 449 or LING 406.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 511",
+  "title": "Advanced Data Management",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 411.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 512",
+  "title": "Data Mining Principles",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 412.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 513",
+  "title": "Theory & Practice of Data Cleaning",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 514",
+  "title": "Advanced Topics in Network Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 412; one of CS 446 or ECE 449.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 519",
+  "title": "Scienti\ufb01c Visualization",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 418 or CSE 427.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 521",
+  "title": "Advanced Topics in Programming Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 374 or ECE 374; CS 421.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 522",
+  "title": "Programming Language Semantics",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 422 and CS 426.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 523",
+  "title": "Advanced Operating Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 423 or CSE 423; one of CS 425 or ECE 428; and one of CS 433 or CSE 422.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 524",
+  "title": "Concurrent Progrmg Languages",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 422; one of CS 475, MATH 475 or CS 476.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 525",
+  "title": "Advanced Distributed Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 423, CSE 423, CS 425, ECE 428, CS 438 or ECE 438.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 526",
+  "title": "Advanced Compiler Construction",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 426.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 527",
+  "title": "Topics in Software Engineering",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 428, CSE 429 or CS 429.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "CS 533",
+  "title": "Parallel Computer Architecture",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 433 or CSE 422.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 534",
+  "title": "Advanced Topics in Computer Architecture",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 433 or CSE 422.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 536",
+  "title": "Fault-Tolerant Dig Syst Design",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 537",
+  "title": "Advanced Topics in Internet of Things (IoT)",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 425 or ECE 428; one of CS 438 or ECE 438.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 538",
+  "title": "Advanced Computer Networks",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 438 or ECE 438.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 539",
+  "title": "Distributed Algorithms",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 540",
+  "title": "Deep Learning Theory",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Basic linear algebra, probability, proof-writing, and statistics required.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 541",
+  "title": "Computer Systems Analysis",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 542",
+  "title": "Statistical Reinforcement Learning",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Calculus, linear algebra, probability and statistics, and basic concepts of machine learning.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 543",
+  "title": "Computer Vision",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 544",
+  "title": "Optimiz in Computer Vision",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 450, CSE 401, ECE 491, or MATH 450; one of CS 473, CSE 414 or MATH 473.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 545",
+  "title": "Machine Learning for Signal Processing",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "MATH 415; one of CS 361, STAT 361, MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 546",
+  "title": "Advanced Topics in Natural Language Processing",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 447 and one of CS 446 or ECE 449, or equivalent background.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "CS 547",
+  "title": "Deep Learning",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 549",
+  "title": "Seminar in Cognitive Science",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 554",
+  "title": "Parallel Numerical Algorithms",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 450, CSE 401, ECE 491, MATH 450, CS 457, CS 555, CSE 510 or MATH 552.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 555",
+  "title": "Numerical Methods for PDEs",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 450, CSE 401, ECE 491, MATH 450 or CS 457.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 556",
+  "title": "Iterative & Multigrid Methods",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 558",
+  "title": "Topics in Numerical Analysis",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "As speci\ufb01ed for each topic offering, see Schedule or departmental course description.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 562",
+  "title": "Advanced Topics in Security, Privacy, and Machine Learning credit: 4 Hours. (https://courses.illinois.edu/schedule/terms/CS/562/) Advanced topics in security and privacy problems in machine learning systems, selected from areas of current research such as: adversarial machine learning, differential privacy, game theory enabled defenses, robust learning methods, machine learning based cybercrime analysis, network intrusion detection, and malware analysis, and machine learning interpretation techniques. May be repeated if topics vary. Credit is not given towards a degree from multiple offerings of this course if those offerings have signi\ufb01cant overlap, as determined by the CS department. Prerequisite: One of CS 446 or ECE 449 and one of CS 463 or ECE 424, or equivalent courses, by consent of instructor. Additional prerequisites or corequisites may be speci\ufb01ed each term. See section information. CS 563 Advanced Computer Security",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 461, CS 463, ECE 422 or ECE 424.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 565",
+  "title": "Human-Computer Interaction",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 465.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 567",
+  "title": "Social Signals and Social Media",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 465 or equivalent or permission of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 568",
+  "title": "User-Centered Machine Learning",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 465 or equivalent course work.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 571",
+  "title": "Combinatorial Mathematics",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 572",
+  "title": "Extremal Graph Theory",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 574",
+  "title": "Randomized Algorithms",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 473, CSE 414, or MATH 473; one of MATH 461, MATH 463 or STAT 400.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 575",
+  "title": "Methods of Combinatorics",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 576",
+  "title": "Topics in Automated Deduction",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": "As speci\ufb01ed for each topic offering, see Schedule or departmental course description.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 579",
+  "title": "Computational Complexity",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 473, CSE 414, MATH 473, CS 475 or MATH 475.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 580",
+  "title": "Topics in Algorithmic Game Theory",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 473.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 581",
+  "title": "Algorithmic Genomic Biology",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 374 or ECE 374 and one of CS 361 or STAT 361, or consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 582",
+  "title": "Machine Learning for Bioinformatics",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 446 or ECE 449; Credit or concurrent enrollment in CS 466; or consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 583",
+  "title": "Approximation Algorithms",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 573, CSE 515 or consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 584",
+  "title": "Embedded System Veri\ufb01cation",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 585",
+  "title": "Hardware Veri\ufb01cation",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 586",
+  "title": "Combinatorial Optimization",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 588",
+  "title": "Autonomous Vehicle System Engineering",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "CS 374, ECE 374, ECE 484, or equivalent.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 591",
+  "title": "Advanced Seminar",
+  "credits_text": "0 to 4",
+  "credits_min": 0,
+  "credits_max": 4,
+  "prerequisite": "As speci\ufb01ed for each topic offering, see Class Schedule or departmental course description.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 597",
+  "title": "Individual Study",
+  "credits_text": "2 to 16",
+  "credits_min": 2,
+  "credits_max": 16,
+  "prerequisite": "Consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "CS 598",
+  "title": "Special Topics",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "CS 599",
+  "title": "Thesis Research",
+  "credits_text": "0 to 16",
+  "credits_min": 0,
+  "credits_max": 16,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "ECON 102",
+  "title": "Microeconomic Principles",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "ECON 103",
+  "title": "Macroeconomic Principles",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "ENG 100",
+  "title": "Grainger Engineering Orientation Seminar",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 165
+  }
+ },
+ {
+  "code": "GEOL 107",
+  "title": "Physical Geology",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 188
+  }
+ },
+ {
+  "code": "GLBL 100",
+  "title": "Intro to Global Studies",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 447
+  }
+ },
+ {
+  "code": "IB 150",
+  "title": "Organismal & Evolutionary Biol",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 46
+  }
+ },
+ {
+  "code": "IS 100",
+  "title": "Exploring the iSchool with a Human-Centered Lens",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": "Restricted to Majors Only; First Semester Freshman, Intercollegiate and Off-Campus Transfer Students Only.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 101",
+  "title": "Introduction to Information Sciences",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 107",
+  "title": "Data Science Discovery",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 142",
+  "title": "Social History of Games and Gaming",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 145",
+  "title": "Mapping Inequalities",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "This course is intended for \ufb01rst and second year students.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 189",
+  "title": "Independent Study",
+  "credits_text": "0 to 3",
+  "credits_min": 0,
+  "credits_max": 3,
+  "prerequisite": "Consent of instructor.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 199",
+  "title": "Undergraduate Open Seminar",
+  "credits_text": "1 to 5",
+  "credits_min": 1,
+  "credits_max": 5,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 200",
+  "title": "Professional Skills in Information Science",
+  "credits_text": "1 or 2",
+  "credits_min": 1,
+  "credits_max": 2,
+  "prerequisite": "For Information Science Majors Only.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 202",
+  "title": "Social Aspects Info Tech",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 203",
+  "title": "Analytical Foundations for Information Problems",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "MATH 112 or Required ALEKS Score.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 204",
+  "title": "Research Design for Information Sciences",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 205",
+  "title": "Programming for Information Problems",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 206",
+  "title": "Introduction to Database Concepts & Applications",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "Some basic programming experience recommended.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 1
+  }
+ },
+ {
+  "code": "IS 226",
+  "title": "Introduction to HCI",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 229",
+  "title": "Web Design Fundamentals",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 234",
+  "title": "Introduction to Risk and Cybersecurity",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 236",
+  "title": "User Research & Evaluation",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "IS 204, or IS 226, or equivalent course.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 249",
+  "title": "BSIS Practicum",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "IS 101 or IS 202.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 265",
+  "title": "Innovation Illinois: From Accessible Design to Supercomputing Cultures",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 266",
+  "title": "Community Innovation",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 269",
+  "title": "BSIS Internship",
+  "credits_text": "0",
+  "credits_min": 0,
+  "credits_max": 0,
+  "prerequisite": "IS 101 or IS 202.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 299",
+  "title": "Information Science Study Abroad",
+  "credits_text": "0 to 18",
+  "credits_min": 0,
+  "credits_max": 18,
+  "prerequisite": "One academic year (or one semester in the case of transfer students) of full-time residence at UIUC, good academic standing, and prior approval of the School of Information Sciences.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 304",
+  "title": "Advanced Research Design",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "IS 204, or IS 236, or similar research course.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 305",
+  "title": "Programming for Information Problems II",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "IS 205, or CS 101, or CS 105, or CS 125, or ECE 120, or equivalent.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 2
+  }
+ },
+ {
+  "code": "IS 308",
+  "title": "Race, Gender, and Information Technology",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "IS 202 Highly recommended.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 309",
+  "title": "Computers and Culture",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "IS 202 Highly recommended.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 310",
+  "title": "Computing in the Humanities",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "Sophomore standing.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 311",
+  "title": "History and Foundations of the Information Society",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "IS 202 Highly recommended.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 312",
+  "title": "Reading and Writing Data",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 316",
+  "title": "The Design of Usable Information Interfaces",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "Sophomore standing.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 324",
+  "title": "Social Network Analysis",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 327",
+  "title": "Concepts of Machine Learning",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "Statistical tools that are fundamental for \ufb01nancial modeling, analyzing \ufb01nancial data and further studies in \ufb01nancial engineering.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 334",
+  "title": "Usable Privacy and Security",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 3
+  }
+ },
+ {
+  "code": "IS 340",
+  "title": "Project Management",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 357",
+  "title": "Introduction to Data Storytelling",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 364",
+  "title": "Privacy and Information Technology",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 368",
+  "title": "Youth Community Engagement",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 370",
+  "title": "Concepts of Information Behavior Theory",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "IS 204, or equivalent course.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 378",
+  "title": "Information Technology Services for Youth",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 380",
+  "title": "Consulting for Information Professionals",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 381",
+  "title": "Introduction to Literacies for Youth",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 389",
+  "title": "Independent Study",
+  "credits_text": "0 to 3",
+  "credits_min": 0,
+  "credits_max": 3,
+  "prerequisite": "Consent of instructor.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 390",
+  "title": "Special Topics in Information Studies",
+  "credits_text": "1 to 3",
+  "credits_min": 1,
+  "credits_max": 3,
+  "prerequisite": "Sophomore standing.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 400",
+  "title": "Colloquium",
+  "credits_text": "0 or 1",
+  "credits_min": 0,
+  "credits_max": 1,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 401",
+  "title": "Introduction to Network Information Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 4
+  }
+ },
+ {
+  "code": "IS 403",
+  "title": "Children's Materials",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": "For undergraduates, junior or senior standing and consent of instructor.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 406",
+  "title": "Cognition in the Wild",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 407",
+  "title": "Introduction to Data Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 409",
+  "title": "Web Technologies & Techniques",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 410",
+  "title": "Storytelling",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": "For undergraduates, junior or senior standing and consent of instructor.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 411",
+  "title": "Information Systems Analysis",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 413",
+  "title": "Teen Materials",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": "For undergraduates, junior or senior standing and consent of instructor.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 416",
+  "title": "Adaptive Minds and Computers",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "IS 406.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 417",
+  "title": "Data Science in the Humanities",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "One semester of experience programming, for example, STAT 107 or IS 430 - or any analogous course.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 418",
+  "title": "Community Engagement",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 5
+  }
+ },
+ {
+  "code": "IS 419",
+  "title": "Entrepreneurial Information Technology Design",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "Undergraduate students: Priority is given to students pursuing a transfer into the BS/IS degree (http:// go.ischool.illinois.edu/BSIS).",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "IS 420",
+  "title": "Community Informatics",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "IS 423",
+  "title": "Early Literacy",
+  "credits_text": "2",
+  "credits_min": 2,
+  "credits_max": 2,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "IS 424",
+  "title": "Social Computing",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "IS 426",
+  "title": "Museum Informatics",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Junior or senior standing and consent of instructor for undergraduates; consent of instructor for non-iSchool graduate students for on-campus sections.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "IS 427",
+  "title": "Mathematical Foundations for Data Analytics",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "Recommended IS 203; or IS 205; or IS 206; or equivalent course.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "IS 429",
+  "title": "Web Content Strategy and Management",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Laptop Required.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 6
+  }
+ },
+ {
+  "code": "IS 430",
+  "title": "Foundations of Information Processing",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 436",
+  "title": "Playful Design Methods",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 439",
+  "title": "Web Development Using Application Framework",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "Experience in Python programming (IS 430 or equivalent).",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 440",
+  "title": "Community Informatics Studio",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 441",
+  "title": "Strategic Communication",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 444",
+  "title": "Legal Aspects of Information Systems",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 445",
+  "title": "Data Visualization",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 446",
+  "title": "Systems Analysis and Design",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 449",
+  "title": "Web Application Development",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "IS 205, IS 206, and IS 229.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 451",
+  "title": "Bibliography of Africa",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "IS 453",
+  "title": "Information Books and Resources for Youth",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 455",
+  "title": "Database Design and Prototyping",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Junior Standing required.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 456",
+  "title": "Information Storage and Retrieval",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 457",
+  "title": "Data Storytelling",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 459",
+  "title": "Mobile Applications",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 461",
+  "title": "Russian, East European, and Eurasian Bibliography & Research Methods",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 464",
+  "title": "Information Assurance",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 466",
+  "title": "Accessible and Inclusive Technologies",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 467",
+  "title": "Ethics and Policy for Data Science",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 471",
+  "title": "Instructional Strategies and Techniques for Information Professionals",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 477",
+  "title": "Data Management, Curation & Reproducibility",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": "IS 205 or STAT 207 or equivalent programming experience.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 8
+  }
+ },
+ {
+  "code": "IS 490",
+  "title": "Topics in Info Foundations",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": "For undergraduates, junior standing and IS 202, or consent of instructor.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 491",
+  "title": "Topics in Information Services",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 492",
+  "title": "Topics in Information Organizations & Social Contexts",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 493",
+  "title": "Topics in Cultural Heritage, Collection Management & Preservation",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 494",
+  "title": "Topics in Management, Ethics & Policy",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 495",
+  "title": "Topics in Organization & Representation",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 496",
+  "title": "Topics in Human-Centered Design & Systems",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 497",
+  "title": "Topics in Data Analytics & Data Science",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 499",
+  "title": "Topics in Web Design & Development",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 500",
+  "title": "Introduction to the iSchool",
+  "credits_text": "0 to 2",
+  "credits_min": 0,
+  "credits_max": 2,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 501",
+  "title": "Reference and Information Services",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 503",
+  "title": "History of Children's Lit",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 504",
+  "title": "Sociotechnical Information Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 505",
+  "title": "Information Organization and Access",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 506",
+  "title": "Human-Centered Information Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "IS 507",
+  "title": "Data, Statistical Models and Information",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Graduate standing.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 508",
+  "title": "Seminar in Information Foundations",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 509",
+  "title": "History and Foundations of Information Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 510",
+  "title": "Libraries, Information and Society",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Required M.S.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 511",
+  "title": "Scholarly Communications",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 514",
+  "title": "Applied Business Research",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Instructor approval required.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 515",
+  "title": "Information Modeling",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 516",
+  "title": "Scalable Information Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 517",
+  "title": "Methods of Data Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "IS 507 or equivalent (e.g.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 10
+  }
+ },
+ {
+  "code": "IS 518",
+  "title": "Seminar in Information Services",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 519",
+  "title": "Research Design in Information Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 521",
+  "title": "Digital Libraries",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "IS 5IS 505 or consent of instructor; previous or concurrent enrollment in IS 430 (either the 2 credit hours or the 4 credit hours of Foundations Info Processing are acceptable), or proof of competency in programming.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 522",
+  "title": "Library Buildings",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 523",
+  "title": "Preserving Info Resources",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 524",
+  "title": "Data Goverance",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 525",
+  "title": "Data Warehousing and Business Intelligence",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 526",
+  "title": "Building Advanced Interactive Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 527",
+  "title": "Network Analysis",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 528",
+  "title": "Seminar in Information Organizations & Social Contexts",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 529",
+  "title": "Doctoral ProSeminar",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": "PhD Students in Information Sciences.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 530",
+  "title": "Collection Development",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "IS 505 - Information, Organization and Access (formerly IS 501 prior to FA 20), or concurrent enrollment in IS 505 and IS 530.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 11
+  }
+ },
+ {
+  "code": "IS 532",
+  "title": "School Library Management",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 533",
+  "title": "Oral History Methods",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 534",
+  "title": "Information Consulting",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 537",
+  "title": "Theory & Practice of Data Cleaning",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 538",
+  "title": "Seminar in Cultural Heritage, Collection Management, & Preservation",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 540",
+  "title": "Social Justice in the Information Professions",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": "Graduate student.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 541",
+  "title": "Copyright for Information Professions",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 542",
+  "title": "Research and Inquiry for Youth",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 543",
+  "title": "Digital Preservation",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 544",
+  "title": "Administration & Management of Libraries and Information Centers",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 545",
+  "title": "Advanced Data Visualization",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "IS 547",
+  "title": "Foundations of Data Curation",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 548",
+  "title": "Seminar in Management, Ethics, & Policy",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 549",
+  "title": "Practicum",
+  "credits_text": "2",
+  "credits_min": 2,
+  "credits_max": 2,
+  "prerequisite": "Completion of 12 graduate hours of information sciences courses; submission of Practicum forms.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 550",
+  "title": "Theories of Information",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Some familiarity with formal logic would be useful, but is not required.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 551",
+  "title": "Youth Services Librarianship",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 555",
+  "title": "Naming and Power",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 556",
+  "title": "Internet of Things",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 557",
+  "title": "Applied Machine Learning: Team Projects",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Students should have demonstrated ability, and must have taken one of the following courses, IS 577 (formerly IS 590 DT), IS 517 (formerly IS 590 MD), CS 412, CS 446 or a course demonstrably equivalent.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 558",
+  "title": "Seminar in Organization & Representation",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 559",
+  "title": "CAS Project",
+  "credits_text": "0 to 8",
+  "credits_min": 0,
+  "credits_max": 8,
+  "prerequisite": "Admission to Certi\ufb01cate of Advanced Study program in library and information science; submission of \"Request to Enroll in IS 559 - CAS Project\" form.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 560",
+  "title": "Social Science Research in Library and Information Science credit: 4 Hours. (https://courses.illinois.edu/schedule/terms/IS/560/) Introduces students to the fundamentals of doing social science research in LIS. Students will learn how to frame a research problem, choose an appropriate research method, apply it, and write up the research for presentation and publication. Information listed in this catalog is current as of 06/2026 <<PAGE 14>> 14 IS - Information Sciences IS 561 Use and Users of Information",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "IS 505.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 562",
+  "title": "Administration and Use of Archival Materials",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 563",
+  "title": "Advanced Topics in Literature, Media and Materials",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 565",
+  "title": "Cataloging for School Libraries",
+  "credits_text": "2",
+  "credits_min": 2,
+  "credits_max": 2,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 567",
+  "title": "Text Mining",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 568",
+  "title": "Seminar in Human-Centered Design & Systems",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 569",
+  "title": "Internship",
+  "credits_text": "0",
+  "credits_min": 0,
+  "credits_max": 0,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 571",
+  "title": "Advanced Topics in Use and Users of Information",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 573",
+  "title": "Advanced Topics in Collections",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 575",
+  "title": "Metadata in Theory & Practice",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "IS 505 - Information, Organization and Access (formerly IS 501 prior to FA 20) or consent of the instructor.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 577",
+  "title": "Data Mining",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 578",
+  "title": "Seminar in Research Methods",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "IS 579",
+  "title": "Guided Research Experience",
+  "credits_text": "0 or 1",
+  "credits_min": 0,
+  "credits_max": 1,
+  "prerequisite": "Completion of either one semester or 12 credits of information sciences courses.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 580",
+  "title": "Information History",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 581",
+  "title": "Advanced Topics in Youth Services",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 582",
+  "title": "Advanced Topics in Librarianship",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 583",
+  "title": "Advanced Topics in Book History",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 584",
+  "title": "Advanced Topics in Ethics and Privacy",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 585",
+  "title": "Bibliographic Metadata",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "Information Organization and Access; IS 505 for Fall 2020 (previously IS 501).",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 586",
+  "title": "Usability Engineering",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 587",
+  "title": "Seminar in Data Analytics and Data Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 588",
+  "title": "Data Consulting Capstone",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 589",
+  "title": "Independent Study",
+  "credits_text": "2 to 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 590",
+  "title": "Advanced Topics in Information Foundations",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 591",
+  "title": "Advanced Topics in Information Services",
+  "credits_text": "1 to 4",
+  "credits_min": 1,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 592",
+  "title": "Advanced Topics In Information Organizations",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 593",
+  "title": "Advanced Topics in Preservation & Tech Services",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 15
+  }
+ },
+ {
+  "code": "IS 594",
+  "title": "Advanced Topics in Management and Policy",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 16
+  }
+ },
+ {
+  "code": "IS 595",
+  "title": "Advanced Topics in Organization & Representation",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 16
+  }
+ },
+ {
+  "code": "IS 596",
+  "title": "Advanced Topics in Human-Centered Design & Systems",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 16
+  }
+ },
+ {
+  "code": "IS 597",
+  "title": "Advanced Topics in Data Analytics & Data Science",
+  "credits_text": "2 or 4",
+  "credits_min": 2,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 16
+  }
+ },
+ {
+  "code": "IS 599",
+  "title": "Thesis Research",
+  "credits_text": "0 to 16",
+  "credits_min": 0,
+  "credits_max": 16,
+  "prerequisite": "MS students must submit a \"Request to Enroll in IS 599 - Master's Thesis\" form.",
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 16
+  }
+ },
+ {
+  "code": "LING 100",
+  "title": "Intro to Language Science",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 276
+  }
+ },
+ {
+  "code": "LLS 100",
+  "title": "Intro Latina/Latino Studies",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 543
+  }
+ },
+ {
+  "code": "MATH 220",
+  "title": "Calculus",
+  "credits_text": "5",
+  "credits_min": 5,
+  "credits_max": 5,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 120
+  }
+ },
+ {
+  "code": "MATH 221",
+  "title": "Calculus I",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 175
+  }
+ },
+ {
+  "code": "MATH 225",
+  "title": "Introductory Matrix Theory",
+  "credits_text": "2 or 3",
+  "credits_min": 2,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 244
+  }
+ },
+ {
+  "code": "MATH 227",
+  "title": "Linear Algebra for Data Science",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 471
+  }
+ },
+ {
+  "code": "MATH 231",
+  "title": "Calculus II",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 22
+  }
+ },
+ {
+  "code": "MATH 241",
+  "title": "Calculus III",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 22
+  }
+ },
+ {
+  "code": "MATH 257",
+  "title": "Linear Algebra with Computational Applications",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 238
+  }
+ },
+ {
+  "code": "MUS 132",
+  "title": "Popular Music Studies",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 1054
+  }
+ },
+ {
+  "code": "PHIL 103",
+  "title": "Logic and Reasoning QR II",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 1087
+  }
+ },
+ {
+  "code": "PHYS 211",
+  "title": "University Physics: Mechanics",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 22
+  }
+ },
+ {
+  "code": "PHYS 212",
+  "title": "University Physics: Elec & Mag",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 22
+  }
+ },
+ {
+  "code": "PSYC 100",
+  "title": "Intro Psych",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 88
+  }
+ },
+ {
+  "code": "SOC 100",
+  "title": "Introduction to Sociology",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 326
+  }
+ },
+ {
+  "code": "STAT 107",
+  "title": "Data Science Discovery",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 835
+  }
+ },
+ {
+  "code": "STAT 207",
+  "title": "Data Science Exploration",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 14
+  }
+ },
+ {
+  "code": "STAT 400",
+  "title": "Statistics and Probability I",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 711
+  }
+ }
+]

@@ -1,0 +1,381 @@
+{
+  "_about": "Real University of Illinois Urbana-Champaign policy facts used by rules.py. Every entry quotes its source verbatim (as extracted from the PDFs in 'University docs/'). Only the student records are synthetic. Do not add a fact without a quote and a source.",
+  "sources": {
+    "isss": {
+      "title": "Maintaining F-1/J-1 Status",
+      "publisher": "International Student and Scholar Services, Illinois International",
+      "url": "https://isss.illinois.edu/students/f1j1-nonimmstatus/",
+      "document": "Maintaining F-1_J-1 Status _ International Student and Scholar Services _ Illinois International _ Illinois.pdf",
+      "retrieved": "2026-11-04"
+    },
+    "refunds": {
+      "title": "Refunds of Registration Charges",
+      "publisher": "Office of the Registrar",
+      "url": "https://www.registrar.illinois.edu/tuition-fees/refunds/",
+      "document": "Refunds of Registration Charges .pdf",
+      "retrieved": "2026-11-04"
+    },
+    "grad_handbook": {
+      "title": "Graduate College Handbook 2026–2027",
+      "publisher": "Graduate College",
+      "url": null,
+      "document": "Graduate College Handbook 26–27.pdf",
+      "retrieved": "2026-11-04"
+    },
+    "calendar": {
+      "title": "2026-2027 Academic Calendar (Senate-approved, EP.25.105)",
+      "publisher": "University of Illinois Urbana-Champaign Senate",
+      "url": null,
+      "document": "2026-2027 AC.pdf",
+      "retrieved": "2026-11-04"
+    },
+    "catalog": {
+      "title": "Academic Catalog 2026-2027 (current as of 06/2026)",
+      "publisher": "University of Illinois Urbana-Champaign",
+      "url": "http://catalog.illinois.edu/",
+      "document": "UIUC catalog 2026-2027.pdf",
+      "retrieved": "2026-11-04"
+    },
+    "fall_2026_calendar": {
+      "title": "Fall 2026 Academic Calendar",
+      "publisher": "Office of the Registrar",
+      "url": "https://www.registrar.illinois.edu/fall-2026-academic-calendar/",
+      "document": "Fall 2026 Drop deadlines.pdf",
+      "retrieved": "2026-11-05"
+    }
+  },
+  "facts": {
+    "isss_full_time": {
+      "source": "isss",
+      "page": 2,
+      "quote": "Students must register full-time, minimum 12 credit hours for undergraduate students and 8 credit hours for graduate students, every Fall and Spring semester.",
+      "values": {
+        "UG": 12,
+        "GR": 8
+      }
+    },
+    "isss_before_dropping": {
+      "source": "isss",
+      "page": 2,
+      "quote": "Please contact ISSS before the semester begins, or before dropping below full-time. Failure to do so may result in the termination of your immigration status."
+    },
+    "isss_exceptions": {
+      "source": "isss",
+      "page": 2,
+      "quote": "Some automatic exceptions apply for students registered for required ESL classes or thesis credit, and for those holding assistantships. Please check with ISSS regarding your specific situation."
+    },
+    "grad_isss_prior_approval": {
+      "source": "grad_handbook",
+      "page": 13,
+      "quote": "International students registered in on-campus programs require the prior approval of International Student and Scholar Services to drop below full-time enrollment"
+    },
+    "tuition_ranges": {
+      "source": "refunds",
+      "page": 1,
+      "quote": "Tuition Assessment Ranges – Fall & Spring Range I: 12 or more hours Range II: 6-11 hours Range III: 1-5 hours Range IV: Zero credit only",
+      "values": [
+        {
+          "name": "Range I",
+          "min": 12,
+          "max": null
+        },
+        {
+          "name": "Range II",
+          "min": 6,
+          "max": 11
+        },
+        {
+          "name": "Range III",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "name": "Range IV",
+          "min": 0,
+          "max": 0
+        }
+      ]
+    },
+    "tuition_range_refund": {
+      "source": "refunds",
+      "page": 1,
+      "quote": "If you reduce your billing hours to a lower tuition range (e.g., from Range I, which is 12 or more credit hours, to Range II, which is 6 to 11 credit hours), you receive a refund of the full difference between the two ranges, provided the change is made by the drop deadline for the particular Part of Term (POT) in which your courses are scheduled. No refund is available at any time for reducing credit hours WITHIN the same range."
+    },
+    "per_credit_hour_programs": {
+      "source": "refunds",
+      "page": 1,
+      "quote": "Per Credit Hour Programs You can reduce your billing hours provided the change is made by the drop deadline for the particular Part of Term (POT) in which your courses are scheduled."
+    },
+    "single_course_withdrawal": {
+      "source": "refunds",
+      "page": 2,
+      "quote": "If you are only enrolled in 1 course, then dropping that course after it starts requires withdrawal."
+    },
+    "drop_deadlines_by_part_of_term": {
+      "source": "refunds",
+      "page": 1,
+      "quote": "No refund is available for dropping a class after the deadlines listed in the Refund Schedules. Refer to the Class Schedule for what POT each course is scheduled in to assist with identifying deadlines."
+    },
+    "grad_drop_deadlines_vary": {
+      "source": "grad_handbook",
+      "page": 15,
+      "quote": "The deadlines for students to add and drop classes vary depending on the length of the class (e.g., full semester or part of term) and the term. The last time to submit changes to a student's current term registration is 5:00 p.m. on Reading Day."
+    },
+    "registration_change_impacts": {
+      "source": "grad_handbook",
+      "page": 12,
+      "quote": "Students should note that changes to registration-including dropping or adding courses, withdrawal, or cancellation-should be considered carefully as these changes may impact tuition assessment, financial aid, waiver eligibility, and other important aspects of student standing."
+    },
+    "holds_general": {
+      "source": "grad_handbook",
+      "page": 15,
+      "quote": "Holds can be placed on a student's record for several reasons. Most commonly these include departmental deficiencies, immunization requirements, disciplinary reasons, financial encumbrance to the university, lack of academic progress, failure to submit transcripts, or low GPA. Holds may prohibit the student from making changes to their registration, from receiving a transcript, or from graduating. Holds will appear in the Registration section of a student's Self-Service profile."
+    },
+    "calendar_fall_2026": {
+      "source": "calendar",
+      "page": 1,
+      "quote": "2026 FALL SEMESTER Monday August 24 Instruction Begins ... Saturday November 21 (1:00 pm) Fall Break Begins Monday November 30 (7:00 am) Instruction Resumes Wednesday December 9 Instruction Ends Thursday December 10 Reading Day Friday December 11 Final Examinations Begin Thursday December 17 Final Examinations End",
+      "values": {
+        "term": "Fall 2026",
+        "instruction_begins": "2026-08-24",
+        "instruction_ends": "2026-12-09",
+        "reading_day": "2026-12-10",
+        "finals_end": "2026-12-17"
+      }
+    },
+    "calendar_spring_2027": {
+      "source": "calendar",
+      "page": 1,
+      "quote": "2027 SPRING SEMESTER ... Tuesday January 19 Instruction Begins ... Wednesday May 5 Instruction Ends Thursday May 6 Reading Day Friday May 7 Final Examinations Begin Thursday May 13 Final Examinations End Saturday May 15 Commencement",
+      "values": {
+        "term": "Spring 2027",
+        "instruction_begins": "2027-01-19",
+        "instruction_ends": "2027-05-05",
+        "reading_day": "2027-05-06",
+        "commencement": "2027-05-15"
+      }
+    },
+    "f26_parts_of_term": {
+      "source": "fall_2026_calendar",
+      "page": 1,
+      "quote": "All dates are tentative until closer to the beginning of the semester. ... The Class Schedule shows what part of term each course is scheduled in to assist with identifying deadlines. ... 1 = full 16 week semester (approximately 8/24/2026 – 12/9/2026 plus finals) A = first 8 weeks of the semester (approximately 8/24/2026 – 10/16/2026) B = second 8 weeks of the semester (approximately 10/19/2026 – 12/9/2026 plus finals)",
+      "values": {
+        "A_ends_approx": "2026-10-16"
+      }
+    },
+    "f26_aug_28": {
+      "source": "fall_2026_calendar",
+      "page": 2,
+      "quote": "August 28 Deadline for ALL to add a POT A course via Student Self-Service Deadline for ALL to drop POT A course for refund if tuition range changes or billing hours decrease",
+      "values": [
+        {
+          "kind": "refund",
+          "pot": "A",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-08-28"
+        }
+      ]
+    },
+    "f26_sep_4": {
+      "source": "fall_2026_calendar",
+      "page": 2,
+      "quote": "September 4 – “10th day” add/drop deadline Deadline for ALL to drop or reduce POT 1 (full semester) hours and receive refund if tuition range changes or billing hours decrease ... Deadline for Undergraduate & Vet Med students to apply to graduate in December via Student Self-Service. After this date, please contact your Academic Office for assistance.",
+      "values": [
+        {
+          "kind": "refund",
+          "pot": "1",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-09-04"
+        },
+        {
+          "kind": "apply_graduate_december",
+          "levels": [
+            "UG"
+          ],
+          "date": "2026-09-04"
+        }
+      ]
+    },
+    "f26_sep_18": {
+      "source": "fall_2026_calendar",
+      "page": 2,
+      "quote": "September 18 Deadline for ALL to drop POT A (1st 8 week) course via Student Self-Service without grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "A",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-09-18"
+        }
+      ]
+    },
+    "f26_oct_2": {
+      "source": "fall_2026_calendar",
+      "page": 3,
+      "quote": "October 2 Deadline for GRAD to drop a POT A (1st 8 week) course via Graduate Student Portal without a grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "A",
+          "levels": [
+            "GR"
+          ],
+          "date": "2026-10-02"
+        }
+      ]
+    },
+    "f26_oct_16": {
+      "source": "fall_2026_calendar",
+      "page": 3,
+      "quote": "October 16 Deadline for ALL to drop POT 1 (full semester) course via Student Self-Service without grade of W ... Deadline for UG to withdraw from Fall 2026 semester (drop all courses) without grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "1",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-10-16"
+        },
+        {
+          "kind": "withdraw_no_w",
+          "levels": [
+            "UG"
+          ],
+          "date": "2026-10-16"
+        }
+      ]
+    },
+    "f26_oct_23": {
+      "source": "fall_2026_calendar",
+      "page": 3,
+      "quote": "October 23 Deadline for ALL to add POT B (2nd 8 week) course via Student Self-Service Deadline for ALL to drop POT B course for refund if tuition range changes or billing hours decrease",
+      "values": [
+        {
+          "kind": "refund",
+          "pot": "B",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-10-23"
+        }
+      ]
+    },
+    "f26_nov_1": {
+      "source": "fall_2026_calendar",
+      "page": 3,
+      "quote": "November 1 Deadline for Graduate, Law & Medicine students to apply to graduate in December via Student Self-Service.",
+      "values": [
+        {
+          "kind": "apply_graduate_december",
+          "levels": [
+            "GR"
+          ],
+          "date": "2026-11-01"
+        }
+      ]
+    },
+    "f26_nov_2": {
+      "source": "fall_2026_calendar",
+      "page": 3,
+      "quote": "November 2 Priority registration for Spring 2027 begins Graduation Application opens for Spring 2027 in Student Self-Service.",
+      "values": [
+        {
+          "kind": "spring_priority_registration",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-11-02"
+        },
+        {
+          "kind": "spring_graduation_application_opens",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-11-02"
+        }
+      ]
+    },
+    "f26_nov_13": {
+      "source": "fall_2026_calendar",
+      "page": 4,
+      "quote": "November 13 Deadline for ALL to drop POT B course via Student Self-Service without grade of W ... Deadline for GRAD to drop POT 1 (full semester) course via Graduate Student Portal without a grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "B",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-11-13"
+        },
+        {
+          "kind": "no_w",
+          "pot": "1",
+          "levels": [
+            "GR"
+          ],
+          "date": "2026-11-13"
+        }
+      ]
+    },
+    "f26_nov_19": {
+      "source": "fall_2026_calendar",
+      "page": 4,
+      "quote": "November 19 Open registration begins for Spring 2027",
+      "values": [
+        {
+          "kind": "spring_open_registration",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-11-19"
+        }
+      ]
+    },
+    "f26_dec_4": {
+      "source": "fall_2026_calendar",
+      "page": 4,
+      "quote": "December 4 Deadline for GRAD to drop POT B (2nd 8 week) course via Graduate Student Portal without a grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "B",
+          "levels": [
+            "GR"
+          ],
+          "date": "2026-12-04"
+        }
+      ]
+    },
+    "f26_dec_10": {
+      "source": "fall_2026_calendar",
+      "page": 4,
+      "quote": "December 10 Reading day (no classes, no final examinations) Last day for GRAD to add/drop POT 1 or POT B course without petitioning Graduate College",
+      "values": [
+        {
+          "kind": "grad_petition_after",
+          "levels": [
+            "GR"
+          ],
+          "date": "2026-12-10"
+        }
+      ]
+    }
+  }
+}
