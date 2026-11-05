@@ -38,20 +38,176 @@
 - **Confirmation:** Save a **synthetic reminder**; do not claim that any hold was cleared.
 - **Observed (November 5, 2026):** Live classification and both holds through the API. Browser check pending.
 
-## Failure and recovery tests
-| Case | Session prerequisite | Fault selection | Expected result | Evidence status |
-|---|---|---|---|---|
-| F-01 Conflicting policy versions | Analyze Alex first | `policy_conflict` | State `blocked`; message says the conflict is simulated; no university facts are invented | Unit test |
-| F-02 Record unavailable | Analyze Maya first | `missing_record` | State `blocked`; do not infer graduation status | Unit test; browser check pending |
-| F-03 Records service outage | Analyze Jordan first | `service_outage` | State `blocked`; no simulated action performed | Unit test; browser check pending |
-| F-04 Recover to review | Any uncompleted blocked session | Return to `none` | Restore the verified view; confirmation still requires acknowledgment | Unit test (`test_confirm_flow`); browser check pending |
-| F-05 Model failure | Remove API key in *private local copy* or simulate denied credentials | Analyze | HTTP 503; transparent error, no invented output | Unit test |
+## Failure and Recovery Tests
+
+InterfaceDNA includes controlled failure scenarios to evaluate how the application responds when verified student information is missing, policy sources conflict, or supporting services become unavailable. These tests focus on safe state transitions, preventing unsupported AI-generated conclusions, and ensuring that blocked actions cannot generate simulated receipts.
+
+All scenarios use synthetic student records; the university policies shown are real and quoted from UIUC sources, and every failure is simulated. Failures are introduced through the application's **Failure / edge case** selector after initializing a session.
+
+---
+
+### F-01 — Conflicting Course-Drop Policies
+
+- **Persona:** Alex
+- **Input:** `Can I drop CS 411?`
+- **Failure mode:** `policy_conflict`
+- **Expected:** The application blocks the request when the simulated fault reports two conflicting versions of the drop rules, and advises the student to consult the Registrar. No conflicting dates are invented.
+- **Safeguard:** No confirmation action or receipt is permitted while the workflow is blocked.
+- **Verification:** Covered by automated backend testing. The conflict scenario was also observed in earlier Checkpoint 3 testing.
+  
+---
+
+### F-02 — Missing Graduation Audit (Maya)
+
+- **Persona:** Maya
+- **Input:** `What do I still need to graduate?`
+- **Failure mode:** `missing_record`
+
+**Test procedure:**
+1. Select **J2 Graduation** with the failure setting `None`.
+2. Analyze Maya's graduation question using live Groq inference.
+3. Verify that the degree requirements are displayed with individual names, statuses, and supporting details.
+4. Select **Simulated: record unavailable** from the failure dropdown.
+5. Verify that the system enters a blocked state.
+6. Confirm that the acknowledgment and confirmation controls are unavailable.
+7. Verify that no simulated receipt is generated.
+
+**Expected behavior:** The system displays `Simulated fault: the degree audit is unavailable. Do not infer graduation status.` and prevents the workflow from proceeding without verified degree-audit information.
+
+**Automated verification:** `test_maya_missing_audit_recovery` confirms that `/api/fault` returns a blocked state and `/api/confirm` rejects the action with HTTP `409 Conflict`, without producing a receipt.
+
+---
+
+### F-03 — Synthetic Records-Service Outage (Jordan)
+
+- **Persona:** Jordan
+- **Input:** `Why can't I register?`
+- **Failure mode:** `service_outage`
+
+**Test procedure:**
+1. Select **J3 Registration hold** with the failure setting `None`.
+2. Analyze Jordan's registration question.
+3. Verify that the two synthetic holds are displayed.
+4. Select **Simulated: service unavailable** from the failure dropdown.
+5. Verify that the application displays the service-unavailable warning.
+6. Confirm that the workflow becomes blocked and confirmation is unavailable.
+7. Verify that no simulated receipt is generated.
+
+**Expected behavior:** The system displays `Simulated fault: the student records service is unavailable. Retry later; no action executed.` and prevents any simulated advising-review request while the outage condition remains active.
+
+**Automated verification:** `test_confirm_flow` (Jordan) verifies the blocked state and confirms that attempting to call `/api/confirm` returns HTTP `409 Conflict`, without a receipt.
+
+---
+
+### F-04 — Recovery After Clearing an Injected Failure
+
+**Objective:** Verify that the application can restore a previously blocked workflow once the simulated failure is cleared.
+
+**Test procedure:**
+1. Start a valid Maya or Jordan workflow.
+2. Introduce the corresponding failure through the dropdown.
+3. Confirm the workflow enters the blocked state.
+4. Change **Failure / edge case** back to `None` without resetting the session.
+5. Verify that the original synthetic student information returns.
+6. Confirm that explicit acknowledgment is still required before performing a simulated action.
+
+**Expected recovery behavior:**
+
+- **Maya:** The verified graduation requirements reappear with their individual names, statuses, and details.
+- **Jordan:** Both registration holds reappear with the Spring 2027 registration dates.
+- **Workflow state:** The backend transitions from `blocked` to `review`.
+- **Human confirmation:** The application does not automatically execute an action when the failure is cleared.
+
+**Automated verification:** `test_maya_missing_audit_recovery` and `test_confirm_flow` confirm that clearing the fault restores the `review` state, and both verify successful synthetic confirmation after recovery.
+
+---
+
+### F-05 — Backend Confirmation Protection
+
+**Objective:** Ensure that blocked actions cannot bypass frontend restrictions through direct API calls.
+
+**Test procedure:**
+1. Create a valid session using `POST /api/start`.
+2. Inject a missing-record or service-outage condition using `POST /api/fault`.
+3. Confirm that the backend session state is `blocked`.
+4. Attempt to confirm the blocked session through `POST /api/confirm` with `confirmation: true`.
+5. Inspect the HTTP response and verify that no receipt was returned.
+
+**Expected behavior:**
+- HTTP status: `409 Conflict`
+- Error: `Task is not confirmable in current state`
+- No receipt generated
+- No transition to a completed state
+
+**Automated verification:** Both the Maya and Jordan recovery tests validate these confirmation safeguards. A blocked request cannot be completed until the failure condition is cleared and the backend returns to the review state.
+
+---
+
+### F-06 — Live Model Unavailability
+
+- **Scenario:** Groq model inference fails or becomes unavailable.
+- **Expected:** The backend returns HTTP `503 Service Unavailable`, displays an appropriate error message, and does not silently substitute a fabricated model response.
+- **Verification status:** Covered by a mocked unit test (`test_model_failure_creates_no_session`). A live provider outage was not tested.
+
+### Automated Test Results
+
+Automated regression tests were executed using the FastAPI test client and pytest. Model classification was mocked for deterministic backend testing, while the application continued to use the actual session-management, validation, fault-injection, and confirmation logic.
+
+**Command executed:**
+
+```bash
+python -m pytest tests -q
+```
+
+**Result:**
+
+```text
+21 passed
+```
+
+Result as of November 5, 2026, after the switch to real UIUC policies and synthetic students.
+
+---
+
+| Test category | Verification coverage | Result |
+|---|---|---|
+| Real course and policy data | Catalog course data, ISSS minimums, deterministic synthetic students | Passed |
+| Course-drop consequences | Credit change, ISSS full-time block, tuition range and refunds | Passed |
+| Graduation and registration holds | Degree requirements and holds for the featured students | Passed |
+| Failure handling | Conflicting policies, missing records, and service outage | Passed |
+| Live model API path (mocked) | Session initialization, confirmation and recovery | Passed |
+| Deadline validation | Registrar no-W deadlines on several dates; graduate petition cutoff | Passed |
+| Unverifiable drop | A drop whose deadline depends on an unknown part of term cannot be confirmed | Passed |
+| Citations | All 254 students × 3 journeys; every check cites a quoted source | Passed |
+| Maya missing-audit recovery | Block, deny confirmation, restore, and confirm | Passed |
+| Jordan service-outage recovery | Block, deny confirmation, restore, and confirm | Passed |
+
+**Evidence:** `validation/checkpoint3/error_recovery_tests_passed.png` (screenshot from the earlier 10-test run; not yet in the repository)
+
+### Verification Summary
+
+| Scenario | Expected outcome | Automated test status |
+|---|---|---|
+| Conflicting course-drop policies | Block unsafe request | Passed |
+| Maya missing graduation audit | Block request and reject confirmation | Passed |
+| Jordan records-service outage | Block request and reject confirmation | Passed |
+| Maya recovery after selecting `None` | Restore verified graduation review | Passed |
+| Jordan recovery after selecting `None` | Restore two registration-hold records | Passed |
+| Confirmation during blocked state | HTTP 409; no receipt | Passed |
+| Successful confirmation after recovery | Synthetic action permitted | Passed |
+| Groq model-provider failure | HTTP 503; no fabricated response | Passed (mocked) |
+
+### Safety Considerations and Limitations
+
+* The error-recovery tests demonstrate that InterfaceDNA separates AI-based intent interpretation from deterministic validation of synthetic student records against quoted university rules. When critical information is missing or supporting services become unavailable, the backend blocks the workflow instead of allowing unsupported conclusions or actions.
+* The system enforces a confirmation boundary at the backend, meaning blocked actions cannot generate simulated receipts even when confirmation is attempted directly through the API. Once the injected failure is removed, the application restores the verified review state without automatically executing an action.
+* These tests use fictional student records and application-controlled fault injection. They validate the implementation's state transitions and safeguards but do not establish production resilience against actual university-system outages. No real university records are accessed or modified during testing.
 
 ### Correct fault-injection procedure
 **Analyze first, inject the failure second.** The `/api/start` call creates the session. The fault selector then calls `/api/fault` using its `session_id`; without a session there is nothing to mutate. This is correct behavior for an **interactive fault-injection demonstration**, but does not establish the system can withstand real third-party outages in production.
 
 ## Automated verification
-`tests/test_api.py`: 20 tests passed (November 5, 2026). They include every one of the 254 synthetic students run through all three journeys, with each check's citation resolving to a quoted source, and no-W deadline outcomes on several dates. `app/tools/verify_sources.py`: all 49 policy and program quotes found verbatim on their cited pages, and every deadline date found in its quote.
+`tests/test_api.py`: 21 tests passed (November 5, 2026). They include every one of the 254 synthetic students run through all three journeys, with each check's citation resolving to a quoted source, and no-W deadline outcomes on several dates. `app/tools/verify_sources.py`: all 49 policy and program quotes found verbatim on their cited pages, and every deadline date found in its quote.
 
 ## Proposed CP4 benchmark alignment
 Compare the **same Alex/Maya/Jordan tasks** across (A) human-only policy portal, (B) general AI-only chatbot without verified records, (C) InterfaceDNA hybrid. Pre-register participant count and task order. Collect correct next-action rate, unsupported claims, completion time, clicks/steps, and explicit confirmation compliance. The actual participant count and benchmark results are not available yet.

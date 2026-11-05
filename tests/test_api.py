@@ -151,6 +151,18 @@ def test_confirm_flow(monkeypatch):
     assert client.post('/api/confirm',json={'session_id':sid,'confirmation':True}).status_code==409
     assert db.get_action(sid)['action_type']=='hold'
 
+def test_maya_missing_audit_recovery(monkeypatch):
+    monkeypatch.setattr(server,'classify_live',stub('graduation',{}))
+    sid=client.post('/api/start',json={'message':'What do I still need to graduate?','student_id':MAYA}).json()['session_id']
+    d=client.post('/api/fault',json={'session_id':sid,'mode':'missing_record'}).json()
+    assert d['state']=='blocked' and 'degree audit is unavailable' in d['result']['reason']
+    r=client.post('/api/confirm',json={'session_id':sid,'confirmation':True})
+    assert r.status_code==409 and 'receipt' not in r.json()
+    assert db.get_action(sid) is None
+    d=client.post('/api/fault',json={'session_id':sid,'mode':'none'}).json()
+    assert d['state']=='review' and any(c['title']=='IS 101' for c in d['result']['checks'])
+    assert client.post('/api/confirm',json={'session_id':sid,'confirmation':True}).json()['state']=='completed'
+
 def test_grad_drop_confirm(monkeypatch):
     monkeypatch.setattr(server,'classify_live',stub('drop',{'course_code':'CS 440'}))
     d=client.post('/api/start',json={'message':'Can I drop CS 440?','student_id':SAM}).json()
