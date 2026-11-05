@@ -11,7 +11,7 @@ import pathlib
 import re
 import time
 import uuid
-from threading import Lock
+from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
@@ -36,10 +36,6 @@ logging.basicConfig(
 )
 log = logging.getLogger('interfacedna')
 
-def policy_today():
-    """Return the server's current calendar date for policy validation."""
-    return date.today()
-
 
 class Start(BaseModel):
     message: str = Field(min_length=3, max_length=1000)
@@ -58,131 +54,17 @@ class Fault(BaseModel):
         pattern=r'^(none|policy_conflict|missing_record|service_outage)$')
 
 
-def facts(intent, persona, fault='none'):
-    st = DATA['students'][persona]
-    if fault == 'service_outage':
-        return {
-            'status': 'blocked',
-            'reason': 'Synthetic records service unavailable. Retry later; no action executed.',
-            'sources': [],
-        }
-
-    if intent == 'drop':
-        if fault == 'policy_conflict':
-            return {
-                'status': 'blocked',
-                'reason': 'Two synthetic policy sources conflict. Ask the registrar before proceeding.',
-                'sources': [DATA['policies']['courseDropConflict']],
-            }
-        course = next(
-            (
-                c for c in st.get('courses', [])
-                if c['code'] == 'CS 411' and c['status'] == 'Enrolled'
-            ),
-            None,
-        )
-        if not course:
-            return {
-                'status': 'blocked',
-                'reason': 'CS 411 not enrolled for this persona.',
-                'sources': [],
-            }
-        policy = DATA['policies']['courseDrop']
-        remaining = st['currentCredits'] - course['credits']
-        return {
-            'status': 'ready',
-            'summary': (
-                f'Dropping CS 411 changes enrolled credits from '
-                f'{st["currentCredits"]} to {remaining}.'
-            ),
-            'details': {
-                'before_credits': st['currentCredits'],
-                'after_credits': remaining,
-                'full_time_threshold': policy['threshold'],
-                'below_threshold': remaining < policy['threshold'],
-                'policy_deadline': policy['deadline'],
-            },
-            'sources': [{
-                'title': policy['title'],
-                'source': policy['source'],
-                'version': policy['version'],
-                'synthetic': True,
-            }],
-            'action': 'Submit synthetic course-drop request',
-        }
-
-    if intent == 'graduation':
-        if fault == 'missing_record':
-            return {
-                'status': 'blocked',
-                'reason': 'Synthetic degree audit unavailable. Do not infer graduation status.',
-                'sources': [],
-            }
-        grad = st.get('graduation')
-        if not grad:
-            return {
-                'status': 'blocked',
-                'reason': 'No degree audit for this persona.',
-                'sources': [],
-            }
-        policy = DATA['policies']['graduation']
-        return {
-            'status': 'ready',
-            'summary': (
-                f'{grad["completed"]} credits completed; '
-                f'{grad["inProgress"]} in progress; '
-                f'{grad["totalRequired"]} required.'
-            ),
-            'details': {
-                'requirements': grad['requirements'],
-                'remaining_if_in_progress_pass': max(
-                    0,
-                    grad['totalRequired'] -
-                    grad['completed'] - grad['inProgress'],
-                ),
-            },
-            'sources': [{
-                'title': policy['title'],
-                'source': policy['source'],
-                'version': policy['version'],
-                'synthetic': True,
-            }],
-            'action': 'Save synthetic graduation review plan',
-        }
-
-    if intent == 'hold':
-        holds = st.get('holds', [])
-        if not holds:
-            return {
-                'status': 'blocked',
-                'reason': 'No holds found for this synthetic student.',
-                'sources': [],
-            }
-        policy = DATA['policies']['registration']
-        return {
-            'status': 'ready',
-            'summary': (
-                f'{len(holds)} active synthetic registration hold(s). '
-                'Review the responsible offices.'
-            ),
-            'details': {'holds': holds},
-            'sources': [{
-                'title': policy['title'],
-                'source': policy['source'],
-                'version': policy['version'],
-                'synthetic': True,
-            }],
-            'action': 'Submit synthetic advising-review request',
-        }
-
-    return {
-        'status': 'blocked',
-        'reason': (
-            'Please ask about dropping CS 411, graduation readiness, '
-            'or registration holds.'
-        ),
-        'sources': [],
-    }
+def normalize_course(raw, message):
+    """Model entities are untrusted: keep a course code only if it is well-formed
+    and the student actually typed it."""
+    if not isinstance(raw, str):
+        return None
+    m = COURSE.fullmatch(raw.strip())
+    if not m:
+        return None
+    code = f'{m[1].upper()} {m[2]}'
+    typed = {f'{a.upper()} {b}' for a, b in COURSE.findall(message)}
+    return code if code in typed else None
 
 
 def groq_api_key():
