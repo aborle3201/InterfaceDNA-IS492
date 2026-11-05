@@ -9,8 +9,8 @@ import os
 import pathlib
 import time
 import uuid
+from datetime import date
 from threading import Lock
-
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
@@ -30,6 +30,10 @@ logging.basicConfig(
 log = logging.getLogger('interfacedna')
 SESSIONS = {}
 GUARD = Lock()
+
+def policy_today():
+    """Return the server's current calendar date for policy validation."""
+    return date.today()
 
 
 class Start(BaseModel):
@@ -78,6 +82,35 @@ def facts(intent, persona, fault='none'):
                 'sources': [],
             }
         policy = DATA['policies']['courseDrop']
+
+        policy = DATA['policies']['courseDrop']
+
+        # Enforce the synthetic course-drop deadline.
+        deadline = date.fromisoformat(policy['deadline_iso'])
+        today = policy_today()
+
+        if today > deadline:
+            return {
+                'status': 'blocked',
+                'reason': (
+                    f'Course-drop deadline passed on '
+                    f'{policy["deadline"]}. '
+                    'This simulated request cannot be submitted.'
+                ),
+                'details': {
+                    'policy_deadline': policy['deadline'],
+                    'deadline_passed': True,
+                },
+                'sources': [{
+                    'title': policy['title'],
+                    'source': policy['source'],
+                    'version': policy['version'],
+                    'synthetic': True,
+                }],
+            }
+
+        remaining = st['currentCredits'] - course['credits']
+
         remaining = st['currentCredits'] - course['credits']
         return {
             'status': 'ready',

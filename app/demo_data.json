@@ -73,6 +73,7 @@
       "approved": true,
       "urlLabel": "Academic Regulations → Enrollment → Course Drops",
       "deadline": "September 30, 2026",
+      "deadline_iso": "2026-09-30",
       "threshold": 12,
       "notes": [
         "Students must review academic and enrollment consequences before submitting a course-drop request.",

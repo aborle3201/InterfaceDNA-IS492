@@ -16,7 +16,39 @@ function displaySources(sources){return `<h3>Verified synthetic policy sources</
 function details(result){let d=result.details||{};
  if(S.intent==='drop') return `<div class="metrics"><div class="metric"><strong>${esc(d.before_credits)}</strong><small>Credits before</small></div><div class="metric"><strong>${esc(d.after_credits)}</strong><small>Credits after</small></div><div class="metric"><strong>${esc(d.full_time_threshold)}</strong><small>Full-time minimum</small></div></div><div class="notice ${d.below_threshold?'warn':'ok'}">${d.below_threshold?'After dropping, this student would be below the synthetic full-time threshold.':'After dropping, this student would meet the synthetic full-time credit threshold.'}</div><p><strong>Synthetic policy deadline:</strong> ${esc(d.policy_deadline||'Not specified')}</p>`;
  if(S.intent==='hold')return `<h3>Active registration holds</h3>${(d.holds||[]).map((h,i)=>`<div class="item"><div class="small-label">Hold ${i+1}</div><h3>${esc(h.type)}</h3><p>${esc(h.reason)}</p><p><strong>Responsible office:</strong> ${esc(h.office)}</p><p><strong>Status:</strong> ${esc(h.status)}</p><p class="subtle">${h.canRequest?'Review request can be initiated in this synthetic demo.':'Contact the responsible office; this interface cannot clear the hold.'}</p></div>`).join('')}`;
- if(S.intent==='graduation'){let req=d.requirements;let blocks=Array.isArray(req)?req.map((v,i)=>`<div class="item"><strong>Requirement ${i+1}</strong><p>${esc(typeof v==='object'?JSON.stringify(v):v)}</p></div>`).join(''):Object.entries(req||{}).map(([k,v])=>`<div class="item"><strong>${esc(k.replace(/([A-Z])/g,' $1'))}</strong><p>${esc(typeof v==='object'?JSON.stringify(v):v)}</p></div>`).join('');return `<div class="metrics"><div class="metric"><strong>${esc(d.remaining_if_in_progress_pass)}</strong><small>Credits potentially remaining if current courses pass</small></div></div><h3>Degree requirements</h3>${blocks||'<p>No requirement details available.</p>'}`;}
+
+if (S.intent === 'graduation') {
+  const requirements = Array.isArray(d.requirements)
+    ? d.requirements
+    : [];
+
+  const blocks = requirements.map((req, index) => {
+    const name = req.name || `Requirement ${index + 1}`;
+    const status = req.status || 'Unknown';
+    const detail = req.detail || 'No details available';
+
+    return `
+      <div class="item">
+        <div class="small-label">Requirement ${index + 1}</div>
+        <h3>${esc(name)}</h3>
+        <p><strong>Status:</strong> ${esc(status)}</p>
+        <p class="subtle">${esc(detail)}</p>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="metrics">
+      <div class="metric">
+        <strong>${esc(d.remaining_if_in_progress_pass)}</strong>
+        <small>Credits potentially remaining if current courses pass</small>
+      </div>
+    </div>
+    <h3>Degree requirements</h3>
+    ${blocks || '<p>No requirement details available.</p>'}
+  `;
+}
+
  return '<p class="muted-copy">No task detail to display.</p>';
 }
 function renderRail(){let u=S.usage;$('rail').innerHTML=`<section class="live-card"><div class="small-label">Workflow</div><h3>${esc(current().name)}</h3><p class="muted-copy">${esc(current().desc)}</p><div class="small-label">AI and safety</div><p class="subtle">${S.sid?'Session active':'Start a task to create a session.'}</p><p class="subtle">Live Groq intent inference · deterministic synthetic student records · server-side confirmation</p>${u?`<p class="subtle">Model: ${esc(u.model)}<br>Input tokens: ${esc(u.input_tokens)}<br>Output tokens: ${esc(u.output_tokens)}</p>`:''}<p class="subtle"><strong>No real university action is performed.</strong></p></section>`;}
