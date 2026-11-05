@@ -1,5 +1,6 @@
-"""Checkpoint 3 API: live model classification + deterministic verified demo workflows.
-Only synthetic student data and simulated university actions are supported.
+"""Checkpoint 3 API: live model intent/entity extraction + deterministic verified workflows.
+University facts are quoted from real UIUC sources; student records are synthetic
+and university actions are simulated.
 """
 from __future__ import annotations
 
@@ -7,10 +8,11 @@ import json
 import logging
 import os
 import pathlib
+import re
 import time
 import uuid
-from datetime import date
 from threading import Lock
+
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
@@ -19,17 +21,20 @@ from pydantic import BaseModel, Field
 
 BASE = pathlib.Path(__file__).parent
 load_dotenv(BASE / '.env')
-DATA = json.loads((BASE / 'demo_data.json').read_text())
+
+import db  # noqa: E402  (reads INTERFACEDNA_DB from .env)
+import rules  # noqa: E402
+
 SYSTEM = (BASE / 'prompts' / 'system.txt').read_text()
 SETTINGS = json.loads((BASE / 'prompts' / 'settings.json').read_text())
+INTENTS = ('drop', 'graduation', 'hold', 'unknown')
+COURSE = re.compile(r'\b([A-Za-z]{2,4})\s*-?\s*(\d{3})\b')
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s %(message)s',
 )
 log = logging.getLogger('interfacedna')
-SESSIONS = {}
-GUARD = Lock()
 
 def policy_today():
     """Return the server's current calendar date for policy validation."""
@@ -38,7 +43,8 @@ def policy_today():
 
 class Start(BaseModel):
     message: str = Field(min_length=3, max_length=1000)
-    persona: str = Field(pattern=r'^(alex|maya|jordan)$')
+    student_id: str = Field(pattern=r'^S\d{5}$')
+    term: str = Field(default=db.CURRENT_TERM, pattern=r'^(Fall|Spring|Summer|Winter) \d{4}$')
 
 
 class Confirm(BaseModel):
@@ -82,35 +88,6 @@ def facts(intent, persona, fault='none'):
                 'sources': [],
             }
         policy = DATA['policies']['courseDrop']
-
-        policy = DATA['policies']['courseDrop']
-
-        # Enforce the synthetic course-drop deadline.
-        deadline = date.fromisoformat(policy['deadline_iso'])
-        today = policy_today()
-
-        if today > deadline:
-            return {
-                'status': 'blocked',
-                'reason': (
-                    f'Course-drop deadline passed on '
-                    f'{policy["deadline"]}. '
-                    'This simulated request cannot be submitted.'
-                ),
-                'details': {
-                    'policy_deadline': policy['deadline'],
-                    'deadline_passed': True,
-                },
-                'sources': [{
-                    'title': policy['title'],
-                    'source': policy['source'],
-                    'version': policy['version'],
-                    'synthetic': True,
-                }],
-            }
-
-        remaining = st['currentCredits'] - course['credits']
-
         remaining = st['currentCredits'] - course['credits']
         return {
             'status': 'ready',
@@ -217,7 +194,8 @@ def groq_api_key():
 
 
 def classify_live(message):
-    """Classify using a real Groq API call; never silently substitute a mock response."""
+    """Extract intent and entities using a real Groq API call; never silently
+    substitute a mock response."""
     from openai import OpenAI  # Groq provides an OpenAI-compatible API.
 
     client = OpenAI(
@@ -238,10 +216,14 @@ def classify_live(message):
     )
     output = json.loads(resp.choices[0].message.content or '{}')
     intent = output.get('intent', 'unknown')
-    if intent not in ('drop', 'graduation', 'hold', 'unknown'):
+    if intent not in INTENTS:
         raise RuntimeError('Model produced an invalid task classification.')
+    entities = output.get('entities')
+    entities = entities if isinstance(entities, dict) else {}
+    course = normalize_course(entities.get('course_code'), message)
     return (
         intent,
+        {'course_code': course} if intent == 'drop' else {},
         str(output.get('explanation', ''))[:500],
         {
             'model': resp.model,
@@ -251,7 +233,14 @@ def classify_live(message):
     )
 
 
-app = FastAPI(title='InterfaceDNA CP3', version='0.1.0')
+@asynccontextmanager
+async def lifespan(_app):
+    db.ensure()
+    log.info('database=%s rules_date=%s', db.DB_PATH, rules.today())
+    yield
+
+
+app = FastAPI(title='InterfaceDNA CP3', version='0.2.0', lifespan=lifespan)
 
 # Serve the original InterfaceDNA frontend CSS and JavaScript.
 app.mount('/assets', StaticFiles(directory=BASE / 'assets'), name='assets')
@@ -262,6 +251,8 @@ async def telemetry(req: Request, call_next):
     start = time.perf_counter()
     try:
         res = await call_next(req)
+        if req.url.path == '/' or req.url.path.startswith('/assets/'):
+            res.headers['Cache-Control'] = 'no-cache'  # always pick up UI updates
         log.info(
             'path=%s status=%d latency_ms=%.0f',
             req.url.path,
@@ -291,6 +282,54 @@ def health():
         'model_configured': bool(key) and key != 'gsk_your_actual_api_key_here',
         'provider': 'Groq',
         'model': os.getenv('GROQ_MODEL', 'openai/gpt-oss-120b'),
+        'database': db.DB_PATH.name,
+        'rules_date': rules.today().isoformat(),
+    }
+
+
+def known_term(term):
+    if not rules.term_info(term):
+        raise HTTPException(404, f'No calendar for {term}')
+    return term
+
+
+@app.get('/api/terms')
+def terms():
+    return {'current': db.CURRENT_TERM,
+            'terms': [dict(t, key_dates=rules.key_dates('UG', t['term']))
+                      for t in rules.terms()]}
+
+
+@app.get('/api/students')
+def students(term: str = db.CURRENT_TERM):
+    return db.list_students(known_term(term))
+
+
+@app.get('/api/sources')
+def sources():
+    return {
+        'facts': db.list_facts(),
+        'programs': db.list_programs(),
+        'schedules': json.loads((BASE / 'sources' / 'offerings.json').read_text()),
+        'term_dates': rules.key_dates('UG', db.CURRENT_TERM),
+    }
+
+
+@app.get('/api/students/{student_id}')
+def student(student_id: str, term: str = db.CURRENT_TERM):
+    s = db.get_student(student_id)
+    if not s:
+        raise HTTPException(404, 'Student not found')
+    courses = db.get_term_courses(student_id, known_term(term))
+    return {
+        **s,
+        'term': term,
+        'term_info': rules.term_info(term),
+        'term_courses': courses,
+        'term_credits': sum(c['credits'] for c in courses),
+        'holds': db.get_active_holds(student_id),
+        'key_dates': rules.key_dates(s['level'], term),
+        'rules_date': rules.today().isoformat(),
     }
 
 
@@ -298,7 +337,7 @@ def health():
 def start(body: Start):
     tic = time.perf_counter()
     try:
-        intent, explanation, usage = classify_live(body.message)
+        intent, entities, explanation, usage = classify_live(body.message)
     except Exception as exc:
         log.exception('Groq model call failed')
         raise HTTPException(
@@ -309,19 +348,18 @@ def start(body: Start):
             ),
         ) from exc
 
-    result = facts(intent, body.persona)
+    if not db.get_student(body.student_id):
+        raise HTTPException(404, 'Student not found')
+    term = known_term(body.term)
+    result = rules.evaluate(intent, body.student_id, entities, term=term)
     sid = str(uuid.uuid4())
     state = 'review' if result['status'] == 'ready' else 'blocked'
-    with GUARD:
-        SESSIONS[sid] = {
-            'intent': intent,
-            'persona': body.persona,
-            'state': state,
-            'fault': 'none',
-        }
+    db.create_session(sid, body.student_id, intent, term, entities, state)
     log.info(
-        'inference intent=%s model=%s input_tokens=%s output_tokens=%s latency_ms=%.0f',
+        'inference intent=%s entities=%s model=%s input_tokens=%s '
+        'output_tokens=%s latency_ms=%.0f',
         intent,
+        entities,
         usage['model'],
         usage['input_tokens'],
         usage['output_tokens'],
@@ -329,7 +367,9 @@ def start(body: Start):
     )
     return {
         'session_id': sid,
+        'term': term,
         'intent': intent,
+        'entities': entities,
         'interpretation': explanation,
         'model_usage': usage,
         'result': result,
@@ -339,45 +379,49 @@ def start(body: Start):
 
 @app.post('/api/fault')
 def fault(body: Fault):
-    with GUARD:
-        sess = SESSIONS.get(body.session_id)
-        if not sess:
-            raise HTTPException(404, 'Session not found')
-        if sess['state'] == 'completed':
-            raise HTTPException(409, 'Cannot mutate completed session')
-        sess['fault'] = body.mode
-        result = facts(sess['intent'], sess['persona'], body.mode)
-        sess['state'] = 'review' if result['status'] == 'ready' else 'blocked'
-        return {
-            'state': sess['state'],
-            'result': result,
-            'session_id': body.session_id,
-        }
+    sess = db.get_session(body.session_id)
+    if not sess:
+        raise HTTPException(404, 'Session not found')
+    if sess['state'] == 'completed':
+        raise HTTPException(409, 'Cannot mutate completed session')
+    result = rules.evaluate(
+        sess['intent'], sess['student_id'], sess['entities'], body.mode,
+        term=sess['term'])
+    state = 'review' if result['status'] == 'ready' else 'blocked'
+    if not db.update_session(body.session_id, state, body.mode):
+        raise HTTPException(409, 'Cannot mutate completed session')
+    return {'state': state, 'result': result, 'session_id': body.session_id}
 
 
 @app.post('/api/confirm')
 def confirm(body: Confirm):
-    with GUARD:
-        sess = SESSIONS.get(body.session_id)
-        if not sess:
-            raise HTTPException(404, 'Session not found')
-        if not body.confirmation:
-            raise HTTPException(400, 'Explicit confirmation required')
-        if sess['state'] != 'review':
-            raise HTTPException(
-                409, 'Task is not confirmable in current state')
-        current = facts(sess['intent'], sess['persona'], sess['fault'])
-        if current['status'] != 'ready':
-            raise HTTPException(409, 'Source validation failed')
-        # Synthetic backend action only; no university connectivity or enrollment changes.
-        sess['state'] = 'completed'
-        return {
-            'state': 'completed',
-            'receipt': str(uuid.uuid4()),
-            'description': current['action'],
-            'synthetic': True,
-            'message': (
-                'Synthetic backend action recorded. '
-                'No university system was changed.'
-            ),
-        }
+    sess = db.get_session(body.session_id)
+    if not sess:
+        raise HTTPException(404, 'Session not found')
+    if not body.confirmation:
+        raise HTTPException(400, 'Explicit confirmation required')
+    if sess['state'] != 'review':
+        raise HTTPException(409, 'Task is not confirmable in current state')
+    # Recheck every fact at confirmation time (deadline, enrollment, faults).
+    current = rules.evaluate(
+        sess['intent'], sess['student_id'], sess['entities'], sess['fault'],
+        term=sess['term'])
+    if current['status'] != 'ready':
+        db.update_session(body.session_id, 'blocked', sess['fault'])
+        raise HTTPException(
+            409, f'Source validation failed: {current.get("reason", "not confirmable")}')
+    # Synthetic backend action only; no university connectivity or enrollment changes.
+    receipt = str(uuid.uuid4())
+    if not db.complete_session(
+            body.session_id, receipt, sess['intent'],
+            {'description': current['action'], **sess['entities']}):
+        raise HTTPException(409, 'Task is not confirmable in current state')
+    return {
+        'state': 'completed',
+        'receipt': receipt,
+        'description': current['action'],
+        'synthetic': True,
+        'message': (
+            'Request recorded.'
+        ),
+    }

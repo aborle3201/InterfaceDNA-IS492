@@ -1,5 +1,5 @@
 {
   "temperature": 0,
   "response_format": "json_object",
-  "max_output_tokens": 200
+  "max_output_tokens": 1000
 }
