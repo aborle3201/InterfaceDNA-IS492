@@ -89,7 +89,7 @@ def test_ug_no_w_deadlines_by_date():
 def test_grad_drop_within_deadline_is_ready():
     r=rules.evaluate('drop',SAM,{'course_code':'CS 440'})
     assert r['status']=='ready' and levels(r)['Within the deadline to drop without a W']=='ok'
-    assert r['action']=='Submit synthetic course-drop request for CS 440'
+    assert r['action']=='Submit course-drop request for CS 440 (Fall 2026)'
 
 def test_grad_petition_after_dec_10():
     title='Graduate add/drop now requires a petition'
@@ -103,7 +103,7 @@ def test_graduation():
     alex=rules.evaluate('graduation',ALEX,{})
     assert levels(alex)['CS 374']=='info' and levels(alex)['CS 421']=='warn'
     grad=find_student(lambda s,cur:s['level']=='GR')
-    assert 'not supported' in rules.evaluate('graduation',grad['id'],{})['reason']
+    assert 'available online yet' in rules.evaluate('graduation',grad['id'],{})['reason']
 
 def test_holds():
     r=rules.evaluate('hold',JORDAN,{})
@@ -126,6 +126,35 @@ def test_every_student_and_journey_is_cited():
                 assert set(c['cites'])<=keys
             assert all(x['quote'] for x in r['sources'])
 
+def test_terms_and_key_dates():
+    t={x['term']:x for x in rules.terms()}
+    assert list(t)==['Fall 2025','Spring 2026','Fall 2026','Winter 2027','Spring 2027','Summer 2027']
+    assert (t['Fall 2026']['status'],t['Spring 2027']['status'],t['Fall 2025']['status'])==('current','upcoming','past')
+    assert rules.key_dates('GR','Winter 2027')==[] and len(rules.key_dates('UG','Winter 2027'))==6
+    assert any(d['label']=='Last day to drop a full semester (POT 1) course without a W' and d['date']=='2027-03-12' for d in rules.key_dates('UG','Spring 2027'))
+
+def test_spring_registration_drop():
+    spring=[c['code'] for c in db.get_term_courses(ALEX,'Spring 2027')]
+    assert spring and all(c['status']=='Registered' for c in db.get_term_courses(ALEX,'Spring 2027'))
+    assert db.get_term_courses(JORDAN,'Spring 2027')==[]  # holds block registration
+    r=rules.evaluate('drop',ALEX,{'course_code':'CS 441'},term='Spring 2027')
+    assert r['status']=='ready' and levels(r)['Within the deadline to drop without a W']=='ok'
+    assert 'Spring 2027 registration' in r['summary']
+
+def test_past_term_drop_blocked():
+    code=next(c['code'] for c in db.get_term_courses(ALEX,'Fall 2025'))
+    r=rules.evaluate('drop',ALEX,{'course_code':code},term='Fall 2025')
+    assert r['status']=='blocked' and 'has ended' in r['summary']
+
+def test_term_endpoints(monkeypatch):
+    assert [t['term'] for t in client.get('/api/terms').json()['terms']][2]=='Fall 2026'
+    assert client.get(f'/api/students/{ALEX}?term=Spring 2027').json()['term_credits']>0
+    assert client.get('/api/students?term=Fall 2031').status_code==404
+    monkeypatch.setattr(server,'classify_live',stub('drop',{'course_code':'CS 441'}))
+    d=client.post('/api/start',json={'message':'Can I drop CS 441?','student_id':ALEX,'term':'Spring 2027'}).json()
+    assert d['state']=='review' and d['term']=='Spring 2027'
+    assert client.post('/api/confirm',json={'session_id':d['session_id'],'confirmation':True}).json()['description'].endswith('(Spring 2027)')
+
 def test_normalize_course():
     assert server.normalize_course('CS411','get me out of cs411')=='CS 411'
     assert server.normalize_course('ART 105','drop ART-105?')=='ART 105'
@@ -135,7 +164,7 @@ def test_normalize_course():
 def test_student_endpoints():
     assert len(client.get('/api/students').json())==254
     p=client.get(f'/api/students/{ALEX}').json()
-    assert p['current_credits']==14 and p['program_name']=='Computer Science, BS'
+    assert p['term_credits']==14 and p['program_name']=='Computer Science, BS'
     assert client.get('/api/students/S99999').status_code==404
 
 def test_confirm_flow(monkeypatch):
@@ -155,7 +184,7 @@ def test_maya_missing_audit_recovery(monkeypatch):
     monkeypatch.setattr(server,'classify_live',stub('graduation',{}))
     sid=client.post('/api/start',json={'message':'What do I still need to graduate?','student_id':MAYA}).json()['session_id']
     d=client.post('/api/fault',json={'session_id':sid,'mode':'missing_record'}).json()
-    assert d['state']=='blocked' and 'degree audit is unavailable' in d['result']['reason']
+    assert d['state']=='blocked' and 'degree audit is unavailable' in d['result']['reason'].lower()
     r=client.post('/api/confirm',json={'session_id':sid,'confirmation':True})
     assert r.status_code==409 and 'receipt' not in r.json()
     assert db.get_action(sid) is None

@@ -21,6 +21,7 @@ BASE = pathlib.Path(__file__).parent
 SEED = 492
 COUNTS = {'CS_BS': 110, 'IS_BS': 100, 'CS_MCS': 20, 'IM_MS': 20}
 CURRENT_TERM = 'Fall 2026'
+NEXT_TERM = 'Spring 2027'  # priority registration opened November 2, 2026
 PAST_TERMS = ['Spring 2026', 'Fall 2025', 'Spring 2025', 'Fall 2024',
               'Spring 2024', 'Fall 2023', 'Spring 2023']  # most recent first
 
@@ -241,6 +242,36 @@ class Generator:
         return round(sum(h * p for h, p in graded) / hours, 2) if hours else None
 
 
+def register_next_term(gen, student):
+    """Add Spring 2027 registrations (status 'Registered') using courses on the
+    Spring 2027 schedules. Students with holds or in their final semester have none."""
+    if student['holds']:
+        return
+    done = len({e['term'] for e in student['enrollments'] if e['status'] == 'Completed'})
+    taken = {e['code'] for e in student['enrollments']}
+    if student['level'] == 'UG':
+        plan = PLANS[student['program']]
+        if done + 1 >= len(plan):
+            return
+        codes = []
+        for slot in plan[done + 1]:
+            if slot in POOLS:
+                options = [c for c in POOLS[slot] if c not in taken and gen.offered_now(c)]
+                if options:  # skip a slot with nothing offered next term
+                    codes.append(gen.rng.choice(options))
+            elif gen.offered_now(slot) and slot not in taken:
+                codes.append(slot)
+            taken.update(codes)
+    else:
+        if done >= 2:
+            return
+        pool = [c for c in GRAD_POOLS[student['program']] if c not in taken and gen.offered_now(c)]
+        codes = gen.rng.sample(pool, min(len(pool), gen.rng.choice([2, 3, 3])))
+    student['enrollments'] += [
+        {'code': c, 'term': NEXT_TERM, 'credits': gen.credits(c, student['level']),
+         'status': 'Registered', 'grade': None} for c in codes]
+
+
 def featured(gen):
     """Four fixed students used in the demo journeys."""
     alex = gen.student(
@@ -262,9 +293,6 @@ def featured(gen):
         maya['enrollments'].append({'code': code, 'term': CURRENT_TERM, 'credits': credits,
                                     'status': 'Enrolled', 'grade': None})
         total += credits
-    for e in maya['enrollments']:
-        if e['grade'] == 'F':
-            e['grade'] = 'B'
 
     jordan = gen.student(
         'CS_BS', sid='S00003', name='Jordan Lee', visa=None, done=2, ability=3.1,
@@ -274,6 +302,9 @@ def featured(gen):
         current=['CS 411', 'CS 412', 'CS 440'], holds=[], assistantship=False)
     for s in (alex, maya, jordan, sam):
         gen.names.add(s['name'])
+        for e in s['enrollments']:
+            if e['grade'] == 'F':
+                e['grade'] = 'B'  # featured transcripts stay consistent with prerequisites
     return [alex, maya, jordan, sam]
 
 
@@ -289,6 +320,12 @@ def generate(seed=SEED):
             students.append(gen.student(program, load=load))
     for s in students:
         s['gpa'] = Generator.gpa([e for e in s['enrollments'] if e['status'] == 'Completed'])
+    # Separate random stream, so adding next-term registrations leaves every
+    # current record unchanged.
+    gen.rng = random.Random(seed + 1)
+    gen.scheduled, gen.offered = load_offered(NEXT_TERM)
+    for s in students:
+        register_next_term(gen, s)
     return students
 
 

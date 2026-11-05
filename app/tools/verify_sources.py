@@ -20,7 +20,7 @@ from pypdf import PdfReader
 APP = pathlib.Path(__file__).resolve().parents[1]
 DOCS = APP.parent / 'University docs'
 LIGATURES = {'ﬀ': 'ff', 'ﬁ': 'fi', 'ﬂ': 'fl', 'ﬃ': 'ffi', 'ﬄ': 'ffl',
-             '’': "'", 'ʼ': "'", '‘': "'", '“': '"', '”': '"', ' ': ' '}
+             '’': "'", 'ʼ': "'", 'ʻ': "'", '‘': "'", '“': '"', '”': '"', ' ': ' '}
 
 
 def norm(text):

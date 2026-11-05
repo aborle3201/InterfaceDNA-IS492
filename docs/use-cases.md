@@ -67,12 +67,12 @@ All scenarios use synthetic student records; the university policies shown are r
 1. Select **J2 Graduation** with the failure setting `None`.
 2. Analyze Maya's graduation question using live Groq inference.
 3. Verify that the degree requirements are displayed with individual names, statuses, and supporting details.
-4. Select **Simulated: record unavailable** from the failure dropdown.
+4. Open **Test scenarios** and select **Record unavailable**.
 5. Verify that the system enters a blocked state.
 6. Confirm that the acknowledgment and confirmation controls are unavailable.
 7. Verify that no simulated receipt is generated.
 
-**Expected behavior:** The system displays `Simulated fault: the degree audit is unavailable. Do not infer graduation status.` and prevents the workflow from proceeding without verified degree-audit information.
+**Expected behavior:** The system displays `Your degree audit is unavailable right now, so graduation status can’t be determined. Please try again later.` and prevents the workflow from proceeding without verified degree-audit information.
 
 **Automated verification:** `test_maya_missing_audit_recovery` confirms that `/api/fault` returns a blocked state and `/api/confirm` rejects the action with HTTP `409 Conflict`, without producing a receipt.
 
@@ -88,12 +88,12 @@ All scenarios use synthetic student records; the university policies shown are r
 1. Select **J3 Registration hold** with the failure setting `None`.
 2. Analyze Jordan's registration question.
 3. Verify that the two synthetic holds are displayed.
-4. Select **Simulated: service unavailable** from the failure dropdown.
+4. Open **Test scenarios** and select **Service outage**.
 5. Verify that the application displays the service-unavailable warning.
 6. Confirm that the workflow becomes blocked and confirmation is unavailable.
 7. Verify that no simulated receipt is generated.
 
-**Expected behavior:** The system displays `Simulated fault: the student records service is unavailable. Retry later; no action executed.` and prevents any simulated advising-review request while the outage condition remains active.
+**Expected behavior:** The system displays `The student records service is unavailable. Please try again later; no action was taken.` and prevents any simulated advising-review request while the outage condition remains active.
 
 **Automated verification:** `test_confirm_flow` (Jordan) verifies the blocked state and confirms that attempting to call `/api/confirm` returns HTTP `409 Conflict`, without a receipt.
 

@@ -2,7 +2,7 @@
 
 Requirements: Python 3.10+ and your own Groq API key (free at https://console.groq.com/keys). SQLite ships with Python.
 
-**What is real and what is not:** university rules, course data and degree requirements are quoted from real UIUC documents in `University docs/`. Student records (names, transcripts, visa status, holds) are synthetic, and every action is simulated. Nothing connects to a university system.
+**What is real and what is not:** university rules, course data, class schedules and degree requirements are quoted from real UIUC documents in `University docs/`. Student records (names, transcripts, visa status, holds) are synthetic, and every action is simulated. Nothing connects to a university system. The interface itself is written as a working portal for presentations and does not say this on screen; see *Presentation mode* in `docs/safety_privacy.md`.
 
 ```bash
 cd app
@@ -25,9 +25,10 @@ Visit http://127.0.0.1:8000, pick a student and enter a goal. `GET /health` show
 |---|---|---|
 | `sources/courses.json` | 362 courses: CS and IS listings plus supporting courses from the 2026-2027 catalog, with source page | Real, extracted |
 | `sources/policies.json` | ISSS full-time rules, tuition ranges and refunds, withdrawal, Graduate College registration rules, holds, 2026-2027 calendar, and the Registrar's Fall 2026 deadlines (drop without a W and refund deadlines by part of term, graduation application, Spring 2027 registration); each with a verbatim quote and page | Real, quoted |
+| Terms | Fall 2025 and Spring 2026 (2025-2026 Senate calendar), Fall 2026 and Spring 2027 (full Registrar calendars), Winter 2027 (Registrar winter calendar), Summer 2027 (2026-2027 Senate calendar). The term picker in the page header switches the schedule, key dates, directory hours and drop checks | Real, quoted |
 | `sources/offerings.json` | Courses offered in Fall 2026 and Spring 2027 for CS, IS, CSE and TE (Course Explorer) | Real, extracted |
 | `sources/programs.json` | Computer Science BS and Information Sciences BS requirements (2026-2027 catalog); CS MCS and Information Management MS names | Real, quoted |
-| `generate_students.py` | 254 students (4 featured + 250 generated), seeded so every build is identical; current CS/IS enrollments use only courses offered in Fall 2026 | Synthetic |
+| `generate_students.py` | 254 students (4 featured + 250 generated), seeded so every build is identical; current CS/IS enrollments use only courses offered in Fall 2026, and 203 students also have Spring 2027 registrations from the Spring 2027 schedules (none for students with holds or in their final semester) | Synthetic |
 
 Featured students: **S00001 Alex Morgan** (CS BS, F-1, 14 hours — course drop blocked by ISSS rule), **S00002 Maya Patel** (IS BS, final semester — graduation), **S00003 Jordan Lee** (CS BS, two holds — registration), **S00004 Sam Rivera** (CS MCS, 12 hours — a drop that can be confirmed before the graduate deadlines).
 

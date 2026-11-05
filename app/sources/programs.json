@@ -10,35 +10,160 @@
       "total_hours": 128,
       "upper_division_hours": 40,
       "required": [
-        {"label": "Grainger Engineering Orientation Seminar", "any_of": ["ENG 100"]},
-        {"label": "Ethics (CS 210 or CS 211)", "any_of": ["CS 210", "CS 211"]},
-        {"label": "Calculus I", "any_of": ["MATH 221", "MATH 220"]},
-        {"label": "Calculus II", "any_of": ["MATH 231"]},
-        {"label": "Calculus III", "any_of": ["MATH 241"]},
-        {"label": "Linear algebra", "any_of": ["MATH 257", "MATH 415", "MATH 416"]},
-        {"label": "University Physics: Mechanics", "any_of": ["PHYS 211"]},
-        {"label": "University Physics: Elec & Mag", "any_of": ["PHYS 212"]},
-        {"label": "CS 124", "any_of": ["CS 124"]},
-        {"label": "CS 128", "any_of": ["CS 128"]},
-        {"label": "CS 173", "any_of": ["CS 173"]},
-        {"label": "CS 222", "any_of": ["CS 222"]},
-        {"label": "CS 225", "any_of": ["CS 225"]},
-        {"label": "CS 233", "any_of": ["CS 233"]},
-        {"label": "CS 341", "any_of": ["CS 341"]},
-        {"label": "CS 357", "any_of": ["CS 357"]},
-        {"label": "CS 361", "any_of": ["CS 361"]},
-        {"label": "CS 374", "any_of": ["CS 374"]},
-        {"label": "CS 421", "any_of": ["CS 421"]}
+        {
+          "label": "Grainger Engineering Orientation Seminar",
+          "any_of": [
+            "ENG 100"
+          ]
+        },
+        {
+          "label": "Ethics (CS 210 or CS 211)",
+          "any_of": [
+            "CS 210",
+            "CS 211"
+          ]
+        },
+        {
+          "label": "Calculus I",
+          "any_of": [
+            "MATH 221",
+            "MATH 220"
+          ]
+        },
+        {
+          "label": "Calculus II",
+          "any_of": [
+            "MATH 231"
+          ]
+        },
+        {
+          "label": "Calculus III",
+          "any_of": [
+            "MATH 241"
+          ]
+        },
+        {
+          "label": "Linear algebra",
+          "any_of": [
+            "MATH 257",
+            "MATH 415",
+            "MATH 416"
+          ]
+        },
+        {
+          "label": "University Physics: Mechanics",
+          "any_of": [
+            "PHYS 211"
+          ]
+        },
+        {
+          "label": "University Physics: Elec & Mag",
+          "any_of": [
+            "PHYS 212"
+          ]
+        },
+        {
+          "label": "CS 124",
+          "any_of": [
+            "CS 124"
+          ]
+        },
+        {
+          "label": "CS 128",
+          "any_of": [
+            "CS 128"
+          ]
+        },
+        {
+          "label": "CS 173",
+          "any_of": [
+            "CS 173"
+          ]
+        },
+        {
+          "label": "CS 222",
+          "any_of": [
+            "CS 222"
+          ]
+        },
+        {
+          "label": "CS 225",
+          "any_of": [
+            "CS 225"
+          ]
+        },
+        {
+          "label": "CS 233",
+          "any_of": [
+            "CS 233"
+          ]
+        },
+        {
+          "label": "CS 341",
+          "any_of": [
+            "CS 341"
+          ]
+        },
+        {
+          "label": "CS 357",
+          "any_of": [
+            "CS 357"
+          ]
+        },
+        {
+          "label": "CS 361",
+          "any_of": [
+            "CS 361"
+          ]
+        },
+        {
+          "label": "CS 374",
+          "any_of": [
+            "CS 374"
+          ]
+        },
+        {
+          "label": "CS 421",
+          "any_of": [
+            "CS 421"
+          ]
+        }
       ],
       "technical_electives": {
         "min_courses": 6,
         "min_hours": 18,
         "subject": "CS",
-        "levels": [400],
-        "also_eligible": ["CS 397"],
-        "excluded": ["CS 400", "CS 401", "CS 402", "CS 403", "CS 491"],
-        "team_project": ["CS 411", "CS 415", "CS 417", "CS 425", "CS 427", "CS 428", "CS 429", "CS 437", "CS 465", "CS 467", "CS 493", "CS 494", "CS 497"],
-        "team_project_min_credits": {"CS 425": 4}
+        "levels": [
+          400
+        ],
+        "also_eligible": [
+          "CS 397"
+        ],
+        "excluded": [
+          "CS 400",
+          "CS 401",
+          "CS 402",
+          "CS 403",
+          "CS 491"
+        ],
+        "team_project": [
+          "CS 411",
+          "CS 415",
+          "CS 417",
+          "CS 425",
+          "CS 427",
+          "CS 428",
+          "CS 429",
+          "CS 437",
+          "CS 465",
+          "CS 467",
+          "CS 493",
+          "CS 494",
+          "CS 497"
+        ],
+        "team_project_min_credits": {
+          "CS 425": 4
+        }
       },
       "not_evaluated": [
         "Campus General Education requirements and the language requirement",
@@ -49,16 +174,46 @@
         "Catalog-year differences: requirements are checked against the 2026-2027 catalog"
       ],
       "quotes": [
-        {"page": 238, "quote": "Minimum hours required for graduation: 128 hours."},
-        {"page": 239, "quote": "Minimum of 40 hours of upper-division coursework, generally at the 300- or 400-level."},
-        {"page": 239, "quote": "ENG 100 Grainger Engineering Orientation Seminar"},
-        {"page": 239, "quote": "CS 210 Ethical & Professional Issues 2 or 3 or CS 211 Ethical and Professional Conduct"},
-        {"page": 239, "quote": "MATH 221 Calculus I (MATH 220 may be substituted."},
-        {"page": 239, "quote": "MATH 231 Calculus II 3 MATH 241 Calculus III 4 MATH 257 Linear Algebra with Computational Applications 3 or MATH 415 Applied Linear Algebra or MATH 416 Abstract Linear Algebra PHYS 211 University Physics: Mechanics 4 PHYS 212 University Physics: Elec & Mag 4"},
-        {"page": 239, "quote": "CS 124 Introduction to Computer Science I 3 CS 128 Introduction to Computer Science II 3 CS 173 Discrete Structures 3 CS 222 Software Design Lab 1 CS 225 Data Structures 4 CS 233 Computer Architecture 4 CS 341 System Programming 4 CS 357 Numerical Methods I 3 CS 361 Probability & Statistics for Computer Science 3 CS 374 Introduction to Algorithms & Models of Computation 4 CS 421 Programming Languages & Compilers 3 Total Hours 35"},
-        {"page": 239, "quote": "Students must take a minimum of (6) six additional technical electives with at least eighteen (18) cumulative credit hours and chosen from CS 397 and the CS 400-level courses, not including CS 400, CS 401, CS 402, CS 403 or CS 491."},
-        {"page": 239, "quote": "At least one (1) of the CS courses used for technical electives must be chosen from the list below of CS courses satisfying the team project requirement."},
-        {"page": 240, "quote": "CS 411 Database Systems 3 or 4 CS 415 Game Development 3 or 4 CS 417 Introduction to Extended Reality 3 CS 425 Distributed Systems (4 hour section only) 4 CS 427 Software Engineering I 3 or 4 CS 428 Software Engineering II 3 or 4 CS 429 Software Engineering II, ACP 3 CS 437 Topics in Internet of Things 3 CS 465 User Interface Design 4 CS 467 Social Visualization 3 or 4 CS 493 Senior Project II, ACP 3 CS 494 Senior Project II 3 CS 497 CS Team Project 1 to 3"}
+        {
+          "page": 238,
+          "quote": "Minimum hours required for graduation: 128 hours."
+        },
+        {
+          "page": 239,
+          "quote": "Minimum of 40 hours of upper-division coursework, generally at the 300- or 400-level."
+        },
+        {
+          "page": 239,
+          "quote": "ENG 100 Grainger Engineering Orientation Seminar"
+        },
+        {
+          "page": 239,
+          "quote": "CS 210 Ethical & Professional Issues 2 or 3 or CS 211 Ethical and Professional Conduct"
+        },
+        {
+          "page": 239,
+          "quote": "MATH 221 Calculus I (MATH 220 may be substituted."
+        },
+        {
+          "page": 239,
+          "quote": "MATH 231 Calculus II 3 MATH 241 Calculus III 4 MATH 257 Linear Algebra with Computational Applications 3 or MATH 415 Applied Linear Algebra or MATH 416 Abstract Linear Algebra PHYS 211 University Physics: Mechanics 4 PHYS 212 University Physics: Elec & Mag 4"
+        },
+        {
+          "page": 239,
+          "quote": "CS 124 Introduction to Computer Science I 3 CS 128 Introduction to Computer Science II 3 CS 173 Discrete Structures 3 CS 222 Software Design Lab 1 CS 225 Data Structures 4 CS 233 Computer Architecture 4 CS 341 System Programming 4 CS 357 Numerical Methods I 3 CS 361 Probability & Statistics for Computer Science 3 CS 374 Introduction to Algorithms & Models of Computation 4 CS 421 Programming Languages & Compilers 3 Total Hours 35"
+        },
+        {
+          "page": 239,
+          "quote": "Students must take a minimum of (6) six additional technical electives with at least eighteen (18) cumulative credit hours and chosen from CS 397 and the CS 400-level courses, not including CS 400, CS 401, CS 402, CS 403 or CS 491."
+        },
+        {
+          "page": 239,
+          "quote": "At least one (1) of the CS courses used for technical electives must be chosen from the list below of CS courses satisfying the team project requirement."
+        },
+        {
+          "page": 240,
+          "quote": "CS 411 Database Systems 3 or 4 CS 415 Game Development 3 or 4 CS 417 Introduction to Extended Reality 3 CS 425 Distributed Systems (4 hour section only) 4 CS 427 Software Engineering I 3 or 4 CS 428 Software Engineering II 3 or 4 CS 429 Software Engineering II, ACP 3 CS 437 Topics in Internet of Things 3 CS 465 User Interface Design 4 CS 467 Social Visualization 3 or 4 CS 493 Senior Project II, ACP 3 CS 494 Senior Project II 3 CS 497 CS Team Project 1 to 3"
+        }
       ]
     },
     "IS_BS": {
@@ -73,13 +228,50 @@
       "min_gpa": 2.5,
       "min_school_gpa": 2.5,
       "required": [
-        {"label": "IS 101", "any_of": ["IS 101"]},
-        {"label": "IS 202", "any_of": ["IS 202"]},
-        {"label": "IS 203", "any_of": ["IS 203"]},
-        {"label": "IS 204", "any_of": ["IS 204"]},
-        {"label": "IS 205", "any_of": ["IS 205"]},
-        {"label": "IS 206", "any_of": ["IS 206"]},
-        {"label": "IS 307, IS 308 or IS 309", "any_of": ["IS 307", "IS 308", "IS 309"]}
+        {
+          "label": "IS 101",
+          "any_of": [
+            "IS 101"
+          ]
+        },
+        {
+          "label": "IS 202",
+          "any_of": [
+            "IS 202"
+          ]
+        },
+        {
+          "label": "IS 203",
+          "any_of": [
+            "IS 203"
+          ]
+        },
+        {
+          "label": "IS 204",
+          "any_of": [
+            "IS 204"
+          ]
+        },
+        {
+          "label": "IS 205",
+          "any_of": [
+            "IS 205"
+          ]
+        },
+        {
+          "label": "IS 206",
+          "any_of": [
+            "IS 206"
+          ]
+        },
+        {
+          "label": "IS 307, IS 308 or IS 309",
+          "any_of": [
+            "IS 307",
+            "IS 308",
+            "IS 309"
+          ]
+        }
       ],
       "not_evaluated": [
         "Approved courses in other departments that count toward the 51 School hours (only IS courses are counted here)",
@@ -88,16 +280,46 @@
         "Catalog-year differences: requirements are checked against the 2026-2027 catalog"
       ],
       "quotes": [
-        {"page": 470, "quote": "Students must earn at least 51 hours in the School of Information Sciences or in approved courses offered by other departments. Students must demonstrate proficiency in at least one programming language."},
-        {"page": 470, "quote": "GPA Requirement: 2.5 - Earn a cumulative grade point average of 2.50 (A = 4.00) in all courses presented for the degree and a cumulative 2.50 grade point average for all courses taken in the School."},
-        {"page": 470, "quote": "IS 101 Introduction to Information Sciences"},
-        {"page": 470, "quote": "IS 202 Social Aspects Info Tech"},
-        {"page": 470, "quote": "IS 203 Analytical Foundations for Information Problems"},
-        {"page": 470, "quote": "IS 204 Research Design for Information Sciences 3"},
-        {"page": 471, "quote": "IS 205 Programming for Information Problems 3"},
-        {"page": 471, "quote": "IS 206 Introduction to Database Concepts & Applications 3"},
-        {"page": 471, "quote": "or IS 308 OR IS 309"},
-        {"page": 471, "quote": "Hours required for graduation 123"}
+        {
+          "page": 470,
+          "quote": "Students must earn at least 51 hours in the School of Information Sciences or in approved courses offered by other departments. Students must demonstrate proficiency in at least one programming language."
+        },
+        {
+          "page": 470,
+          "quote": "GPA Requirement: 2.5 - Earn a cumulative grade point average of 2.50 (A = 4.00) in all courses presented for the degree and a cumulative 2.50 grade point average for all courses taken in the School."
+        },
+        {
+          "page": 470,
+          "quote": "IS 101 Introduction to Information Sciences"
+        },
+        {
+          "page": 470,
+          "quote": "IS 202 Social Aspects Info Tech"
+        },
+        {
+          "page": 470,
+          "quote": "IS 203 Analytical Foundations for Information Problems"
+        },
+        {
+          "page": 470,
+          "quote": "IS 204 Research Design for Information Sciences 3"
+        },
+        {
+          "page": 471,
+          "quote": "IS 205 Programming for Information Problems 3"
+        },
+        {
+          "page": 471,
+          "quote": "IS 206 Introduction to Database Concepts & Applications 3"
+        },
+        {
+          "page": 471,
+          "quote": "or IS 308 OR IS 309"
+        },
+        {
+          "page": 471,
+          "quote": "Hours required for graduation 123"
+        }
       ]
     },
     "CS_MCS": {
@@ -107,7 +329,10 @@
       "pages": "1351",
       "audit_supported": false,
       "quotes": [
-        {"page": 1351, "quote": "Computer Science, MCS for the degree of Master of Computer Science in Computer Science"}
+        {
+          "page": 1351,
+          "quote": "Computer Science, MCS for the degree of Master of Computer Science in Computer Science"
+        }
       ]
     },
     "IM_MS": {
@@ -117,7 +342,111 @@
       "pages": "1652",
       "audit_supported": false,
       "quotes": [
-        {"page": 1652, "quote": "Information Management, MS for the degree of Master of Science in Information Management"}
+        {
+          "page": 1652,
+          "quote": "Information Management, MS for the degree of Master of Science in Information Management"
+        }
+      ]
+    },
+    "ILEE_BS": {
+      "name": "Innovation, Leadership & Engineering Entrepreneurship (ILEE), BS",
+      "level": "UG",
+      "catalog": "2026-2027",
+      "pages": "476-477",
+      "audit_supported": false,
+      "summary": "Second bachelor's degree from the Technology Entrepreneur Center: 31 hours of TE courses on top of a Grainger Engineering primary degree. Offered only as a dual degree (double major).",
+      "required": [
+        {
+          "label": "Orientation (TE 100 or TE 200)",
+          "any_of": [
+            "TE 100",
+            "TE 200"
+          ]
+        },
+        {
+          "label": "TE 230",
+          "any_of": [
+            "TE 230"
+          ]
+        },
+        {
+          "label": "TE 250",
+          "any_of": [
+            "TE 250"
+          ]
+        },
+        {
+          "label": "TE 333",
+          "any_of": [
+            "TE 333"
+          ]
+        },
+        {
+          "label": "TE 360",
+          "any_of": [
+            "TE 360"
+          ]
+        },
+        {
+          "label": "SE 361",
+          "any_of": [
+            "SE 361"
+          ]
+        },
+        {
+          "label": "TE 390",
+          "any_of": [
+            "TE 390"
+          ]
+        },
+        {
+          "label": "TE 401",
+          "any_of": [
+            "TE 401"
+          ]
+        },
+        {
+          "label": "TE 450",
+          "any_of": [
+            "TE 450"
+          ]
+        },
+        {
+          "label": "TE 461",
+          "any_of": [
+            "TE 461"
+          ]
+        },
+        {
+          "label": "TE 462",
+          "any_of": [
+            "TE 462"
+          ]
+        },
+        {
+          "label": "TE 466",
+          "any_of": [
+            "TE 466"
+          ]
+        }
+      ],
+      "quotes": [
+        {
+          "page": 476,
+          "quote": "Currently, the BS in ILEE degree is only offered as a dual degree (double major) for current Grainger Engineering, Agricultural and Biological Engineering, and Chemical Engineering students."
+        },
+        {
+          "page": 476,
+          "quote": "Students must complete all requirements specified for the primary engineering degree, and 31 hours for the second (ILEE) degree, for a minimum of 158 credit hours."
+        },
+        {
+          "page": 476,
+          "quote": "TE 100 Introduction to Innovation, Leadership and Engineering Entrepreneurship 1 or TE 200 Introduction to Innovation"
+        },
+        {
+          "page": 476,
+          "quote": "TE 230 Design Thinking/Need-Finding 3 TE 250 From Idea to Enterprise 2 TE 333 Creativity, Innovation, Vision 4 TE 360 Lectures in Engineering Entrepreneurship 1 SE 361 Emotional Intelligence Skills 3 TE 390 Innovation and Engineering Design 2 TE 401 Developing Breakthrough Projects 4 TE 450 Startups: Incorporation, Funding, Contracts, & Intellectual Property 3 TE 461 Technology Entrepreneurship 3 TE 462 Leading Sustainable Change 3 TE 466 High-Tech Venture Marketing 2 Total Hours 30"
+        }
       ]
     }
   }

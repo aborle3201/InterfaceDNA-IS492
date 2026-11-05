@@ -42,6 +42,27 @@
       "url": "https://www.registrar.illinois.edu/fall-2026-academic-calendar/",
       "document": "Fall 2026 Drop deadlines.pdf",
       "retrieved": "2026-11-05"
+    },
+    "spring_2027_calendar": {
+      "title": "Spring 2027 Academic Calendar",
+      "publisher": "Office of the Registrar",
+      "url": "https://www.registrar.illinois.edu/spring-2027-academic-calendar/",
+      "document": "Spring 2027 Drop deadlines.pdf",
+      "retrieved": "2026-11-05"
+    },
+    "winter_2027_calendar": {
+      "title": "Winter 2026–2027 Academic Calendar",
+      "publisher": "Office of the Registrar",
+      "url": null,
+      "document": "Winter 2027 Drop deadlines.pdf",
+      "retrieved": "2026-11-05"
+    },
+    "calendar_2025": {
+      "title": "2025-2026 Academic Calendar (Senate-approved)",
+      "publisher": "University of Illinois Urbana-Champaign Senate",
+      "url": null,
+      "document": "2025-2026AC.pdf",
+      "retrieved": "2026-11-04"
     }
   },
   "facts": {
@@ -152,7 +173,8 @@
         "instruction_begins": "2027-01-19",
         "instruction_ends": "2027-05-05",
         "reading_day": "2027-05-06",
-        "commencement": "2027-05-15"
+        "commencement": "2027-05-15",
+        "finals_end": "2027-05-13"
       }
     },
     "f26_parts_of_term": {
@@ -160,7 +182,8 @@
       "page": 1,
       "quote": "All dates are tentative until closer to the beginning of the semester. ... The Class Schedule shows what part of term each course is scheduled in to assist with identifying deadlines. ... 1 = full 16 week semester (approximately 8/24/2026 – 12/9/2026 plus finals) A = first 8 weeks of the semester (approximately 8/24/2026 – 10/16/2026) B = second 8 weeks of the semester (approximately 10/19/2026 – 12/9/2026 plus finals)",
       "values": {
-        "A_ends_approx": "2026-10-16"
+        "A_ends_approx": "2026-10-16",
+        "term": "Fall 2026"
       }
     },
     "f26_aug_28": {
@@ -175,7 +198,8 @@
             "UG",
             "GR"
           ],
-          "date": "2026-08-28"
+          "date": "2026-08-28",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -191,14 +215,17 @@
             "UG",
             "GR"
           ],
-          "date": "2026-09-04"
+          "date": "2026-09-04",
+          "term": "Fall 2026"
         },
         {
-          "kind": "apply_graduate_december",
+          "kind": "apply_graduate",
           "levels": [
             "UG"
           ],
-          "date": "2026-09-04"
+          "date": "2026-09-04",
+          "term": "Fall 2026",
+          "conferral": "December"
         }
       ]
     },
@@ -214,7 +241,8 @@
             "UG",
             "GR"
           ],
-          "date": "2026-09-18"
+          "date": "2026-09-18",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -229,7 +257,8 @@
           "levels": [
             "GR"
           ],
-          "date": "2026-10-02"
+          "date": "2026-10-02",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -245,14 +274,16 @@
             "UG",
             "GR"
           ],
-          "date": "2026-10-16"
+          "date": "2026-10-16",
+          "term": "Fall 2026"
         },
         {
           "kind": "withdraw_no_w",
           "levels": [
             "UG"
           ],
-          "date": "2026-10-16"
+          "date": "2026-10-16",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -268,7 +299,8 @@
             "UG",
             "GR"
           ],
-          "date": "2026-10-23"
+          "date": "2026-10-23",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -278,11 +310,13 @@
       "quote": "November 1 Deadline for Graduate, Law & Medicine students to apply to graduate in December via Student Self-Service.",
       "values": [
         {
-          "kind": "apply_graduate_december",
+          "kind": "apply_graduate",
           "levels": [
             "GR"
           ],
-          "date": "2026-11-01"
+          "date": "2026-11-01",
+          "term": "Fall 2026",
+          "conferral": "December"
         }
       ]
     },
@@ -297,7 +331,8 @@
             "UG",
             "GR"
           ],
-          "date": "2026-11-02"
+          "date": "2026-11-02",
+          "term": "Fall 2026"
         },
         {
           "kind": "spring_graduation_application_opens",
@@ -305,7 +340,8 @@
             "UG",
             "GR"
           ],
-          "date": "2026-11-02"
+          "date": "2026-11-02",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -321,7 +357,8 @@
             "UG",
             "GR"
           ],
-          "date": "2026-11-13"
+          "date": "2026-11-13",
+          "term": "Fall 2026"
         },
         {
           "kind": "no_w",
@@ -329,7 +366,8 @@
           "levels": [
             "GR"
           ],
-          "date": "2026-11-13"
+          "date": "2026-11-13",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -344,7 +382,8 @@
             "UG",
             "GR"
           ],
-          "date": "2026-11-19"
+          "date": "2026-11-19",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -359,7 +398,8 @@
           "levels": [
             "GR"
           ],
-          "date": "2026-12-04"
+          "date": "2026-12-04",
+          "term": "Fall 2026"
         }
       ]
     },
@@ -373,9 +413,366 @@
           "levels": [
             "GR"
           ],
-          "date": "2026-12-10"
+          "date": "2026-12-10",
+          "term": "Fall 2026"
         }
       ]
+    },
+    "s27_parts_of_term": {
+      "source": "spring_2027_calendar",
+      "page": 1,
+      "quote": "1 = full 16 week semester (approximately 1/19/2027 – 5/5/2027 plus finals) A = first 8 weeks of the semester (approximately 1/19/2027 – 3/12/2027) B = second 8 weeks of the semester (approximately 3/15/2027 – 5/5/2027 plus finals.",
+      "values": {
+        "term": "Spring 2027",
+        "A_ends_approx": "2027-03-12"
+      }
+    },
+    "s27_registration": {
+      "source": "spring_2027_calendar",
+      "page": 1,
+      "quote": "November 2 Priority registration begins for Spring and Winter 2027 for eligible continuing and returning students ... November 19 Open registration for Spring 2027 begins for new and all other students",
+      "values": [
+        {
+          "kind": "event",
+          "label": "Priority registration begins for Spring and Winter 2027",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-11-02",
+          "term": "Spring 2027"
+        },
+        {
+          "kind": "event",
+          "label": "Open registration for Spring 2027 begins",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2026-11-19",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_jan_18": {
+      "source": "spring_2027_calendar",
+      "page": 1,
+      "quote": "January 18 11:59 PM CST Deadline to cancel registration (dropping all Spring 2027 classes) for full reversal of tuition and campus fees for classes scheduled in a regular semester",
+      "values": [
+        {
+          "kind": "cancel",
+          "label": "Last day to cancel Spring 2027 registration for a full reversal of tuition and fees",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2027-01-18",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_jan_25": {
+      "source": "spring_2027_calendar",
+      "page": 2,
+      "quote": "January 25 Deadline for ALL to add a POT A course via Student Self-Service Deadline for ALL to drop POT A course for refund if tuition range changes or billing hours decrease",
+      "values": [
+        {
+          "kind": "refund",
+          "pot": "A",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2027-01-25",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_feb_1": {
+      "source": "spring_2027_calendar",
+      "page": 2,
+      "quote": "February 1 – “10th day” add/drop deadline Deadline for ALL to drop or reduce POT 1 (full semester) hours and receive refund if tuition range changes or billing hours decrease. ... Deadline for Undergraduate & Vet Med students to apply to graduate in May via Student Self-Service. After this date, please contact your Academic Office for assistance.",
+      "values": [
+        {
+          "kind": "refund",
+          "pot": "1",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2027-02-01",
+          "term": "Spring 2027"
+        },
+        {
+          "kind": "apply_graduate",
+          "conferral": "May",
+          "levels": [
+            "UG"
+          ],
+          "date": "2027-02-01",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_feb_12": {
+      "source": "spring_2027_calendar",
+      "page": 2,
+      "quote": "February 12 Deadline for ALL to drop a POT A (1st 8 week) course via Student Self-Service without grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "A",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2027-02-12",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_feb_26": {
+      "source": "spring_2027_calendar",
+      "page": 2,
+      "quote": "February 26 Deadline for GRAD to drop a POT A (1st 8 week) course via Graduate Student Portal without a grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "A",
+          "levels": [
+            "GR"
+          ],
+          "date": "2027-02-26",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_mar_12": {
+      "source": "spring_2027_calendar",
+      "page": 3,
+      "quote": "March 12 Deadline for ALL to drop POT 1 (full semester) course via Student Self-Service without grade of W ... Deadline for UG to withdraw from Spring 2027 semester (drop all courses) without grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "1",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2027-03-12",
+          "term": "Spring 2027"
+        },
+        {
+          "kind": "withdraw_no_w",
+          "levels": [
+            "UG"
+          ],
+          "date": "2027-03-12",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_mar_26": {
+      "source": "spring_2027_calendar",
+      "page": 3,
+      "quote": "March 26 Deadline for ALL to add POT B (2nd 8 week) course via Student Self-Service Deadline for ALL to drop POT B course for refund if tuition range changes or billing hours decrease",
+      "values": [
+        {
+          "kind": "refund",
+          "pot": "B",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2027-03-26",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_apr_4": {
+      "source": "spring_2027_calendar",
+      "page": 3,
+      "quote": "April 4 Deadline for Graduate, Law & Medicine students to apply to graduate in May via Student Self-Service.",
+      "values": [
+        {
+          "kind": "apply_graduate",
+          "conferral": "May",
+          "levels": [
+            "GR"
+          ],
+          "date": "2027-04-04",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_apr_16": {
+      "source": "spring_2027_calendar",
+      "page": 3,
+      "quote": "April 16 Deadline for ALL to drop POT B (2nd 8 week) course via Student Self-Service without grade of W ... Deadline for GRAD to drop POT 1 (full semester) course via Graduate Student Portal without a grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "B",
+          "levels": [
+            "UG",
+            "GR"
+          ],
+          "date": "2027-04-16",
+          "term": "Spring 2027"
+        },
+        {
+          "kind": "no_w",
+          "pot": "1",
+          "levels": [
+            "GR"
+          ],
+          "date": "2027-04-16",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_apr_30": {
+      "source": "spring_2027_calendar",
+      "page": 4,
+      "quote": "April 30 Deadline for GRAD to drop POT B (2nd 8 week) course via Graduate Student Portal without a grade of W",
+      "values": [
+        {
+          "kind": "no_w",
+          "pot": "B",
+          "levels": [
+            "GR"
+          ],
+          "date": "2027-04-30",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "s27_may_6": {
+      "source": "spring_2027_calendar",
+      "page": 4,
+      "quote": "May 6 Reading day (no classes, no final examinations) Last day for GRAD to add/drop POT 1 or POT B course without petitioning Graduate College",
+      "values": [
+        {
+          "kind": "grad_petition_after",
+          "levels": [
+            "GR"
+          ],
+          "date": "2027-05-06",
+          "term": "Spring 2027"
+        }
+      ]
+    },
+    "w27_session": {
+      "source": "winter_2027_calendar",
+      "page": 1,
+      "quote": "The winter session is open to all undergraduate students to enroll in only 1 class. All classes are delivered completely online. 4 week session (12/18/2026 – 1/15/2027)",
+      "values": {
+        "term": "Winter 2027",
+        "instruction_begins": "2026-12-18",
+        "finals_end": "2027-01-15",
+        "levels": [
+          "UG"
+        ],
+        "max_classes": 1
+      }
+    },
+    "w27_dec_17": {
+      "source": "winter_2027_calendar",
+      "page": 1,
+      "quote": "December 17 11:59 PM CST deadline to ADD a Winter class via Student Self-Service. ABSOLUTELY no late add of winter class is allowed per campus policy. 11:59 PM CST deadline to DROP a Winter class for 100% tuition refund via Student Self-Service",
+      "values": [
+        {
+          "kind": "event",
+          "label": "Last day to add a Winter class, or drop one for a 100% refund",
+          "levels": [
+            "UG"
+          ],
+          "date": "2026-12-17",
+          "term": "Winter 2027"
+        }
+      ]
+    },
+    "w27_dec_22": {
+      "source": "winter_2027_calendar",
+      "page": 1,
+      "quote": "December 22 11:59 PM CST deadline to DROP a Winter class for 80% tuition refund and no ʻWʼ grade via Student Self-Service",
+      "values": [
+        {
+          "kind": "event",
+          "label": "Last day to drop a Winter class for an 80% refund",
+          "levels": [
+            "UG"
+          ],
+          "date": "2026-12-22",
+          "term": "Winter 2027"
+        }
+      ]
+    },
+    "w27_dec_28": {
+      "source": "winter_2027_calendar",
+      "page": 1,
+      "quote": "December 28 11:59 PM CST deadline to DROP a Winter class for 60% tuition refund and no ʻWʼ grade via Student Self-Service",
+      "values": [
+        {
+          "kind": "event",
+          "label": "Last day to drop a Winter class for a 60% refund",
+          "levels": [
+            "UG"
+          ],
+          "date": "2026-12-28",
+          "term": "Winter 2027"
+        }
+      ]
+    },
+    "w27_jan_2": {
+      "source": "winter_2027_calendar",
+      "page": 1,
+      "quote": "January 2 11:59 PM Deadline to drop a Winter class without ʻWʼ grade and via Student Self-Service. Contact your college office to drop a winter class after this deadline.",
+      "values": [
+        {
+          "kind": "event",
+          "label": "Last day to drop a Winter class without a W",
+          "levels": [
+            "UG"
+          ],
+          "date": "2027-01-02",
+          "term": "Winter 2027"
+        }
+      ]
+    },
+    "calendar_fall_2025": {
+      "source": "calendar_2025",
+      "page": 1,
+      "quote": "2025 FALL SEMESTER Monday August 25 Instruction Begins ... Wednesday December 10 Instruction Ends Thursday December 11 Reading Day Friday December 12 Final Examinations Begin Thursday December 18 Final Examinations End",
+      "values": {
+        "term": "Fall 2025",
+        "instruction_begins": "2025-08-25",
+        "instruction_ends": "2025-12-10",
+        "reading_day": "2025-12-11",
+        "finals_end": "2025-12-18"
+      }
+    },
+    "calendar_spring_2026": {
+      "source": "calendar_2025",
+      "page": 1,
+      "quote": "2026 SPRING SEMESTER ... Tuesday January 20 Instruction Begins ... Wednesday May 6 Instruction Ends Thursday May 7 Reading Day Friday May 8 Final Examinations Begin Thursday May 14 Final Examinations End Saturday May 16 Commencement",
+      "values": {
+        "term": "Spring 2026",
+        "instruction_begins": "2026-01-20",
+        "instruction_ends": "2026-05-06",
+        "reading_day": "2026-05-07",
+        "finals_end": "2026-05-14"
+      }
+    },
+    "calendar_summer_2027": {
+      "source": "calendar",
+      "page": 1,
+      "quote": "2027 SUMMER SESSION 1 Monday May 17 Instruction Begins ... Saturday June 12 Must End 2027 SUMMER SESSION 2 Monday June 14 Instruction Begins ... Thursday August 5 (12 noon) Instruction Ends Thursday August 5 (1:00 pm) Reading Day Friday August 6 Final Examinations Begin Saturday August 7 Final Examinations End",
+      "values": {
+        "term": "Summer 2027",
+        "instruction_begins": "2027-05-17",
+        "finals_end": "2027-08-07"
+      }
     }
   }
 }

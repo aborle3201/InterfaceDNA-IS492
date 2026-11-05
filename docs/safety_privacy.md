@@ -1,7 +1,9 @@
 # InterfaceDNA — Checkpoint 3 Safety, Privacy and Guardrails
 
 ## Scope
-University rules, course data and degree requirements are quoted from real UIUC documents. Student records are synthetic. The app does not authenticate real students, contact UIUC systems, modify university records, remove holds or grant graduation approval. It is a class prototype, not official advice, and the page says so.
+University rules, course data and degree requirements are quoted from real UIUC documents. Student records are synthetic. The app does not authenticate real students, contact UIUC systems, modify university records, remove holds or grant graduation approval.
+
+**Presentation mode.** For the class presentation, the interface is written as a working student portal: it does not label students as synthetic, actions as simulated, or itself as a prototype. This is disclosed here, in `app/INSTALL.md` and to the instructor. The interface is branded InterfaceDNA, not as the university, credits UIUC only as the policy source, and keeps "confirm important decisions with the office cited" in the footer. **If the app is ever hosted where real students could reach it, restore a visible notice that records are fictional and requests are not submitted to the university.**
 
 ## Implemented safeguards
 | Risk | Current mitigation | Evidence / verification |
@@ -30,6 +32,7 @@ University rules, course data and degree requirements are quoted from real UIUC 
 - Sessions and simulated receipts are stored in a local SQLite file (`app/data/interfacedna.db`); it has no access control or retention policy, and rebuilding the database clears it.
 - A simulated successful receipt is **not** proof of a real-world action.
 - **No UIUC branding.** The interface cites UIUC sources but must not use UIUC logos or present itself as an official university service.
+- **Receipts are not real.** The portal shows "Request recorded" with a receipt number, but nothing is sent to the university (see Presentation mode above).
 
 ## Required tests before submission
 1. Confirm false -> HTTP 400; blocked state -> HTTP 409; repeated confirmation -> HTTP 409.

@@ -23,6 +23,23 @@ HEADER = re.compile(r'SCHEDULE / (\d{4}) / (FALL|SPRING|SUMMER|WINTER) / ([A-Z]{
 RETRIEVED = re.compile(r'(\d{1,2})/(\d{1,2})/(\d{2}), \d{1,2}:\d{2} [AP]M')
 
 
+def course_titles(text, subject):
+    """Course code -> title, joining titles the PDF wrapped onto a second line."""
+    titles, last = {}, None
+    for line in text.splitlines():
+        line = line.strip()
+        m = re.match(rf'({subject} \d{{3}}) (.+)$', line)
+        if m:
+            last = m[1]
+            titles[last] = m[2]
+        elif last and line and line[0].isalpha() and not line.startswith(('Course', 'Number', 'Title')):
+            titles[last] += ' ' + line
+            last = None
+        else:
+            last = None
+    return titles
+
+
 def main():
     terms = {}
     for pdf in sorted(DOCS.glob('*Schedule*.pdf')):
@@ -31,11 +48,13 @@ def main():
         if not head:
             raise SystemExit(f'No Course Explorer header in {pdf.name}')
         year, season, subject = head.groups()
-        codes = sorted(set(re.findall(rf'(?m)^({subject} \d{{3}}) ', text)))
+        titles = course_titles(text, subject)
+        codes = sorted(titles)
         m, d, y = RETRIEVED.search(text).groups()
         term = f'{season.title()} {year}'
         terms.setdefault(term, {})[subject] = {
             'courses': codes,
+            'titles': {c: titles[c].strip() for c in codes},
             'document': pdf.name,
             'url': f'https://courses.illinois.edu/schedule/{year}/{season.lower()}/{subject}',
             'retrieved': f'20{y}-{int(m):02d}-{int(d):02d}',

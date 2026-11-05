@@ -67,7 +67,7 @@ CREATE TABLE enrollments (
     course_code TEXT NOT NULL REFERENCES courses(code),
     term TEXT NOT NULL,
     credits INTEGER NOT NULL,
-    status TEXT NOT NULL CHECK (status IN ('Enrolled', 'Completed')),
+    status TEXT NOT NULL CHECK (status IN ('Enrolled', 'Completed', 'Registered')),
     grade TEXT,
     PRIMARY KEY (student_id, course_code, term)
 );
@@ -83,6 +83,7 @@ CREATE TABLE sessions (
     id TEXT PRIMARY KEY,
     student_id TEXT NOT NULL REFERENCES students(id),
     intent TEXT NOT NULL,
+    term TEXT NOT NULL,
     entities TEXT NOT NULL, -- JSON object
     state TEXT NOT NULL CHECK (state IN ('review', 'blocked', 'completed')),
     fault TEXT NOT NULL DEFAULT 'none',
@@ -199,14 +200,35 @@ def get_fact(key):
         }
 
 
-def get_dated(kind, level):
-    """Dated entries of one kind (e.g. 'no_w', 'refund') that apply to a level,
-    each with the key of the fact that quotes it."""
+def list_facts():
+    with transaction() as conn:
+        keys = [r['key'] for r in conn.execute('SELECT key FROM policy_facts ORDER BY key')]
+    return [get_fact(k) for k in keys]
+
+
+def get_dated(kind, level, term=None):
+    """Dated entries of one kind (e.g. 'no_w', 'refund') that apply to a level
+    (and term, if given), each with the key of the fact that quotes it."""
     with transaction() as conn:
         rows = conn.execute(
             "SELECT key, vals FROM policy_facts WHERE vals LIKE '[%'").fetchall()
     return [dict(v, key=row['key']) for row in rows for v in json.loads(row['vals'])
-            if v.get('kind') == kind and level in v.get('levels', ())]
+            if v.get('kind') == kind and level in v.get('levels', ())
+            and (term is None or v.get('term') == term)]
+
+
+def get_terms():
+    """Terms that have a quoted calendar, oldest first, with that calendar's values."""
+    with transaction() as conn:
+        rows = conn.execute("SELECT key, vals FROM policy_facts WHERE vals LIKE '{%'").fetchall()
+    terms = [dict(json.loads(r['vals']), key=r['key']) for r in rows]
+    return sorted((t for t in terms if 'instruction_begins' in t),
+                  key=lambda t: t['instruction_begins'])
+
+
+def list_programs():
+    with transaction() as conn:
+        return [json.loads(r['data']) for r in conn.execute('SELECT data FROM programs ORDER BY level DESC, name')]
 
 
 def get_program(code):
@@ -232,12 +254,15 @@ def get_student(student_id):
         return dict(row, assistantship=bool(row['assistantship'])) if row else None
 
 
-def list_students():
+def list_students(term=CURRENT_TERM):
     with transaction() as conn:
         rows = conn.execute(
-            'SELECT s.id, s.name, s.level, s.program, p.name AS program_name, s.visa,'
-            ' (SELECT COUNT(*) FROM holds h WHERE h.student_id = s.id AND h.active = 1) AS holds'
-            ' FROM students s JOIN programs p ON p.code = s.program ORDER BY s.id'
+            'SELECT s.id, s.name, s.level, s.program, p.name AS program_name, s.visa, s.gpa,'
+            ' (SELECT COUNT(*) FROM holds h WHERE h.student_id = s.id AND h.active = 1) AS holds,'
+            ' (SELECT COALESCE(SUM(e.credits), 0) FROM enrollments e WHERE e.student_id = s.id'
+            '  AND e.term = ?) AS term_credits'
+            ' FROM students s JOIN programs p ON p.code = s.program ORDER BY s.id',
+            (term,)
         ).fetchall()
         return [dict(r) for r in rows]
 
@@ -254,8 +279,12 @@ def get_records(student_id):
 
 
 def get_current(student_id):
-    return [r for r in get_records(student_id)
-            if r['status'] == 'Enrolled' and r['term'] == CURRENT_TERM]
+    return get_term_courses(student_id, CURRENT_TERM)
+
+
+def get_term_courses(student_id, term):
+    """A student's courses in one term: completed, enrolled or registered."""
+    return [r for r in get_records(student_id) if r['term'] == term]
 
 
 def get_enrollment(student_id, course_code):
@@ -277,12 +306,12 @@ def _session_row(row):
     return dict(row, entities=json.loads(row['entities'])) if row else None
 
 
-def create_session(session_id, student_id, intent, entities, state):
+def create_session(session_id, student_id, intent, term, entities, state):
     stamp = now()
     with transaction() as conn:
         conn.execute(
-            "INSERT INTO sessions VALUES (?, ?, ?, ?, ?, 'none', ?, ?)",
-            (session_id, student_id, intent, json.dumps(entities), state,
+            "INSERT INTO sessions VALUES (?, ?, ?, ?, ?, ?, 'none', ?, ?)",
+            (session_id, student_id, intent, term, json.dumps(entities), state,
              stamp, stamp),
         )
 

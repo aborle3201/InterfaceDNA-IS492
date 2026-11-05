@@ -33,7 +33,7 @@ flowchart TD
 ## Components and actual technologies
 | Component | Current implementation | Limitations |
 |---|---|---|
-| Client | `app/index.html`, `app/assets/styles.css`, `live.css`, `live.js`: student picker, check cards with status labels, expandable source quotes | Requires server for dynamic workflows |
+| Client | `app/index.html`, `app/assets/portal.css`, `app.js`: student-portal flow in five steps (choose student → dashboard with schedule, holds and Registrar key dates → describe goal → adaptive page with grouped checks and numbered quoted sources → confirm and receipt), policy sources page, demo fault controls | Requires server for dynamic workflows; no sign-in |
 | Orchestrator | Python FastAPI in `app/server.py` | Runs locally; deployment not yet verified |
 | AI model | Groq OpenAI-compatible endpoint, `openai/gpt-oss-120b`, temperature 0, JSON output, 1,000-token output cap | Live provider availability/quota required; free tier allows ~8,000 tokens/min (~8 requests/min) |
 | Prompts | `app/prompts/system.txt` (rules + few-shot examples) and `settings.json` | Intent/entity extraction only; not an autonomous tool-using agent |

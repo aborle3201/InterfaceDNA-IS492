@@ -40,6 +40,7 @@ log = logging.getLogger('interfacedna')
 class Start(BaseModel):
     message: str = Field(min_length=3, max_length=1000)
     student_id: str = Field(pattern=r'^S\d{5}$')
+    term: str = Field(default=db.CURRENT_TERM, pattern=r'^(Fall|Spring|Summer|Winter) \d{4}$')
 
 
 class Confirm(BaseModel):
@@ -132,6 +133,8 @@ async def telemetry(req: Request, call_next):
     start = time.perf_counter()
     try:
         res = await call_next(req)
+        if req.url.path == '/' or req.url.path.startswith('/assets/'):
+            res.headers['Cache-Control'] = 'no-cache'  # always pick up UI updates
         log.info(
             'path=%s status=%d latency_ms=%.0f',
             req.url.path,
@@ -166,23 +169,49 @@ def health():
     }
 
 
+def known_term(term):
+    if not rules.term_info(term):
+        raise HTTPException(404, f'No calendar for {term}')
+    return term
+
+
+@app.get('/api/terms')
+def terms():
+    return {'current': db.CURRENT_TERM,
+            'terms': [dict(t, key_dates=rules.key_dates('UG', t['term']))
+                      for t in rules.terms()]}
+
+
 @app.get('/api/students')
-def students():
-    return db.list_students()
+def students(term: str = db.CURRENT_TERM):
+    return db.list_students(known_term(term))
+
+
+@app.get('/api/sources')
+def sources():
+    return {
+        'facts': db.list_facts(),
+        'programs': db.list_programs(),
+        'schedules': json.loads((BASE / 'sources' / 'offerings.json').read_text()),
+        'term_dates': rules.key_dates('UG', db.CURRENT_TERM),
+    }
 
 
 @app.get('/api/students/{student_id}')
-def student(student_id: str):
+def student(student_id: str, term: str = db.CURRENT_TERM):
     s = db.get_student(student_id)
     if not s:
         raise HTTPException(404, 'Student not found')
-    current = db.get_current(student_id)
+    courses = db.get_term_courses(student_id, known_term(term))
     return {
         **s,
-        'current_term': db.CURRENT_TERM,
-        'current_courses': current,
-        'current_credits': sum(c['credits'] for c in current),
+        'term': term,
+        'term_info': rules.term_info(term),
+        'term_courses': courses,
+        'term_credits': sum(c['credits'] for c in courses),
         'holds': db.get_active_holds(student_id),
+        'key_dates': rules.key_dates(s['level'], term),
+        'rules_date': rules.today().isoformat(),
     }
 
 
@@ -203,10 +232,11 @@ def start(body: Start):
 
     if not db.get_student(body.student_id):
         raise HTTPException(404, 'Student not found')
-    result = rules.evaluate(intent, body.student_id, entities)
+    term = known_term(body.term)
+    result = rules.evaluate(intent, body.student_id, entities, term=term)
     sid = str(uuid.uuid4())
     state = 'review' if result['status'] == 'ready' else 'blocked'
-    db.create_session(sid, body.student_id, intent, entities, state)
+    db.create_session(sid, body.student_id, intent, term, entities, state)
     log.info(
         'inference intent=%s entities=%s model=%s input_tokens=%s '
         'output_tokens=%s latency_ms=%.0f',
@@ -219,6 +249,7 @@ def start(body: Start):
     )
     return {
         'session_id': sid,
+        'term': term,
         'intent': intent,
         'entities': entities,
         'interpretation': explanation,
@@ -236,7 +267,8 @@ def fault(body: Fault):
     if sess['state'] == 'completed':
         raise HTTPException(409, 'Cannot mutate completed session')
     result = rules.evaluate(
-        sess['intent'], sess['student_id'], sess['entities'], body.mode)
+        sess['intent'], sess['student_id'], sess['entities'], body.mode,
+        term=sess['term'])
     state = 'review' if result['status'] == 'ready' else 'blocked'
     if not db.update_session(body.session_id, state, body.mode):
         raise HTTPException(409, 'Cannot mutate completed session')
@@ -254,7 +286,8 @@ def confirm(body: Confirm):
         raise HTTPException(409, 'Task is not confirmable in current state')
     # Recheck every fact at confirmation time (deadline, enrollment, faults).
     current = rules.evaluate(
-        sess['intent'], sess['student_id'], sess['entities'], sess['fault'])
+        sess['intent'], sess['student_id'], sess['entities'], sess['fault'],
+        term=sess['term'])
     if current['status'] != 'ready':
         db.update_session(body.session_id, 'blocked', sess['fault'])
         raise HTTPException(
@@ -271,7 +304,6 @@ def confirm(body: Confirm):
         'description': current['action'],
         'synthetic': True,
         'message': (
-            'Synthetic backend action recorded. '
-            'No university system was changed.'
+            'Request recorded.'
         ),
     }
