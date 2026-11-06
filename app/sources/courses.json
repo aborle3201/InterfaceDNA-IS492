@@ -4296,6 +4296,18 @@
   }
  },
  {
+  "code": "SE 361",
+  "title": "Emotional Intelligence Skills",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 350
+  }
+ },
+ {
   "code": "SOC 100",
   "title": "Introduction to Sociology",
   "credits_text": "4",
@@ -4341,6 +4353,138 @@
   "source": {
    "document": "UIUC catalog 2026-2027.pdf",
    "page": 711
+  }
+ },
+ {
+  "code": "TE 100",
+  "title": "Introduction to Innovation, Leadership and Engineering Entrepreneurship",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 476
+  }
+ },
+ {
+  "code": "TE 230",
+  "title": "Design Thinking/Need-Finding",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 350
+  }
+ },
+ {
+  "code": "TE 250",
+  "title": "From Idea to Enterprise",
+  "credits_text": "2",
+  "credits_min": 2,
+  "credits_max": 2,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 476
+  }
+ },
+ {
+  "code": "TE 333",
+  "title": "Creativity, Innovation, Vision",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 213
+  }
+ },
+ {
+  "code": "TE 360",
+  "title": "Lectures in Engineering Entrepreneurship",
+  "credits_text": "1",
+  "credits_min": 1,
+  "credits_max": 1,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 476
+  }
+ },
+ {
+  "code": "TE 390",
+  "title": "Innovation and Engineering Design",
+  "credits_text": "2",
+  "credits_min": 2,
+  "credits_max": 2,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 476
+  }
+ },
+ {
+  "code": "TE 401",
+  "title": "Developing Breakthrough Projects",
+  "credits_text": "1 to 4",
+  "credits_min": 1,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 24
+  }
+ },
+ {
+  "code": "TE 450",
+  "title": "Startups: Incorporation, Funding, Contracts, & Intellectual Property",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 476
+  }
+ },
+ {
+  "code": "TE 461",
+  "title": "Technology Entrepreneurship",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 476
+  }
+ },
+ {
+  "code": "TE 462",
+  "title": "Leading Sustainable Change",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 476
+  }
+ },
+ {
+  "code": "TE 466",
+  "title": "High-Tech Venture Marketing",
+  "credits_text": "2",
+  "credits_min": 2,
+  "credits_max": 2,
+  "prerequisite": null,
+  "source": {
+   "document": "UIUC catalog 2026-2027.pdf",
+   "page": 476
   }
  }
 ]

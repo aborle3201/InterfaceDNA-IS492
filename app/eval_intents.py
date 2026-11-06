@@ -29,11 +29,13 @@ def main():
             failures.append((case, f'error: {exc}'))
             continue
         course = entities.get('course_code')
-        if intent == case['intent'] and course == case['course_code']:
+        wanted = case.get('entities', {})
+        if (intent == case['intent'] and course == case['course_code']
+                and all(entities.get(k) == v for k, v in wanted.items())):
             passed[case['kind']] += 1
         else:
-            failures.append((case, f'got intent={intent} course_code={course}'))
-        time.sleep(7)  # Groq free tier: 8,000 tokens/min at ~900 tokens/call
+            failures.append((case, f'got intent={intent} entities={entities}'))
+        time.sleep(12)  # Groq free tier: 8,000 tokens/min at ~1,700 tokens/call
 
     for case, why in failures:
         print(f'FAIL {case["id"]} {case["message"]!r}\n'

@@ -231,6 +231,17 @@ def list_programs():
         return [json.loads(r['data']) for r in conn.execute('SELECT data FROM programs ORDER BY level DESC, name')]
 
 
+def subjects():
+    with transaction() as conn:
+        return {r[0].split()[0] for r in conn.execute('SELECT code FROM courses')} | set(
+            subject for term in load('offerings.json').values() for subject in term)
+
+
+def get_offerings(term):
+    """Course Explorer listing for a term: {subject: {courses, titles, url, ...}}."""
+    return load('offerings.json').get(term, {})
+
+
 def get_program(code):
     with transaction() as conn:
         row = conn.execute('SELECT data FROM programs WHERE code = ?', (code,)).fetchone()
@@ -350,6 +361,25 @@ def complete_session(session_id, receipt, action_type, details):
             (receipt, session_id, action_type, json.dumps(details), stamp),
         )
         return True
+
+
+def list_requests(student_id):
+    """A student's confirmed requests, newest first."""
+    with transaction() as conn:
+        rows = conn.execute(
+            'SELECT a.receipt, a.action_type AS intent, a.status, a.details, a.created_at,'
+            ' s.term, s.entities FROM actions a JOIN sessions s ON s.id = a.session_id'
+            ' WHERE s.student_id = ? ORDER BY a.created_at DESC',
+            (student_id,)).fetchall()
+    return [dict(r, details=json.loads(r['details']), entities=json.loads(r['entities']))
+            for r in rows]
+
+
+def find_request(student_id, intent, term, entities):
+    """An already-confirmed request for the same task, if any."""
+    return next((r for r in list_requests(student_id)
+                 if r['intent'] == intent and r['term'] == term and r['entities'] == entities),
+                None)
 
 
 def get_action(session_id):

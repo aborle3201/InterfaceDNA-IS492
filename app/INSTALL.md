@@ -17,7 +17,7 @@ uvicorn server:app --reload
 
 Visit http://127.0.0.1:8000, pick a student and enter a goal. `GET /health` shows whether a model key is configured and which date the rules use; it does NOT prove API access. The server intentionally returns an error rather than faking an LLM reply when no key or quota is available.
 
-**How a request flows:** Groq extracts only the intent (`drop`, `graduation`, `hold`, `unknown`) and the course code the student typed; a course code is discarded unless it appears in the student's own text. `rules.py` reads the student's synthetic record and the real policy facts, and reports each check with its source. Anything the sources do not cover is shown as **Not verified** rather than guessed. `/api/confirm` reruns every rule before recording a simulated action.
+**How a request flows:** Groq extracts only the intent (`drop`, `graduation`, `hold`, `course_search`, `course_info`, `policy`, `unknown`) and the details the student typed (course code, term, subject, credit hours, level, keyword or policy topic). Course codes, terms and keywords are discarded unless they appear in the student's own text, and a term named in the question overrides the term picker. `rules.py` reads the student's synthetic record and the real policy facts, and reports each check with its source. Anything the sources do not cover is shown as **Not verified** rather than guessed. `/api/confirm` reruns every rule before recording a simulated action.
 
 ## Data
 
@@ -51,7 +51,7 @@ Add policy facts to `sources/policies.json` only with a verbatim quote, the sour
 
 **Tests:** from the repository root, `python -m pytest tests -q`. Tests use a temporary database and never call the real LLM.
 
-**Model evaluation:** from `app/`, `python eval_intents.py` sends the 28 cases in `prompts/intent_eval.json` (typical, edge and adversarial) to the live model and reports accuracy by category. This is prompt engineering plus evaluation, not fine-tuning.
+**Model evaluation:** from `app/`, `python eval_intents.py` sends the 38 cases in `prompts/intent_eval.json` (typical, edge and adversarial) to the live model and reports accuracy by category. This is prompt engineering plus evaluation, not fine-tuning.
 
 **Simulated date:** rules use the server's date unless `INTERFACEDNA_TODAY=YYYY-MM-DD` is set in `.env`. Disclose a simulated date whenever it is used in a demo.
 

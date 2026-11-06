@@ -19,6 +19,10 @@ const TASKS = {
     suggest: () => ['What do I still need to graduate?', 'Am I on track to graduate in December?']},
   hold: {icon: '!', title: 'Registration & holds', desc: 'See holds that could block Spring 2027 registration.',
     suggest: () => ['Why can’t I register for spring?', 'Do I have any holds on my account?']},
+  courses: {icon: '⌕', title: 'Find courses', desc: 'Search the class schedule by term, subject, credit hours or topic.',
+    suggest: () => [`Show me 3 credit courses I can take in ${S.term}`, `What 400-level CS courses are offered in ${S.term}?`, 'Tell me about CS 425']},
+  policy: {icon: '§', title: 'Policies & deadlines', desc: 'Ask about deadlines, refunds, full-time rules or registration dates.',
+    suggest: () => [`What are the drop deadlines for ${S.term}?`, 'How many credits do international students need?', 'When does spring registration open?']},
   any: {icon: '?', title: 'Something else', desc: 'Describe what you want to do in your own words.',
     suggest: p => ['What do I still need to graduate?', droppable(p)[0] ? `Can I drop ${droppable(p)[0].code}?` : 'Can I drop a course?', 'Why can’t I register?']},
 };
@@ -161,14 +165,23 @@ function renderDirectory() {
 }
 
 // ---- Step 2: dashboard -------------------------------------------------------
+function requestsCard(p) {
+  const rows = p.requests || [];
+  return `<section class="card"><h2>My requests</h2>
+    ${rows.length ? `<div class="table-wrap"><table><thead><tr><th>Date</th><th>Request</th><th>Term</th><th>Receipt</th><th>Status</th></tr></thead><tbody>
+      ${rows.map(r => `<tr><td>${esc(new Date(r.created_at).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'}))}</td><td>${esc(r.details.description)}</td><td>${esc(r.term)}</td>
+        <td><code title="${esc(r.receipt)}">${esc(r.receipt.slice(0, 8))}</code></td><td><span class="badge ok">Recorded</span></td></tr>`).join('')}
+    </tbody></table></div>` : '<p class="muted">No requests yet. Requests you confirm appear here with their receipt.</p>'}</section>`;
+}
 function scheduleCard(p) {
   const info = p.term_info || {}, past = info.status === 'past';
+  const dropRequested = new Set((p.requests || []).filter(r => r.intent === 'drop' && r.term === p.term).map(r => r.entities.course_code));
   const title = past ? `${p.term} courses` : info.status === 'upcoming' ? `${p.term} registration` : `${p.term} schedule`;
   const rows = p.term_courses;
   const note = info.note ? `<div class="alert info small">${esc(info.note)}</div>` : '';
   if (!rows.length) return `<section class="card"><h2>${esc(title)}</h2>${note}<p class="muted">No courses ${past ? 'taken' : 'registered'} for ${esc(p.term)}.</p></section>`;
   return `<section class="card"><h2>${esc(title)}</h2>${note}<div class="table-wrap"><table><thead><tr><th>Course</th><th>Title</th><th>Hours</th><th>${past ? 'Grade' : 'Status'}</th></tr></thead><tbody>
-    ${rows.map(c => `<tr><td><strong>${esc(c.code)}</strong></td><td>${esc(c.title)}</td><td>${esc(c.credits)}</td><td>${past ? esc(c.grade || '—') : `<span class="badge ${c.status === 'Registered' ? 'info' : 'ok'}">${esc(c.status)}</span>`}</td></tr>`).join('')}
+    ${rows.map(c => `<tr><td><strong>${esc(c.code)}</strong></td><td>${esc(c.title)}</td><td>${esc(c.credits)}</td><td>${past ? esc(c.grade || '—') : dropRequested.has(c.code) ? '<span class="badge warn">Drop requested</span>' : `<span class="badge ${c.status === 'Registered' ? 'info' : 'ok'}">${esc(c.status)}</span>`}</td></tr>`).join('')}
     <tr><td></td><td><strong>Total</strong></td><td><strong>${esc(p.term_credits)}</strong></td><td></td></tr></tbody></table></div>
     <p class="muted small" style="margin-top:8px">Course titles and credit hours from the 2026–2027 Academic Catalog.</p></section>`;
 }
@@ -185,11 +198,12 @@ function viewDashboard(p) {
       <div>
         <section class="card"><h2>What would you like to do?</h2>
           <p class="muted">Pick a service, or describe your goal in your own words. The next page is built around your answer.</p>
-          <div class="grid two" style="grid-template-columns:1fr 1fr">${Object.entries(TASKS).map(([k, t]) => `
+          <div class="tiles">${Object.entries(TASKS).map(([k, t]) => `
             <button type="button" class="tile" data-task="${k}"><span class="icon" aria-hidden="true">${t.icon}</span>
               <h3>${esc(t.title)}</h3><p>${esc(t.desc)}</p></button>`).join('')}</div>
         </section>
         ${scheduleCard(p)}
+        ${requestsCard(p)}
       </div>
       <div>
         <section class="card profile"><h2>Student record</h2>
@@ -248,7 +262,7 @@ async function analyze(p, task) {
   viewAsk(p, task);
   try {
     const d = await api('/api/start', {message: S.question, student_id: p.id, term: S.term});
-    Object.assign(S, {receipt: null, sid: d.session_id, result: d.result, intent: d.intent, entities: d.entities || {}, interpretation: d.interpretation, usage: d.model_usage});
+    Object.assign(S, {receipt: null, resultTerm: d.term, sid: d.session_id, result: d.result, intent: d.intent, entities: d.entities || {}, interpretation: d.interpretation, usage: d.model_usage});
     $('failure').value = 'none';
     S.busy = false;
     go(`#/s/${p.id}/result`);
@@ -260,7 +274,20 @@ async function analyze(p, task) {
 // ---- Step 4: adaptive page ---------------------------------------------------
 function heading() {
   if (S.intent === 'drop') return S.entities.course_code ? `Dropping ${S.entities.course_code}` : 'Dropping a course';
-  return {graduation: 'Your graduation requirements', hold: 'Your registration holds'}[S.intent] || 'We couldn’t match that request';
+  if (S.intent === 'course_info') return S.entities.course_code || 'Course details';
+  if (S.intent === 'course_search') return `Courses for ${S.resultTerm}`;
+  return {graduation: 'Your graduation requirements', hold: 'Your registration holds',
+    policy: 'University policies and deadlines'}[S.intent] || 'We couldn’t match that request';
+}
+function coursesTable(r) {
+  if (!r.courses) return '';
+  const shown = r.courses.slice(0, 150);
+  return `<section class="group"><h3>Courses</h3>${shown.length ? `<div class="table-wrap"><table>
+    <thead><tr><th>Course</th><th>Title</th><th>Hours</th><th>Your record</th></tr></thead><tbody>
+    ${shown.map(c => `<tr><td><strong>${esc(c.code)}</strong></td><td>${esc(c.title)}${c.prerequisite ? `<div class="muted small">Prerequisite: ${esc(c.prerequisite)}</div>` : ''}</td>
+      <td>${esc(c.credits || '—')}</td><td>${c.record ? `<span class="badge">${esc(c.record)}</span>` : '<span class="badge ok">Available</span>'}</td></tr>`).join('')}
+    </tbody></table></div>${r.courses.length > shown.length ? `<p class="muted small">Showing ${shown.length} of ${r.courses.length}. Add a subject, level or topic to narrow the list.</p>` : ''}`
+    : '<p class="muted">No courses match. Try fewer filters or another term.</p>'}</section>`;
 }
 function viewResult(p) {
   const r = S.result;
@@ -272,7 +299,7 @@ function viewResult(p) {
   const srcIndex = Object.fromEntries(sources.map((s, i) => [s.key, i + 1]));
   const status = r.status === 'ready'
     ? ['ok', 'You can review and confirm this request.']
-    : r.status === 'info' ? ['info', 'Nothing needs your action.'] : ['block', `This action isn’t available. ${r.reason || ''}`];
+    : r.status === 'info' ? ['info', 'Here’s what the sources say.'] : ['block', `This action isn’t available. ${r.reason || ''}`];
   const checkHtml = c => {
     const [lbl, cls] = LEVEL[c.level] || LEVEL.info;
     const refs = (c.cites || []).map(k => srcIndex[k]).filter(Boolean);
@@ -285,12 +312,13 @@ function viewResult(p) {
     <div class="page-head"><div><h1 tabindex="-1">${esc(heading())}</h1><p>${esc(r.summary)}</p></div>
       <a class="btn secondary" href="#/s/${esc(p.id)}/ask/${esc(S.task)}">Change my question</a></div>
     <div class="interpretation"><span class="badge accent">AI interpretation</span> ${esc(S.interpretation)}
-      <span class="badge">term: ${esc(S.term)}</span><span class="badge">intent: ${esc(S.intent)}</span>${S.entities.course_code ? `<span class="badge">course: ${esc(S.entities.course_code)}</span>` : ''}
+      <span class="badge">term: ${esc(S.resultTerm || S.term)}</span><span class="badge">intent: ${esc(S.intent)}</span>${S.entities.course_code ? `<span class="badge">course: ${esc(S.entities.course_code)}</span>` : ''}
       ${S.usage ? `<span>· ${esc(S.usage.model)}</span>` : ''}</div>
     <div class="alert ${status[0]}" role="status"><strong>${esc(status[1])}</strong></div>
     <div class="grid two">
       <div>
         ${(r.metrics || []).length ? `<div class="metrics">${r.metrics.map(m => `<div class="metric${String(m.value).length > 14 ? ' long' : ''}"><strong>${esc(m.value)}</strong><span>${esc(m.label)}</span></div>`).join('')}</div>` : ''}
+        ${coursesTable(r)}
         ${groups.map(([title, cs]) => `<section class="group"><h3>${esc(title)}</h3>${cs.map(checkHtml).join('')}</section>`).join('')}
         ${S.receipt ? `<div class="alert ok" style="margin-top:22px"><strong>Already confirmed.</strong> Receipt <code>${esc(S.receipt)}</code>.</div>
           <div class="actions"><a class="btn secondary" href="#/s/${esc(p.id)}">Back to dashboard</a></div>` : r.status === 'ready' ? `
@@ -328,6 +356,7 @@ async function confirmAction(p) {
   try {
     const d = await api('/api/confirm', {session_id: S.sid, confirmation: true});
     S.receipt = d.receipt; S.action = d.description; S.error = '';
+    S.profile = null;  // reload so My requests and the schedule show this request
     go(`#/s/${p.id}/done`);
   } catch (e) { S.error = e.message; viewResult(p); }
 }

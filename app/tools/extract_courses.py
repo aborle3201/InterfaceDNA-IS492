@@ -33,11 +33,18 @@ SUPPORTING = [
     'CHEM 103', 'IB 150', 'GEOL 107', 'CMN 101', 'LING 100', 'MUS 132',
     'GLBL 100', 'AAS 100', 'AFRO 100', 'LLS 100', 'BADM 310', 'ACCY 201',
     'PHIL 103',
+    # TE courses in the ILEE (Technology Entrepreneur Center) requirements
+    'TE 230', 'TE 250', 'TE 333', 'TE 360', 'TE 390', 'TE 401',
+    'TE 461', 'TE 462', 'TE 466', 'SE 361',
 ]
 # The 2026-2027 catalog table wraps this title across lines, so the generic
 # row pattern misses it. Verified by hand: Computer Science, BS, page 238.
 MANUAL = {
     'MATH 257': ('Linear Algebra with Computational Applications', '3', 238),
+    # Titles wrap in the ILEE table, Innovation, Leadership & Engineering
+    # Entrepreneurship (ILEE), BS, page 476 (quoted in sources/programs.json).
+    'TE 100': ('Introduction to Innovation, Leadership and Engineering Entrepreneurship', '1', 476),
+    'TE 450': ('Startups: Incorporation, Funding, Contracts, & Intellectual Property', '3', 476),
 }
 
 ENTRY = re.compile(

@@ -27,7 +27,10 @@ import rules  # noqa: E402
 
 SYSTEM = (BASE / 'prompts' / 'system.txt').read_text()
 SETTINGS = json.loads((BASE / 'prompts' / 'settings.json').read_text())
-INTENTS = ('drop', 'graduation', 'hold', 'unknown')
+INTENTS = ('drop', 'graduation', 'hold', 'course_search', 'course_info', 'policy', 'unknown')
+TERM = re.compile(r'\b(fall|spring|summer|winter)\s+(\d{4})\b', re.I)
+TOPICS = ('full_time', 'deadlines', 'refunds', 'withdrawal', 'registration',
+          'graduation_application', 'winter_session', 'holds')
 COURSE = re.compile(r'\b([A-Za-z]{2,4})\s*-?\s*(\d{3})\b')
 
 logging.basicConfig(
@@ -67,6 +70,38 @@ def normalize_course(raw, message):
     return code if code in typed else None
 
 
+def normalize_term(raw, message):
+    """A term the student typed, e.g. 'spring 2027' -> 'Spring 2027'."""
+    m = TERM.fullmatch(raw.strip()) if isinstance(raw, str) else None
+    if not m:
+        return None
+    term = f'{m[1].title()} {m[2]}'
+    typed = {f'{a.title()} {b}' for a, b in TERM.findall(message)}
+    return term if term in typed and rules.term_info(term) else None
+
+
+def clean_entities(intent, raw, message):
+    """Keep only well-formed entities that fit the intent; the model's output
+    is untrusted, so typed values (course, term, keyword) must be in the text."""
+    out = {}
+    if intent in ('drop', 'course_info'):
+        out['course_code'] = normalize_course(raw.get('course_code'), message)
+    if intent in ('drop', 'course_search', 'course_info', 'policy'):
+        out['term'] = normalize_term(raw.get('term'), message)
+    if intent == 'course_search':
+        subject = str(raw.get('subject') or '').strip().upper()
+        out['subject'] = subject if subject in db.subjects() else None
+        credits, level = raw.get('credits'), raw.get('level')
+        out['credits'] = credits if isinstance(credits, int) and 0 < credits <= 6 else None
+        out['level'] = level if level in (100, 200, 300, 400, 500) else None
+        keyword = str(raw.get('keyword') or '').strip().lower()
+        out['keyword'] = keyword if 2 < len(keyword) <= 40 and keyword in message.lower() else None
+    if intent == 'policy':
+        out['topic'] = raw.get('topic') if raw.get('topic') in TOPICS else None
+    # A drop always carries its course key so duplicate requests compare equal.
+    return {k: v for k, v in out.items() if v is not None or k == 'course_code'}
+
+
 def groq_api_key():
     key = os.getenv('GROQ_API_KEY', '').strip()
     if not key or key == 'gsk_your_actual_api_key_here':
@@ -102,10 +137,9 @@ def classify_live(message):
         raise RuntimeError('Model produced an invalid task classification.')
     entities = output.get('entities')
     entities = entities if isinstance(entities, dict) else {}
-    course = normalize_course(entities.get('course_code'), message)
     return (
         intent,
-        {'course_code': course} if intent == 'drop' else {},
+        clean_entities(intent, entities, message),
         str(output.get('explanation', ''))[:500],
         {
             'model': resp.model,
@@ -210,6 +244,7 @@ def student(student_id: str, term: str = db.CURRENT_TERM):
         'term_courses': courses,
         'term_credits': sum(c['credits'] for c in courses),
         'holds': db.get_active_holds(student_id),
+        'requests': db.list_requests(student_id),
         'key_dates': rules.key_dates(s['level'], term),
         'rules_date': rules.today().isoformat(),
     }
@@ -232,7 +267,7 @@ def start(body: Start):
 
     if not db.get_student(body.student_id):
         raise HTTPException(404, 'Student not found')
-    term = known_term(body.term)
+    term = entities.get('term') or known_term(body.term)  # a term in the question wins
     result = rules.evaluate(intent, body.student_id, entities, term=term)
     sid = str(uuid.uuid4())
     state = 'review' if result['status'] == 'ready' else 'blocked'

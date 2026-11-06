@@ -27,6 +27,7 @@ def stub(intent,entities):
 
 def levels(r): return {c['title']:c['level'] for c in r['checks']}
 def level_of(r,prefix): return next(c['level'] for c in r['checks'] if c['title'].startswith(prefix))
+def levels_text(r,title): return next(c['text'] for c in r['checks'] if c['title']==title)
 def blockers(r): return [c['title'] for c in r['checks'] if c['blocks']]
 
 def find_student(pred):
@@ -212,3 +213,41 @@ def test_model_failure_creates_no_session(monkeypatch):
     def boom(message): raise RuntimeError('no key')
     monkeypatch.setattr(server,'classify_live',boom)
     assert client.post('/api/start',json={'message':'Can I drop CS 411?','student_id':ALEX}).status_code==503
+
+def test_requests_listed_and_duplicates_blocked(monkeypatch):
+    sid=find_student(lambda s,cur:s['level']=='UG' and len(db.get_active_holds(s['id']))>0 and s['id']!=JORDAN)['id']
+    monkeypatch.setattr(server,'classify_live',stub('hold',{}))
+    d=client.post('/api/start',json={'message':"Why can't I register?",'student_id':sid}).json()
+    receipt=client.post('/api/confirm',json={'session_id':d['session_id'],'confirmation':True}).json()['receipt']
+    reqs=client.get(f'/api/students/{sid}').json()['requests']
+    assert [r['receipt'] for r in reqs]==[receipt]
+    again=client.post('/api/start',json={'message':"Why can't I register?",'student_id':sid}).json()
+    assert again['state']=='blocked'
+    assert again['result']['checks'][0]['title']=='You already submitted this request' and receipt in again['result']['checks'][0]['text']
+
+def test_course_search():
+    r=rules.evaluate('course_search',JORDAN,{'credits':3,'term':'Spring 2027'},term='Spring 2027')
+    assert r['status']=='info' and r['courses']
+    assert all(db.get_course(c['code'])['credits_min']<=3<=db.get_course(c['code'])['credits_max'] for c in r['courses'])
+    r=rules.evaluate('course_search',ALEX,{'subject':'CS','level':400,'keyword':'learning'},term='Spring 2027')
+    assert {c['code'] for c in r['courses']}>={'CS 441','CS 446'} and next(c for c in r['courses'] if c['code']=='CS 441')['record']=='Registered Spring 2027'
+    assert 'isn’t available' in rules.evaluate('course_search',ALEX,{},term='Summer 2027')['reason']
+
+def test_course_info():
+    r=rules.evaluate('course_info',ALEX,{'course_code':'CS 425'})
+    assert r['status']=='info' and 'team project' in levels_text(r,'Counts toward your degree')
+    assert rules.evaluate('course_info',ALEX,{'course_code':'CS 999'})['status']=='blocked'
+
+def test_policy_answers_are_quotes():
+    r=rules.evaluate('policy',ALEX,{'topic':'full_time'})
+    assert levels_text(r,'F-1/J-1 full-time minimum')==db.get_fact('isss_full_time')['quote']
+    r=rules.evaluate('policy',ALEX,{'topic':'graduation_application'},term='Spring 2027')
+    assert any('February 1, 2027' in c['text'] for c in r['checks'])
+
+def test_clean_entities():
+    m='Show me 3 credit IS courses for spring 2027 about data'
+    e=server.clean_entities('course_search',{'subject':'is','credits':3,'term':'Spring 2027','keyword':'data','level':450},m)
+    assert e=={'subject':'IS','credits':3,'term':'Spring 2027','keyword':'data'}
+    assert server.clean_entities('course_search',{'term':'Fall 2026','keyword':'robots'},m)=={}
+    assert server.clean_entities('policy',{'topic':'tuition hacks'},'refund?')=={}
+    assert server.clean_entities('drop',{'course_code':'CS 411'},'drop CS 411')=={'course_code':'CS 411'}

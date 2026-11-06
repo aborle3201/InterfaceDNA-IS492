@@ -13,7 +13,7 @@ an action only when status is 'ready'.
 from __future__ import annotations
 
 import os
-from datetime import date
+from datetime import date, datetime
 
 import db
 from generate_students import GRADES
@@ -62,9 +62,34 @@ class Report:
             'quote': quote['quote'], 'retrieved': '2026-11-04', 'synthetic': False,
         }
 
+    def schedule(self, term, subject, listing):
+        key = f'schedule:{term}:{subject}'
+        season, year = term.split()
+        self.sources[key] = {
+            'key': key, 'title': f'{subject} {term} class schedule (Course Explorer)',
+            'publisher': 'Office of the Registrar', 'url': listing['url'],
+            'document': listing['document'], 'page': 1,
+            'quote': f'SCHEDULE / {year} / {season.upper()} / {subject}',
+            'retrieved': listing['retrieved'], 'synthetic': False,
+        }
+        return key
+
+    def course(self, c):
+        key = f'course:{c["code"]}'
+        self.sources[key] = {
+            'key': key, 'title': f'{c["code"]} {c["title"]} — Academic Catalog course listing',
+            'publisher': 'University of Illinois Urbana-Champaign', 'url': None,
+            'document': c['source_document'], 'page': c['source_page'],
+            'quote': f'{c["code"]} {c["title"]} credit: {c["credits_text"]} Hours.'
+                     + (f' Prerequisite: {c["prerequisite"]}' if c['prerequisite'] else ''),
+            'retrieved': '2026-11-04', 'synthetic': False,
+        }
+        return key
+
     def check(self, level, title, text, cites=(), blocks=None):
         for key in cites:
-            self.fact(key)
+            if key not in self.sources:
+                self.fact(key)
         self.checks.append({
             'level': level, 'title': title, 'text': text, 'cites': list(cites),
             'blocks': level in ('block', 'unknown') if blocks is None else blocks,
@@ -102,15 +127,36 @@ def evaluate(intent, student_id, entities, fault='none', on=None, term=None):
     student = db.get_student(student_id)
     if not student:
         return blocked('No record exists for this student.')
-    if intent == 'drop':
-        return drop(student, entities, fault, on, term)
-    if intent == 'graduation':
-        return graduation(student, fault, on)
-    if intent == 'hold':
-        return hold(student, fault, on)
+    if intent in ('drop', 'graduation', 'hold'):
+        result = {'drop': lambda: drop(student, entities, fault, on, term),
+                  'graduation': lambda: graduation(student, fault, on),
+                  'hold': lambda: hold(student, fault, on)}[intent]()
+        return already_requested(result, student_id, intent, term, entities)
+    if intent == 'course_search':
+        return course_search(student, entities, term)
+    if intent == 'course_info':
+        return course_info(student, entities)
+    if intent == 'policy':
+        return policy(student, entities, term, on)
     return blocked(
-        'Please ask about dropping a course, graduation requirements, '
-        'or registration holds.')
+        'I can help with dropping a course, finding courses, course details, '
+        'graduation requirements, registration holds, and university policies '
+        'and deadlines. Try asking about one of those.')
+
+
+def already_requested(result, student_id, intent, term, entities):
+    """Stop a second confirmation of a request that already has a receipt."""
+    previous = db.find_request(student_id, intent, term, entities)
+    if result['status'] != 'ready' or not previous:
+        return result
+    title = 'You already submitted this request'
+    result['checks'].insert(0, {
+        'level': 'block', 'title': title, 'cites': [], 'blocks': True,
+        'text': f'Receipt {previous["receipt"]}, recorded '
+                f'{fmt(datetime.fromisoformat(previous["created_at"]).astimezone().date())}. '
+                'It is listed under My requests on your dashboard.'})
+    result.update(status='blocked', action=None, reason=f'{title}.')
+    return result
 
 
 # ---- Terms and Registrar deadlines -------------------------------------------
@@ -203,7 +249,7 @@ def key_dates(level, term=None, on=None):
 
     def entry(d, label, key):
         f = db.get_fact(key)
-        return {'date': d, 'display': fmt(d), 'label': label,
+        return {'key': key, 'date': d, 'display': fmt(d), 'label': label,
                 'past': on > date.fromisoformat(d),
                 'source': {'title': f['title'], 'publisher': f['publisher'],
                            'url': f['url'], 'page': f['page'], 'quote': f['quote']}}
@@ -579,3 +625,187 @@ def hold(student, fault, on):
         f'{len(holds)} active hold(s) on your record may block '
         f'{spring["term"]} registration.',
         f'Save a reminder to resolve {len(holds)} hold(s) before {spring["term"]}')
+
+
+# ---- Courses ----------------------------------------------------------------
+
+def record_status(student_id):
+    """Course code -> how the student has it on record (completed, enrolled, registered)."""
+    out = {}
+    for x in db.get_records(student_id):
+        if x['status'] == 'Completed':
+            out[x['code']] = f'Completed {x["term"]} ({x["grade"]})' if x['grade'] != 'F' else out.get(x['code'])
+        else:
+            out[x['code']] = f'{x["status"]} {x["term"]}'
+    return {k: v for k, v in out.items() if v}
+
+
+def course_search(student, e, term):
+    offerings = db.get_offerings(term)
+    if not offerings:
+        available = ', '.join(t for t in ('Fall 2026', 'Spring 2027') if db.get_offerings(t))
+        return blocked(f'The class schedule for {term} isn’t available here. '
+                       f'Class schedules are available for {available}.')
+    subject = e.get('subject')
+    if subject and subject not in offerings:
+        return blocked(f'No {subject} class schedule is available for {term}. '
+                       f'Schedules are available for {", ".join(sorted(offerings))}.')
+    r = Report()
+    record = record_status(student['id'])
+    rows, unknown_credits = [], []
+    for subj in [subject] if subject else sorted(offerings):
+        listing = offerings[subj]
+        key = r.schedule(term, subj, listing)
+        for code in listing['courses']:
+            c = db.get_course(code)
+            title = c['title'] if c else listing['titles'].get(code, '')
+            credits = e.get('credits')
+            if credits and not (c and c['credits_min'] <= credits <= c['credits_max']):
+                if not c:
+                    unknown_credits.append(code)
+                continue
+            if e.get('level') and int(code.split()[1]) // 100 * 100 != e['level']:
+                continue
+            if e.get('keyword') and e['keyword'] not in title.lower():
+                continue
+            rows.append({'code': code, 'title': title,
+                         'credits': c['credits_text'] if c else None,
+                         'prerequisite': c['prerequisite'] if c else None,
+                         'record': record.get(code), 'source': key})
+    rows.sort(key=lambda x: (bool(x['record']), x['code']))
+    filters = [f'{e["credits"]} credit hours' if e.get('credits') else None,
+               f'{e["level"]}-level' if e.get('level') else None,
+               f'“{e["keyword"]}”' if e.get('keyword') else None,
+               subject]
+    filters = ', '.join(f for f in filters if f)
+    r.metric('Matching courses', len(rows))
+    r.metric('Term', term)
+    if filters:
+        r.metric('Filters', filters)
+    taken = sum(1 for x in rows if x['record'])
+    if taken:
+        r.check('info', 'Courses already on your record',
+                f'{taken} of these are already on your record and are listed last.',
+                blocks=False)
+    r.check('unknown', 'Prerequisites aren’t checked',
+            'Prerequisites are shown as listed in the catalog. Confirm you meet them '
+            'before registering.', blocks=False)
+    if unknown_credits:
+        r.check('unknown', 'Some courses have no credit hours here',
+                f'{len(unknown_credits)} listed course(s) have no credit hours in the catalog '
+                f'data available here (e.g. {", ".join(unknown_credits[:3])}), so they are '
+                'left out of the credit filter.',
+                blocks=False)
+    out = r.result(f'{len(rows)} {term} course(s) found'
+                   + (f' matching {filters}.' if filters else '.'), None, status='info')
+    out['courses'] = rows
+    return out
+
+
+def course_info(student, e):
+    code = e.get('course_code')
+    if not code:
+        return blocked('Which course? Name it, for example “Tell me about CS 425”.')
+    c = db.get_course(code)
+    if not c:
+        return blocked(f'{code} isn’t in the course catalog data available here.')
+    r = Report()
+    ckey = r.course(c)
+    r.metric('Course', f'{code} · {c["title"]}')
+    r.metric('Credit hours', c['credits_text'])
+    subject = code.split()[0]
+    offered = []
+    for term in ('Fall 2026', 'Spring 2027'):
+        listing = db.get_offerings(term).get(subject)
+        if listing and code in listing['courses']:
+            offered.append((term, r.schedule(term, subject, listing)))
+    r.metric('Offered', ', '.join(t for t, _ in offered) or 'Not on the loaded schedules')
+    r.check('info', 'Prerequisites', c['prerequisite'] or 'None listed in the catalog.', [ckey])
+    if offered:
+        r.check('ok', 'When it’s offered',
+                f'{code} is on the {" and ".join(t for t, _ in offered)} class schedule.',
+                [k for _, k in offered])
+    else:
+        r.check('unknown', 'When it’s offered',
+                f'{code} isn’t on the Fall 2026 or Spring 2027 class schedules available here.',
+                blocks=False)
+    status = record_status(student['id']).get(code)
+    r.check('ok' if status else 'info', 'Your record',
+            f'{status}.' if status else f'You haven’t taken {code}.', blocks=False)
+
+    prog = db.get_program(student['program'])
+    r.program(student['program'], prog)
+    pkey = f'program:{student["program"]}'
+    req = next((q for q in prog.get('required', []) if code in q['any_of']), None)
+    te = prog.get('technical_electives')
+    if req:
+        r.check('ok', 'Counts toward your degree',
+                f'Required for {prog["name"]}: {req["label"]}.', [pkey])
+    elif te and (code in te['also_eligible'] or (subject == te['subject']
+                 and int(code.split()[1]) // 100 * 100 in te['levels']
+                 and code not in te['excluded'])):
+        team = code in te['team_project']
+        r.check('ok', 'Counts toward your degree',
+                f'Eligible as a {prog["name"]} technical elective'
+                + (' and on the team project list.' if team else '.'), [pkey])
+    elif prog.get('school_subject') == subject:
+        r.check('ok', 'Counts toward your degree',
+                f'Counts toward the {prog["school_hours"]} School of Information Sciences '
+                'hours for your degree.', [pkey])
+    else:
+        r.check('unknown', 'Counts toward your degree',
+                f'{code} isn’t a listed requirement for {prog["name"]} here; it may count '
+                'as an elective. Confirm with your academic advisor.', blocks=False)
+    return r.result(f'{code}: {c["title"]}, {c["credits_text"]} credit hours.', None,
+                    status='info')
+
+
+# ---- Policies and deadlines -------------------------------------------------
+
+TOPICS = {
+    'full_time': ('Full-time enrollment', ['isss_full_time', 'isss_before_dropping', 'isss_exceptions', 'tuition_ranges'], ()),
+    'refunds': ('Refunds and tuition ranges', ['tuition_ranges', 'tuition_range_refund', 'per_credit_hour_programs', 'drop_deadlines_by_part_of_term'], ('refund',)),
+    'deadlines': ('Drop and withdrawal deadlines', ['drop_deadlines_by_part_of_term'], ('drop', 'withdraw', 'cancel')),
+    'withdrawal': ('Withdrawing from a term', ['single_course_withdrawal'], ('withdraw', 'cancel')),
+    'registration': ('Registration dates', [], ('registration',)),
+    'graduation_application': ('Applying to graduate', [], ('graduat',)),
+    'winter_session': ('Winter session', ['w27_session'], ('winter',)),
+    'holds': ('Registration holds', ['holds_general'], ()),
+}
+FACT_TITLES = {
+    'isss_full_time': 'F-1/J-1 full-time minimum', 'isss_before_dropping': 'Before dropping below full time',
+    'isss_exceptions': 'Exceptions', 'grad_isss_prior_approval': 'Graduate students need ISSS approval',
+    'tuition_ranges': 'Tuition ranges', 'tuition_range_refund': 'Refunds when your range changes',
+    'per_credit_hour_programs': 'Per-credit-hour programs', 'drop_deadlines_by_part_of_term': 'Deadlines by part of term',
+    'single_course_withdrawal': 'Dropping your only course', 'holds_general': 'What holds can block',
+    'w27_session': 'Who can take winter classes',
+}
+
+
+def policy(student, e, term, on):
+    topic = e.get('topic')
+    if topic not in TOPICS:
+        return blocked('Which policy? I can answer questions about full-time enrollment, '
+                       'drop and withdrawal deadlines, refunds, registration dates, applying '
+                       'to graduate, the winter session and holds.')
+    label, facts, words = TOPICS[topic]
+    if topic == 'winter_session':
+        term = 'Winter 2027'
+    if topic == 'full_time' and student['level'] == 'GR':
+        facts = facts[:2] + ['grad_isss_prior_approval'] + facts[2:]
+    r = Report()
+    for key in facts:
+        r.check('info', FACT_TITLES[key], r.fact(key)['quote'], [key], blocks=False)
+    dates = [d for d in key_dates(student['level'], term, on)
+             if any(w in d['label'].lower() for w in words)] if words else []
+    for d in dates:
+        r.check('info' if not d['past'] else 'ok', d['label'],
+                f'{d["display"]}{" (passed)" if d["past"] else ""}.', [d['key']], blocks=False)
+    if words and not dates:
+        r.check('unknown', f'{term} dates',
+                f'The {term} calendar available here has no dates for this.', blocks=False)
+    r.metric('Topic', label)
+    if words:
+        r.metric('Term', term)
+    return r.result(f'{label}' + (f' — {term}' if words else '') + ', quoted from university sources.',
+                    None, status='info')
