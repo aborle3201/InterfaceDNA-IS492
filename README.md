@@ -359,6 +359,96 @@ The Checkpoint 3 evaluation will compare:
 
 The goal for Checkpoint 3 is not simply to make InterfaceDNA more autonomous. It is to test whether a clearer division of responsibility between the **AI, trusted system logic, and the student** creates a safer and more useful experience.
 
+
+---
+
+## Checkpoint 3 — Implemented System and Results
+
+**Implementation snapshot:** November 5, 2026  
+**Branch:** `live_demo`
+
+Checkpoint 3 transformed InterfaceDNA from an initial goal-adaptive interface concept into an integrated, source-grounded academic workflow prototype.
+
+The application combines live generative AI intent interpretation with deterministic rule evaluation, synthetic student records, a task-focused university portal interface, and explicit confirmation safeguards.
+
+### Implemented Functionality
+
+The current implementation includes:
+
+1. **Natural-language goal interpretation:** Groq-hosted inference identifies supported academic intents and extracts relevant user-supplied entities.
+
+2. **Source-grounded university information:** Course information, academic requirements, and policy rules are derived from real UIUC documents, with quoted evidence and source references.
+
+3. **Synthetic student records:** A reproducible dataset of 254 fictional students represents different programs, enrollment histories, registration statuses, and academic circumstances.
+
+4. **SQLite-backed application state:** Student information, course data, policy facts, sessions, and simulated action receipts are managed using SQLite.
+
+5. **Deterministic academic validation:** Python rules evaluate course-drop consequences, enrollment eligibility, deadlines, graduation requirements, and registration holds.
+
+6. **Task-focused interface composition:** The frontend presents relevant information through structured cards, grouped checks, warning states, and source references.
+
+7. **Explicit confirmation:** Consequential actions require user acknowledgment and backend revalidation before a simulated receipt can be recorded.
+
+8. **Failure and recovery handling:** Controlled missing-record, policy-conflict, and service-outage scenarios demonstrate blocked actions and recovery to review.
+   
+---
+
+### Supported Academic Workflows
+
+| Workflow | Functionality |
+|---|---|
+| Course drop | Evaluate enrollment, credit consequences, applicable deadlines, and student-specific restrictions |
+| Graduation readiness | Compare available undergraduate records against supported degree requirements |
+| Registration holds | Explain synthetic holds and source-backed registration information |
+| Course search | Retrieve relevant catalog information |
+| Course information | Present available course details |
+| Policy questions | Provide source-backed policy information with citations |
+
+---
+
+### Checkpoint 3 Validation
+
+The latest locally observed backend regression run on November 5, 2026 reported:
+
+```text
+25 passed, 1 warning in 1.24s
+```
+
+The tests cover synthetic records, academic validation, citation handling, confirmation safeguards, failure injection, recovery, and relevant API behavior.
+
+The separate live model evaluation was documented as 37 correct classifications out of 38 cases, with one remaining adversarial failure. This evaluation is distinct from the mocked backend regression suite.
+
+Source-verification tools were also used to validate quoted policy and program evidence against the corresponding source documents.
+
+### Evidence and Documentation
+
+- [System architecture](docs/architecture.md)
+- [Use cases and recovery tests](docs/use-cases.md)
+- [Safety, privacy, and guardrails](docs/safety_privacy.md)
+- [Observability](docs/observability.md)
+- [Local installation instructions](app/INSTALL.md)
+- [Checkpoint 3 validation screenshots](validation/checkpoint3/)
+
+The screenshots include evidence from an earlier prototype implementation and should not be interpreted as complete manual verification of the redesigned portal.
+
+### Known Limitations
+
+InterfaceDNA remains a local academic prototype. Student records are fictional, university data sources are not automatically refreshed, and recorded actions do not modify actual university systems.
+
+Degree-audit coverage is partial, course part-of-term information can be unavailable, and some institutional questions require human verification. Production authentication, operational monitoring, and integration with university systems remain outside the current implementation.
+
+### Connection to the Project Research
+
+Checkpoint 3 operationalizes the three primary gaps identified during Checkpoint 2:
+
+- **Grounding:** Institutional facts originate from traceable sources rather than unsupported model generation.
+- **Human control:** Consequential actions remain subject to deterministic validation and explicit user confirmation.
+- **Attention management:** Task-focused views prioritize relevant consequences, uncertainty, and next steps over lengthy generic responses.
+
+The final evaluation will examine whether this hybrid approach improves task comprehension and decision quality compared with conventional portal navigation and general-purpose conversational AI.
+
+---
+
 ## Project Vision
 
 InterfaceDNA explores a different way of thinking about digital interfaces.
