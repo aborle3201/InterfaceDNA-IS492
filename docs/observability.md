@@ -34,15 +34,15 @@ There are no distributed traces, trace IDs, durable metrics, per-user budget, st
 
 ## Checkpoint 3 — Verification and Interpretation of Logs
 
-The application is tested locally with pytest and FastAPI's TestClient: **48 tests pass** (November 6, 2026). The tests mock model interpretation, so backend behavior is validated without depending on Groq availability. Live inference is evaluated separately through `app/eval_intents.py` (38 cases, 37/38) and interactive testing.
+The application is tested locally with pytest and FastAPI's TestClient: **51 tests pass** (November 6, 2026). The tests mock model interpretation, so backend behavior is validated without depending on Groq availability. Live inference is evaluated separately through `app/eval_intents.py` (37/38 on the 38-case run; 4 later record cases passed) and interactive testing.
 
 ### Verification levels
 
 | Verification level | Evidence | Limitation |
 |---|---|---|
-| Backend regression | pytest and TestClient (48 tests) | Does not independently validate browser usability |
-| Policy-source verification | `tools/verify_sources.py`: 74 quotations and every deadline date | Source documents may become outdated |
-| Live model evaluation | 38 intent-classification cases | Model output may vary between runs |
+| Backend regression | pytest and TestClient (51 tests) | Does not independently validate browser usability |
+| Policy-source verification | `tools/verify_sources.py`: 81 quotations and every deadline date | Source documents may become outdated |
+| Live model evaluation | 42 intent-classification cases | Model output may vary between runs |
 | Browser checks | Headless-browser walkthroughs of the main flows, phone width and dark mode | Not every combination of student, term and question |
 | UI evidence | `validation/checkpoint3/` screenshots | Some reflect the previous prototype |
 | Operational logging | HTTP outcomes, latency, intent, entities, model usage and errors | Not a production monitoring system |

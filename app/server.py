@@ -27,7 +27,7 @@ import rules  # noqa: E402
 
 SYSTEM = (BASE / 'prompts' / 'system.txt').read_text()
 SETTINGS = json.loads((BASE / 'prompts' / 'settings.json').read_text())
-INTENTS = ('drop', 'graduation', 'hold', 'course_search', 'course_info', 'policy', 'unknown')
+INTENTS = ('drop', 'graduation', 'hold', 'record', 'course_search', 'course_info', 'policy', 'unknown')
 TERM = re.compile(r'\b(fall|spring|summer|winter)\s+(\d{4})\b', re.I)
 TOPICS = ('full_time', 'deadlines', 'refunds', 'withdrawal', 'registration',
           'graduation_application', 'winter_session', 'holds')
@@ -48,6 +48,12 @@ class Start(BaseModel):
 
 class Confirm(BaseModel):
     session_id: str
+    confirmation: bool
+
+
+class Cancel(BaseModel):
+    student_id: str = Field(pattern=r'^S\d{5}$')
+    receipt: str = Field(min_length=8, max_length=64)
     confirmation: bool
 
 
@@ -90,7 +96,7 @@ def as_int(value):
     return None
 
 
-RELATIVE = re.compile(r'\b(this|next|coming|upcoming)\s+(fall|spring|summer|winter|semester|term)\b', re.I)
+RELATIVE = re.compile(r'\b(this|next|coming|upcoming|last|previous)\s+(fall|spring|summer|winter|semester|term)\b', re.I)
 
 
 def typed_terms(message):
@@ -100,7 +106,13 @@ def typed_terms(message):
     terms = rules.terms()
     for when, what in RELATIVE.findall(message):
         what = what.lower()
-        if what in ('semester', 'term'):  # the next Fall or Spring semester
+        if when.lower() in ('last', 'previous'):  # the most recent finished term
+            pool = [t for t in reversed(terms) if t['status'] == 'past'
+                    and (rules.full_term(t['term']) if what in ('semester', 'term')
+                         else t['term'].lower().startswith(what))]
+        elif when.lower() == 'this' and what in ('semester', 'term'):
+            pool = [t for t in terms if t['status'] == 'current']
+        elif what in ('semester', 'term'):  # the next Fall or Spring semester
             pool = [t for t in terms if t['status'] == 'upcoming' and rules.full_term(t['term'])]
         else:
             pool = [t for t in terms if t['term'].lower().startswith(what)
@@ -180,7 +192,7 @@ def clean_entities(intent, raw, message):
         name = str(raw.get('course_name') or '').strip()
         if not out['course_code'] and 2 < len(name) <= 60 and name.lower() in message.lower():
             out['course_name'] = name
-    if intent in ('drop', 'course_search', 'course_info', 'policy'):
+    if intent in ('drop', 'record', 'course_search', 'course_info', 'policy'):
         # A single term the student typed is used even if the model missed it.
         known = [t for t in dict.fromkeys(typed_terms(message)) if rules.term_info(t)]
         out['term'] = normalize_term(raw.get('term'), message) or (known[0] if len(known) == 1 else None)
@@ -397,6 +409,17 @@ def start(body: Start):
         'result': result,
         'state': state,
     }
+
+
+@app.post('/api/requests/cancel')
+def cancel(body: Cancel):
+    if not body.confirmation:
+        raise HTTPException(400, 'Explicit confirmation required')
+    request = db.cancel_request(body.student_id, body.receipt)
+    if not request:
+        raise HTTPException(409, 'This request is not active, so it cannot be cancelled')
+    return {'receipt': body.receipt, 'status': 'cancelled', 'description': request['details']['description'],
+            'message': 'Request cancelled.'}
 
 
 @app.post('/api/fault')

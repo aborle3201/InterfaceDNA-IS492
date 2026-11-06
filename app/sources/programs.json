@@ -327,12 +327,70 @@
       "level": "GR",
       "catalog": "2026-2027",
       "pages": "1351",
-      "audit_supported": false,
+      "audit_supported": true,
       "quotes": [
         {
           "page": 1351,
           "quote": "Computer Science, MCS for the degree of Master of Computer Science in Computer Science"
+        },
+        {
+          "page": 1351,
+          "quote": "Advanced courses – chosen from CS 500 - CS 590 and CS 598; CS 597, or an approved non-CS 500-level course may satisfy 4 credit hours of this requirement."
+        },
+        {
+          "page": 1351,
+          "quote": "Total Hours 32"
+        },
+        {
+          "page": 1351,
+          "quote": "A minimum of 24 CS credit hours must be taken from the University of Illinois at Urbana-Champaign campus. A minimum of 12 500-level credit hours overall. A maximum of 4 hours of CS 591 and CS 491 may be applied toward the degree. A grade of B- or higher is required for Breadth course work."
+        },
+        {
+          "page": 1351,
+          "quote": "The minimum program GPA is 3.0."
         }
+      ],
+      "total_hours": 32,
+      "min_gpa": 3.0,
+      "school_hours": 24,
+      "school_subject": "CS",
+      "school_label": "CS hours on the Urbana-Champaign campus",
+      "required": [],
+      "level_hours": {
+        "level": 500,
+        "min": 12
+      },
+      "range_hours": {
+        "label": "Advanced courses (CS 500–CS 590 and CS 598)",
+        "subject": "CS",
+        "ranges": [
+          [
+            500,
+            590
+          ],
+          [
+            598,
+            598
+          ]
+        ],
+        "min": 12
+      },
+      "max_hours": [
+        {
+          "label": "CS 591 and CS 491 combined",
+          "courses": [
+            "CS 591",
+            "CS 491"
+          ],
+          "max": 4
+        }
+      ],
+      "not_evaluated": [
+        "Breadth requirement (the CS department's breadth course lists are not in the loaded documents)",
+        "A grade of B- or higher in breadth course work",
+        "Professional development (CS 591, ENG 572 or comparable work experience)",
+        "Transfer credit and the three-consecutive-semester limit for on-campus students",
+        "Catalog-year differences: requirements are checked against the 2026-2027 catalog"
       ]
     },
     "IM_MS": {
@@ -340,12 +398,68 @@
       "level": "GR",
       "catalog": "2026-2027",
       "pages": "1652",
-      "audit_supported": false,
+      "audit_supported": true,
       "quotes": [
         {
           "page": 1652,
           "quote": "Information Management, MS for the degree of Master of Science in Information Management"
+        },
+        {
+          "page": 1652,
+          "quote": "IS 504 Sociotechnical Information Systems 4 IS 507 Data, Statistical Models and Information 4 One of the following two courses: 4 IS 515 Information Modeling IS 455 Database Design and Prototyping"
+        },
+        {
+          "page": 1652,
+          "quote": "IS 579 Guided Research Experience IS 589 Independent Study Total Hours 40"
+        },
+        {
+          "page": 1652,
+          "quote": "Minimum Hours Required within the Unit 28 Minimum 500-level Hours Required Overall 12 Maximum Guided Research/Independent Study 4 Competency in at least one programming language Minimum GPA: 2.75"
         }
+      ],
+      "total_hours": 40,
+      "min_gpa": 2.75,
+      "school_hours": 28,
+      "school_subject": "IS",
+      "required": [
+        {
+          "label": "IS 504 Sociotechnical Information Systems",
+          "any_of": [
+            "IS 504"
+          ]
+        },
+        {
+          "label": "IS 507 Data, Statistical Models and Information",
+          "any_of": [
+            "IS 507"
+          ]
+        },
+        {
+          "label": "IS 515 or IS 455",
+          "any_of": [
+            "IS 515",
+            "IS 455"
+          ]
+        }
+      ],
+      "level_hours": {
+        "level": 500,
+        "min": 12
+      },
+      "max_hours": [
+        {
+          "label": "Guided research / independent study (IS 579, IS 589)",
+          "courses": [
+            "IS 579",
+            "IS 589"
+          ],
+          "max": 4
+        }
+      ],
+      "not_evaluated": [
+        "Competency in at least one programming language",
+        "Elective courses are subject to the program's other requirements and conditions",
+        "Catalog-year differences: requirements are checked against the 2026-2027 catalog"
       ]
     },
     "ILEE_BS": {

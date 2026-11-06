@@ -319,5 +319,41 @@
   "intent": "unknown",
   "course_code": null,
   "entities": {}
+ },
+ {
+  "id": "R01",
+  "kind": "typical",
+  "message": "What courses do I have?",
+  "intent": "record",
+  "course_code": null,
+  "entities": {}
+ },
+ {
+  "id": "R02",
+  "kind": "edge",
+  "message": "what did I take last semester",
+  "intent": "record",
+  "course_code": null,
+  "entities": {
+   "term": "Spring 2026"
+  }
+ },
+ {
+  "id": "R03",
+  "kind": "typical",
+  "message": "What's my GPA?",
+  "intent": "record",
+  "course_code": null,
+  "entities": {}
+ },
+ {
+  "id": "R04",
+  "kind": "edge",
+  "message": "am I registered for anything next spring",
+  "intent": "record",
+  "course_code": null,
+  "entities": {
+   "term": "Spring 2027"
+  }
  }
 ]

@@ -103,8 +103,9 @@ def test_graduation():
     assert [c['title'] for c in maya['checks'] if c['level']=='warn']==['Apply to graduate in December']
     alex=rules.evaluate('graduation',ALEX,{})
     assert levels(alex)['CS 374']=='info' and levels(alex)['CS 421']=='warn'
-    grad=find_student(lambda s,cur:s['level']=='GR')
-    assert 'available online yet' in rules.evaluate('graduation',grad['id'],{})['reason']
+    sam=rules.evaluate('graduation',SAM,{})
+    assert sam['status']=='ready' and levels(sam)['Advanced courses (CS 500–CS 590 and CS 598)'] in ('ok','info','warn')
+    assert levels(sam)['Program GPA']=='ok' and 'Breadth requirement (the CS department\'s breadth course lists are not in the loaded documents)' in levels(sam)
 
 def test_holds():
     r=rules.evaluate('hold',JORDAN,{})
@@ -413,3 +414,40 @@ def test_important_follows_selected_term():
     assert any('cancel Spring 2027' in i['title'] for i in spring)
     assert [i for i in rules.important(ALEX,'Fall 2025') if 'request' not in i['title']]==[]  # requests show on every term
     assert [i['title'] for i in rules.important(JORDAN,'Spring 2027')][:2]==['Hold: Immunization requirement','Hold: Financial encumbrance']
+
+def test_record_question():
+    r=rules.evaluate('record',ALEX,{},term='Fall 2026')
+    assert r['status']=='info' and {c['code'] for c in r['courses']}=={'CS 341','CS 357','CS 374','CS 411'}
+    past=rules.evaluate('record',ALEX,{},term='Fall 2025')
+    assert past['summary'].startswith('You took') and all('Completed (' in c['record'] for c in past['courses'])
+    assert rules.evaluate('record',ALEX,{},term='Spring 2027')['summary'].startswith('You are registered for')
+    assert rules.evaluate('record',ALEX,{},'missing_record')['status']=='blocked'
+    assert server.typed_terms('what did I take last semester')==['Spring 2026']
+    assert server.typed_terms('what am I taking this semester')==['Fall 2026']
+
+def test_cancel_request(monkeypatch):
+    monkeypatch.setattr(server,'classify_live',stub('drop',{'course_code':'CS 412'}))
+    sid=find_student(lambda s,cur:s['level']=='GR' and s['visa'] is None and len(cur)>=3 and not db.list_requests(s['id']))['id']
+    code=db.get_current(sid)[0]['code']
+    monkeypatch.setattr(server,'classify_live',stub('drop',{'course_code':code}))
+    d=client.post('/api/start',json={'message':f'drop {code}','student_id':sid}).json()
+    receipt=client.post('/api/confirm',json={'session_id':d['session_id'],'confirmation':True}).json()['receipt']
+    assert client.post('/api/requests/cancel',json={'student_id':sid,'receipt':receipt,'confirmation':False}).status_code==400
+    assert client.post('/api/requests/cancel',json={'student_id':ALEX,'receipt':receipt,'confirmation':True}).status_code==409  # not Alex's
+    r=client.post('/api/requests/cancel',json={'student_id':sid,'receipt':receipt,'confirmation':True})
+    assert r.status_code==200 and r.json()['status']=='cancelled'
+    assert client.post('/api/requests/cancel',json={'student_id':sid,'receipt':receipt,'confirmation':True}).status_code==409  # already cancelled
+    assert db.list_requests(sid)[0]['status']=='cancelled' and db.list_requests(sid,active=True)==[]
+    # the course counts again and the same request can be made again
+    again=client.post('/api/start',json={'message':f'drop {code}','student_id':sid}).json()
+    assert again['state']=='review' and not any(c['title']=='Includes your pending drop request' for c in again['result']['checks'])
+
+def test_graduate_degree_checks():
+    im=next(x['id'] for x in db.list_students() if x['program']=='IM_MS')
+    r=rules.evaluate('graduation',im,{})
+    titles=levels(r)
+    assert r['status']=='ready' and 'IS 504 Sociotechnical Information Systems' in titles and '500-level hours' in titles
+    assert 'Guided research / independent study (IS 579, IS 589)' in titles
+    w=next(c['where'] for c in r['checks'] if c['level']=='unknown' and c['where'])
+    assert w['label']=='Your graduate program office'
+    assert r['summary'].startswith('Graduation is not guaranteed')

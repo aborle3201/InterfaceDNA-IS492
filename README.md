@@ -247,7 +247,7 @@ InterfaceDNA-IS492/
 │   ├── rules.py              # deterministic rules, important items, directions
 │   ├── db.py                 # SQLite schema, seeding and queries
 │   ├── generate_students.py  # 254 seeded synthetic students
-│   ├── eval_intents.py       # live 38-case intent evaluation
+│   ├── eval_intents.py       # live 42-case intent evaluation
 │   ├── index.html, assets/   # student portal UI
 │   ├── prompts/              # system prompt, settings, evaluation cases
 │   ├── sources/              # courses, offerings, policies, programs (from University docs)
@@ -255,7 +255,7 @@ InterfaceDNA-IS492/
 │   └── INSTALL.md            # local setup
 ├── University docs/          # source PDFs: calendars, catalogs, schedules, ISSS, refunds, Graduate College Handbook
 ├── docs/                     # architecture, use cases, safety and privacy, observability
-├── tests/                    # backend test suite (48 tests)
+├── tests/                    # backend test suite (51 tests)
 ├── validation/               # Checkpoint 2 study, interviews, analyses; checkpoint3/ screenshots
 ├── prototype/                # Checkpoint 2 static prototype
 ├── literature/               # bibliography and papers
@@ -293,10 +293,10 @@ InterfaceDNA-IS492/
 ### Checkpoint 3
 
 - Built the integrated portal on `live_demo`: live intent extraction, deterministic rules, SQLite, and a step-by-step student-services interface with a term picker.
-- Loaded real UIUC sources (calendars, Registrar deadlines, ISSS rules, refunds, Graduate College Handbook, catalogs, class schedules) with 74 automatically verified quotations.
+- Loaded real UIUC sources (calendars, Registrar deadlines, ISSS rules, refunds, Graduate College Handbook, catalogs, class schedules) with 81 automatically verified quotations.
 - Generated 254 reproducible synthetic students.
-- Added course drop, graduation, holds, course search, course details, policy questions, "Important for you", "Where to check" directions and request history.
-- 48 backend tests passing; live intent evaluation 37/38.
+- Added course drop, graduation, holds, your own courses and record, course search, course details, policy questions, "Important for you", "Where to check" directions and request history.
+- 51 backend tests passing; live intent evaluation 37/38 plus 4 record cases passing.
 - Documented architecture, use cases, safety and observability.
 
 ---
@@ -386,16 +386,16 @@ Checkpoint 3 turned InterfaceDNA from a goal-adaptive interface concept into an 
 
 ### Implemented functionality
 
-1. **Natural-language goal interpretation.** Groq-hosted inference (`openai/gpt-oss-120b`) identifies one of seven intents and extracts what the student typed:
-   - **intents:** drop, graduation, hold, course search, course details, policy, or out of scope;
+1. **Natural-language goal interpretation.** Groq-hosted inference (`openai/gpt-oss-120b`) identifies one of eight intents and extracts what the student typed:
+   - **intents:** drop, graduation, hold, the student's own record, course search, course details, policy, or out of scope;
    - **details:** course code or name, term, subject, credit hours, level, topic.
-   It understands synonyms, abbreviations and relative terms such as "next spring".
-2. **Source-grounded university information.** Policy facts, deadlines, course data, class schedules and degree requirements come from the real UIUC documents in `University docs/`, with verbatim quotes and page references (74 quotes verified automatically).
+   It understands synonyms, abbreviations and relative terms such as "next spring" or "last semester".
+2. **Source-grounded university information.** Policy facts, deadlines, course data, class schedules and degree requirements come from the real UIUC documents in `University docs/`, with verbatim quotes and page references (81 quotes verified automatically).
 3. **Synthetic student records.** A reproducible set of 254 fictional students across CS BS, IS BS, CS MCS and Information Management MS, with transcripts, Fall 2026 enrollments, Spring 2027 registrations, visa status and holds.
 4. **Term picker.** Six terms: Fall 2025, Spring 2026, Fall 2026 (current), Winter 2027, Spring 2027 and Summer 2027. Schedules, key dates, drop checks and important items follow the selected term.
 5. **Deterministic academic rules.** The rules cover:
    - **drops:** enrollment, ISSS minimums, no-W and refund deadlines by part of term, withdrawal and cancellation, the graduate petition cutoff, and pending requests;
-   - **graduation:** CS BS and IS BS requirements, with "Graduation is not guaranteed" wording;
+   - **graduation:** CS BS, IS BS, CS MCS and Information Management MS requirements, with "Graduation is not guaranteed" wording;
    - **registration:** holds and registration dates;
    - **courses:** search and course details;
    - **policy:** answers quoted directly from the sources.
@@ -407,7 +407,7 @@ Checkpoint 3 turned InterfaceDNA from a goal-adaptive interface concept into an 
    - the graduation application;
    - recorded requests.
 7. **Where to check.** Anything the sources can't verify points to the official place (the course's Course Explorer page, Registrar refund schedules, ISSS, Student Self-Service, the college office or the academic advisor). Out-of-scope questions get a guide to official pages instead of a dead end.
-8. **Explicit confirmation and request history.** Consequential actions need acknowledgment and server-side revalidation before a receipt is recorded. Requests appear under *My requests*, dropped courses are marked *Drop requested*, and duplicates are blocked.
+8. **Explicit confirmation and request history.** Consequential actions need acknowledgment and server-side revalidation before a receipt is recorded. Requests appear under *My requests* and can be cancelled there or on the receipt page; dropped courses are marked *Drop requested*, and duplicates of active requests are blocked.
 9. **Failure and recovery handling.** Test scenarios (conflicting policy versions, record unavailable, service outage) block every question type and recover to review without executing anything.
 
 ### Supported question types
@@ -417,6 +417,7 @@ Checkpoint 3 turned InterfaceDNA from a goal-adaptive interface concept into an 
 | Course drop | "Can I drop CS 411?" / "can I quit my database class?" | Credit change, visa minimum, tuition range and refund, no-W deadline by part of term, withdrawal rules |
 | Graduation | "What do I still need to graduate?" | Requirement-by-requirement check against the 2026-2027 catalog, unverified items with the advisor, graduation application |
 | Holds | "Why can't I register?" | Holds, what they can block, registration dates, where to resolve them |
+| Your courses & record (ask under *Something else*) | "What courses do I have?" / "what did I take last semester" | The term's courses with status or grades, hours this term, completed hours, GPA, holds |
 | Course search | "3 credit courses I can take next spring" / "any AI courses?" | Matching courses from the Course Explorer schedules with credits, prerequisites and the student's record |
 | Course details | "What are the prerequisites for CS 425?" | Prerequisites, when offered, the student's record, whether it counts toward the degree |
 | Policy | "How many credits do international students need?" | The quoted policy text and the term's relevant dates |
@@ -426,9 +427,9 @@ Checkpoint 3 turned InterfaceDNA from a goal-adaptive interface concept into an 
 
 | Check | Result |
 |---|---|
-| Backend tests (`python -m pytest tests -q`, November 6, 2026) | **48 passed** |
-| Source verification (`app/tools/verify_sources.py`) | **74/74** quotations found on their cited pages; every deadline date matches its quote |
-| Live intent evaluation (`app/eval_intents.py`) | **37/38**; the one failure (A06) is contained by the rules |
+| Backend tests (`python -m pytest tests -q`, November 6, 2026) | **51 passed** |
+| Source verification (`app/tools/verify_sources.py`) | **81/81** quotations found on their cited pages; every deadline date matches its quote |
+| Live intent evaluation (`app/eval_intents.py`) | **37/38** on the 38-case run (the one failure, A06, is contained by the rules); the 4 later record cases passed |
 | Browser checks | Main flows, term picker, important items, confirmation and *My requests*, phone width and dark mode |
 
 ### Evidence and documentation
@@ -443,7 +444,7 @@ Checkpoint 3 turned InterfaceDNA from a goal-adaptive interface concept into an 
 ### Known limitations
 
 - **Local prototype.** Student records are fictional, university sources are not refreshed automatically, and recorded actions do not modify university systems.
-- **Partial degree checks.** Only CS BS and IS BS are checked. Gen eds, focus areas, technical GPA and graduate programs are not.
+- **Partial degree checks.** CS BS, IS BS, CS MCS and Information Management MS are checked; gen eds, focus areas, technical GPA, the MCS breadth requirement and the ILEE degree are not.
 - **Unchecked prerequisites.** Prerequisites are shown but not checked against transcripts.
 - **Part of term unknown.** Each course's part of term isn't in the loaded schedules, so some undergraduate drops can't be decided; the page links to the course's Course Explorer page.
 - **Outside scope.** Production authentication, operational monitoring and integration with university systems.

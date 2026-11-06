@@ -300,6 +300,14 @@ def featured(gen):
     sam = gen.student(
         'CS_MCS', sid='S00004', name='Sam Rivera', visa=None, done=1, ability=3.5,
         current=['CS 411', 'CS 412', 'CS 440'], holds=[], assistantship=False)
+    # Sam's Fall 2026 courses are fixed; a past course drawn at random must not
+    # repeat one of them. Swap in the first unused pool course (no extra random draws).
+    current = {e['code'] for e in sam['enrollments'] if e['status'] == 'Enrolled'}
+    used = {e['code'] for e in sam['enrollments']}
+    for e in sam['enrollments']:
+        if e['status'] == 'Completed' and e['code'] in current:
+            e['code'] = next(c for c in GRAD_POOLS['CS_MCS'] if c not in used)
+            used.add(e['code'])
     for s in (alex, maya, jordan, sam):
         gen.names.add(s['name'])
         for e in s['enrollments']:

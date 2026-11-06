@@ -152,6 +152,10 @@ def evaluate(intent, student_id, entities, fault='none', on=None, term=None):
     if fault == 'policy_conflict' and intent == 'policy':
         return blocked('Two different versions of this policy were returned, so I’m '
                        'not sure which applies. Check with the office that owns it.')
+    if fault == 'missing_record' and intent == 'record':
+        return blocked('Your student record is unavailable right now. Please try again later.')
+    if intent == 'record':
+        return record(student, term)
     if intent == 'course_search':
         return course_search(student, entities, term)
     if intent == 'course_info':
@@ -319,7 +323,7 @@ def drop(student, entities, fault, on, term):
         return blocked(f'You already requested to drop {code} for {term} '
                        f'(receipt {previous["receipt"][:8]}). It is listed under My requests.')
     # Courses with a recorded drop request no longer count toward hours.
-    pending = {r['entities'].get('course_code') for r in db.list_requests(student['id'])
+    pending = {r['entities'].get('course_code') for r in db.list_requests(student['id'], active=True)
                if r['intent'] == 'drop' and r['term'] == term}
     courses = [c for c in db.get_term_courses(student['id'], term) if c['code'] not in pending]
     course = next((c for c in courses if c['code'] == code), None)
@@ -509,9 +513,10 @@ def graduation(student, fault, on):
     done_hours = sum(x['credits'] for x in passed)
     now_hours = sum(x['credits'] for x in current)
 
-    r.metric('Hours completed', done_hours)
+    r.metric(f'Hours completed since {student["admit_term"]}', done_hours)
     r.metric('Hours in progress', now_hours)
-    r.metric('Hours required', prog['total_hours'])
+    r.metric(f'Hours remaining after current courses (of {prog["total_hours"]})',
+             max(0, prog['total_hours'] - done_hours - now_hours))
 
     missing = 0
 
@@ -578,17 +583,41 @@ def graduation(student, fault, on):
     if 'school_hours' in prog:
         subj = prog['school_subject'] + ' '
         school = lambda rows: sum(x['credits'] for x in rows if x['code'].startswith(subj))
-        threshold(f'{prog["school_subject"]} hours (School of Information Sciences)',
+        threshold(prog.get('school_label', f'{prog["school_subject"]} hours (School of Information Sciences)'),
                   school(passed), school(current), prog['school_hours'])
+
+    lv = prog.get('level_hours')
+    if lv:
+        at_level = lambda rows: sum(x['credits'] for x in rows if course_level(x['code']) >= lv['level'])
+        threshold(f'{lv["level"]}-level hours', at_level(passed), at_level(current), lv['min'])
+
+    rh = prog.get('range_hours')
+    if rh:
+        def in_range(x):
+            return (x['code'].startswith(rh['subject'] + ' ')
+                    and any(lo <= course_level(x['code']) <= hi for lo, hi in rh['ranges']))
+        threshold(rh['label'], sum(x['credits'] for x in passed if in_range(x)),
+                  sum(x['credits'] for x in current if in_range(x)), rh['min'])
+
+    for cap in prog.get('max_hours', []):
+        used = sum(x['credits'] for x in passed + current if x['code'] in cap['courses'])
+        if used > cap['max']:
+            missing += 1
+            r.check('warn', cap['label'], f'{used} hours on record; at most {cap["max"]} can count '
+                    'toward the degree.', blocks=False)
+        else:
+            r.check('ok', cap['label'], f'{used} of at most {cap["max"]} hours used.', blocks=False)
 
     if 'min_gpa' in prog:
         points = dict(GRADES)
         graded = [x for x in records if x['status'] == 'Completed' and x['grade']]
-        for title, rows, need in [
-                ('Cumulative GPA', graded, prog['min_gpa']),
-                ('GPA in School courses',
-                 [x for x in graded if x['code'].startswith(prog['school_subject'] + ' ')],
-                 prog['min_school_gpa'])]:
+        gpa_checks = [('Cumulative GPA' if student['level'] == 'UG' else 'Program GPA',
+                       graded, prog['min_gpa'])]
+        if 'min_school_gpa' in prog:
+            gpa_checks.append(('GPA in School courses',
+                               [x for x in graded if x['code'].startswith(prog['school_subject'] + ' ')],
+                               prog['min_school_gpa']))
+        for title, rows, need in gpa_checks:
             hours = sum(x['credits'] for x in rows)
             gpa = round(sum(x['credits'] * points[x['grade']] for x in rows) / hours, 2) if hours else None
             if gpa is None:
@@ -613,8 +642,10 @@ def graduation(student, fault, on):
 
     for item in prog['not_evaluated']:
         r.check('unknown', item,
-                'Not included in this check; confirm with your academic advisor.',
-                blocks=False, where=('Your academic advisor', None))
+                'Not included in this check; confirm with your '
+                + ('academic advisor.' if student['level'] == 'UG' else 'graduate program office.'),
+                blocks=False, where=('Your academic advisor' if student['level'] == 'UG'
+                                     else 'Your graduate program office', None))
 
     
     if missing:
@@ -985,7 +1016,7 @@ def important(student_id, term=None, on=None, horizon=21, upcoming_count=5):
             f'{d["display"]} — {"today" if days == 0 else f"in {days} day" + ("s" if days != 1 else "")}.',
             f'{d["source"]["publisher"]}: {d["source"]["title"]}', d['source']['url'])
 
-    requests = db.list_requests(student_id)
+    requests = db.list_requests(student_id, active=True)
     if requests:
         add('info', f'{len(requests)} request(s) on record',
             'Listed under My requests on your dashboard with their receipts.')
@@ -1016,3 +1047,41 @@ def general(student, term):
         'I can’t answer that question directly here. I can help with dropping a course, '
         'finding courses, course details, graduation requirements, holds, and policies and '
         'deadlines. For anything else, start with the official pages below.', None, status='info')
+
+
+# ---- The student's own record -----------------------------------------------
+
+def record(student, term):
+    """The student's courses for a term (with grades for a finished term) and a
+    summary of their record: program, completed hours, GPA and holds."""
+    info = term_info(term)
+    rows = db.get_term_courses(student['id'], term)
+    r = Report()
+    pending = {q['entities'].get('course_code') for q in db.list_requests(student['id'], active=True)
+               if q['intent'] == 'drop' and q['term'] == term}
+    courses = [{'code': c['code'], 'title': c['title'], 'credits': str(c['credits']),
+                'prerequisite': None,
+                'record': ('Drop requested' if c['code'] in pending else
+                           f'{c["status"]} ({c["grade"]})' if c['grade'] else c['status'])}
+               for c in rows]
+    records = db.get_records(student['id'])
+    done = sum(x['credits'] for x in records if x['status'] == 'Completed' and x['grade'] != 'F')
+    hours = sum(c['credits'] for c in rows)
+    r.metric(f'{term} hours', hours)
+    r.metric('Hours completed', done)
+    r.metric('GPA', f'{student["gpa"]:.2f}' if student['gpa'] is not None else '—')
+    r.check('info', 'Program', f'{student["program_name"]} · '
+            f'{"Graduate" if student["level"] == "GR" else "Undergraduate"} · admitted {student["admit_term"]}'
+            + (f' · {student["visa"]}' if student['visa'] else ''), blocks=False)
+    holds = db.get_active_holds(student['id'])
+    if holds:
+        r.check('warn', f'{len(holds)} active hold(s)', ', '.join(h['type'] for h in holds) + '.',
+                blocks=False, where=('Registration section of Student Self-Service', None))
+    if pending:
+        r.check('info', 'Pending drop requests', f'{", ".join(sorted(pending))} marked as drop requested.',
+                blocks=False)
+    status = info['status'] if info else 'current'
+    verb = {'past': 'took', 'upcoming': 'are registered for'}.get(status, 'are taking')
+    out = r.result(f'You {verb} {len(rows)} course(s) in {term} ({hours} hours).', None, status='info')
+    out['courses'] = courses
+    return out

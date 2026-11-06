@@ -368,21 +368,39 @@ def complete_session(session_id, receipt, action_type, details):
         return True
 
 
-def list_requests(student_id):
-    """A student's confirmed requests, newest first."""
+def list_requests(student_id, active=False):
+    """A student's confirmed requests, newest first; `active` leaves out cancelled ones."""
     with transaction() as conn:
         rows = conn.execute(
             'SELECT a.receipt, a.action_type AS intent, a.status, a.details, a.created_at,'
             ' s.term, s.entities FROM actions a JOIN sessions s ON s.id = a.session_id'
             ' WHERE s.student_id = ? ORDER BY a.created_at DESC',
             (student_id,)).fetchall()
-    return [dict(r, details=json.loads(r['details']), entities=json.loads(r['entities']))
-            for r in rows]
+    out = [dict(r, details=json.loads(r['details']), entities=json.loads(r['entities']))
+           for r in rows]
+    return [r for r in out if r['status'] != 'cancelled'] if active else out
+
+
+def cancel_request(student_id, receipt):
+    """Cancel one of the student's active requests. Returns the request, or None
+    if it doesn't exist, belongs to someone else or is already cancelled."""
+    stamp = now()
+    with transaction() as conn:
+        row = conn.execute(
+            'SELECT a.details FROM actions a JOIN sessions s ON s.id = a.session_id'
+            " WHERE a.receipt = ? AND s.student_id = ? AND a.status != 'cancelled'",
+            (receipt, student_id)).fetchone()
+        if not row:
+            return None
+        details = dict(json.loads(row['details']), cancelled_at=stamp)
+        conn.execute("UPDATE actions SET status = 'cancelled', details = ? WHERE receipt = ?",
+                     (json.dumps(details), receipt))
+    return next(r for r in list_requests(student_id) if r['receipt'] == receipt)
 
 
 def find_request(student_id, intent, term, entities):
     """An already-confirmed request for the same task, if any."""
-    return next((r for r in list_requests(student_id)
+    return next((r for r in list_requests(student_id, active=True)
                  if r['intent'] == intent and r['term'] == term
                  and r['entities'].get('course_code') == entities.get('course_code')),
                 None)

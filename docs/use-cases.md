@@ -27,7 +27,7 @@
 
 ### UC-02 — Maya Patel (S00002): What do I still need to graduate?
 - **Setup:** S00002, IS BS, final semester. Tile: *Graduation check*.
-- **Expected:** 113 hours completed, 17 in progress, 123 required (catalog p. 471). Every IS core course, the 51 School hours and both 2.50 GPA minimums are checked. The summary opens with **"Graduation is not guaranteed."**, gives the credit projection (130 hours if current courses are passed), and says to confirm with the academic advisor or Academic Office. Unchecked items (gen eds, programming proficiency, approved non-IS courses, catalog year) are *Not verified* with *Where to check: Your academic advisor*. **Important for you:** *Apply to graduate in December*: the deadline was September 4, 2026; contact your Academic Office.
+- **Expected:** 113 hours completed since Spring 2023, 17 in progress, 0 remaining after current courses (of the 123 required, catalog p. 471). Every IS core course, the 51 School hours and both 2.50 GPA minimums are checked. The summary opens with **"Graduation is not guaranteed."**, gives the credit projection (130 hours if current courses are passed), and says to confirm with the academic advisor or Academic Office. Unchecked items (gen eds, programming proficiency, approved non-IS courses, catalog year) are *Not verified* with *Where to check: Your academic advisor*. **Important for you:** *Apply to graduate in December*: the deadline was September 4, 2026; contact your Academic Office.
 - **Confirmation:** save a graduation review plan (not graduation approval).
 
 ### UC-03 — Jordan Lee (S00003): Why can't I register?
@@ -39,6 +39,7 @@
 
 | ID | Student / term | Input | Expected |
 |---|---|---|---|
+| UC-03b | Alex | "What courses do I have?" | *Your courses · Fall 2026*: CS 341, CS 357, CS 374, CS 411 (14 hours), 63 hours completed, GPA 3.38. "what did I take last semester" shows Spring 2026 with grades; "what am I registered for next semester" shows Spring 2027 |
 | UC-04 | Any, Spring 2027 | "Show me 3 credit courses I can take in spring 2027" | *Courses for Spring 2027*: about 140 courses from the CS, IS, CSE and TE schedules that list 3 credit hours, with prerequisites and *Available* or the student's record. Sources: the Course Explorer schedules |
 | UC-05 | Alex | "any AI courses next spring" | *next spring* → Spring 2027; *AI* matches CS 440 *Artificial Intelligence* and TE 468 *Transforming Marketing with AI* |
 | UC-06 | Alex | "What are the prerequisites for CS 425?" | Course details: prerequisites (catalog), offered Fall 2026 and Spring 2027, not taken, eligible CS BS technical elective on the team-project list |
@@ -51,12 +52,14 @@
 
 | ID | Input / action | Expected |
 |---|---|---|
+| UC-02b | S00235 Aarav Marsh (Information Management MS): "What do I still need to graduate?" | Graduate check: 40-hour total, IS 504, IS 507, IS 515 or IS 455, 28 IS hours, 12 500-level hours, at most 4 research/independent-study hours, 2.75 program GPA; programming competency points to the graduate program office |
 | E-01 | "drop CS 411 and CS 425" | "Please ask about one course at a time." |
 | E-02 | "show me IS courses for fall 2030" | "Information for Fall 2030 isn't available", plus the available terms |
 | E-03 | "courses next fall" | "Information for next fall isn't available" (Fall 2027 has no calendar) |
 | E-04 | Alex on Fall: "Can I drop CS 441?" | "Your Fall 2026 schedule does not include CS 441… CS 441 is on your Spring 2027 registration; choose Spring 2027 in the term picker or name the term in your question." |
 | E-05 | Sam: confirm the CS 440 drop, then ask to drop CS 412 | Counts from 8 hours, not 12 (8 → 4), with *Includes your pending drop request* |
 | E-06 | Sam: ask to drop CS 440 again | "You already requested to drop CS 440 for Fall 2026 (receipt …)" |
+| E-06b | Sam: under *My requests*, choose **Cancel** on the CS 440 request, then **Yes, cancel it** | The request shows *Cancelled*; CS 440 returns to *Enrolled*; asking to drop CS 440 again is allowed. Cancel is also offered on the receipt page |
 | E-07 | Empty or over-1,000-character question | "Please describe your goal in 3 to 1,000 characters." |
 | E-08 | Free-tier rate limit hit | "The assistant is busy right now. Please wait a minute and try again." |
 | E-09 | S00085 (only CS 128): "Can I drop CS 128?" | *Dropping your only course is a withdrawal*, with the October 16 deadline |
@@ -125,20 +128,21 @@ Failures are introduced through the **Test scenarios** panel (collapsed at the b
 python -m pytest tests -q
 ```
 
-**Result (November 6, 2026):** `48 passed, 1 warning`. The warning concerns the deprecated Starlette TestClient import path.
+**Result (November 6, 2026):** `51 passed, 1 warning`. The warning concerns the deprecated Starlette TestClient import path.
 
 | Test category | Coverage |
 |---|---|
 | Real data | Catalog courses (including extraction fixes), policy facts, every student × every journey cited to a quoted source |
 | Synthetic students | Deterministic generation; credits within catalog ranges; current enrollments on the Fall 2026 schedules |
 | Drops | ISSS minimum, enrollment by term, withdrawal, no-W and refund deadlines on several dates, graduate petition, Spring registration drops, past terms, pending drops, duplicates |
+| Record | Courses by term with grades, registrations, last/this/next semester |
 | Graduation and holds | CS BS / IS BS checks, "not guaranteed" summary, hypothetical failure stop, holds and registration dates |
 | New question types | Course search with synonyms, course details, policy answers as quotes |
 | Input handling | Entity cleaning, typed and relative terms, course names, multi-course drops, unknown terms, numeric text |
 | Important items | Per student and per selected term; directions on unverified items; out-of-scope guide |
-| Safeguards | Explicit confirmation, blocked confirmation, recovery, test scenarios on every question type, model failure and rate limit |
+| Safeguards | Request cancellation (confirmation, ownership, already-cancelled), explicit confirmation, blocked confirmation, recovery, test scenarios on every question type, model failure and rate limit |
 
-Source verification (`app/tools/verify_sources.py`) separately checks all **74** policy and program quotations against their cited PDF pages and every deadline date against its quote. The live intent evaluation (38 cases, 37/38) is separate from these tests.
+Source verification (`app/tools/verify_sources.py`) separately checks all **81** policy and program quotations against their cited PDF pages and every deadline date against its quote. The live intent evaluation (37/38 on the 38-case run; the 4 later record cases passed) is separate from these tests.
 
 **Screenshots:** `validation/checkpoint3/` holds the earlier 8- and 10-test runs from the previous prototype, plus Anisha's prompt-test screenshots from November 5. Some of those file names contain `validation:checkpoint3:` as part of the name.
 

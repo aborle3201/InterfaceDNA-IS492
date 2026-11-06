@@ -24,7 +24,7 @@ const TASKS = {
   policy: {icon: '§', title: 'Policies & deadlines', desc: 'Ask about deadlines, refunds, full-time rules or registration dates.',
     suggest: () => [`What are the drop deadlines for ${S.term}?`, 'How many credits do international students need?', 'When does spring registration open?']},
   any: {icon: '?', title: 'Something else', desc: 'Describe what you want to do in your own words.',
-    suggest: p => ['What do I still need to graduate?', droppable(p)[0] ? `Can I drop ${droppable(p)[0].code}?` : 'Can I drop a course?', 'Why can’t I register?']},
+    suggest: p => ['What courses do I have?', 'What did I take last semester?', 'What do I still need to graduate?', droppable(p)[0] ? `Can I drop ${droppable(p)[0].code}?` : 'Can I drop a course?', 'Why can’t I register?']},
 };
 const GROUPS = [
   ['Stops this action', c => c.blocks],
@@ -174,12 +174,14 @@ function requestsCard(p) {
   return `<section class="card"><h2>My requests</h2>
     ${rows.length ? `<div class="table-wrap"><table><thead><tr><th>Date</th><th>Request</th><th>Term</th><th>Receipt</th><th>Status</th></tr></thead><tbody>
       ${rows.map(r => `<tr><td>${esc(new Date(r.created_at).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'}))}</td><td>${esc(r.details.description)}</td><td>${esc(r.term)}</td>
-        <td><code title="${esc(r.receipt)}">${esc(r.receipt.slice(0, 8))}</code></td><td><span class="badge ok">Recorded</span></td></tr>`).join('')}
+        <td><code title="${esc(r.receipt)}">${esc(r.receipt.slice(0, 8))}</code></td>
+        <td>${r.status === 'cancelled' ? '<span class="badge">Cancelled</span>'
+          : `<span class="badge ok">Recorded</span> <button type="button" class="linklike" data-cancel="${esc(r.receipt)}">Cancel</button>`}</td></tr>`).join('')}
     </tbody></table></div>` : '<p class="muted">No requests yet. Requests you confirm appear here with their receipt.</p>'}</section>`;
 }
 function scheduleCard(p) {
   const info = p.term_info || {}, past = info.status === 'past';
-  const dropRequested = new Set((p.requests || []).filter(r => r.intent === 'drop' && r.term === p.term).map(r => r.entities.course_code));
+  const dropRequested = new Set((p.requests || []).filter(r => r.intent === 'drop' && r.term === p.term && r.status !== 'cancelled').map(r => r.entities.course_code));
   const title = past ? `${p.term} courses` : info.status === 'upcoming' ? `${p.term} registration` : `${p.term} schedule`;
   const rows = p.term_courses;
   const note = info.note ? `<div class="alert info small">${esc(info.note)}</div>` : '';
@@ -225,6 +227,7 @@ function viewDashboard(p) {
       </div>
     </div>`, 1);
   $('main').querySelectorAll('[data-task]').forEach(b => b.addEventListener('click', () => go(`#/s/${p.id}/ask/${b.dataset.task}`)));
+  bindCancel(p);
 }
 
 // ---- Step 3: describe the goal -----------------------------------------------
@@ -280,6 +283,7 @@ function heading() {
   if (S.intent === 'drop') return S.entities.course_code ? `Dropping ${S.entities.course_code}` : 'Dropping a course';
   if (S.intent === 'course_info') return S.entities.course_code || 'Course details';
   if (S.intent === 'course_search') return `Courses for ${S.resultTerm}`;
+  if (S.intent === 'record') return `Your courses · ${S.resultTerm}`;
   return {graduation: 'Your graduation requirements', hold: 'Your registration holds',
     policy: 'University policies and deadlines'}[S.intent] || 'Here’s where to look';
 }
@@ -297,7 +301,7 @@ function coursesTable(r) {
   if (!r.courses) return '';
   const shown = r.courses.slice(0, 150);
   return `<section class="group"><h3>Courses</h3>${shown.length ? `<div class="table-wrap"><table>
-    <thead><tr><th>Course</th><th>Title</th><th>Hours</th><th>Your record</th></tr></thead><tbody>
+    <thead><tr><th>Course</th><th>Title</th><th>Hours</th><th>${S.intent === 'record' ? 'Status' : 'Your record'}</th></tr></thead><tbody>
     ${shown.map(c => `<tr><td><strong>${esc(c.code)}</strong></td><td>${esc(c.title)}${c.prerequisite ? `<div class="muted small">Prerequisite: ${esc(c.prerequisite)}</div>` : ''}</td>
       <td>${esc(c.credits || '—')}</td><td>${c.record ? `<span class="badge">${esc(c.record)}</span>` : '<span class="badge ok">Available</span>'}</td></tr>`).join('')}
     </tbody></table></div>${r.courses.length > shown.length ? `<p class="muted small">Showing ${shown.length} of ${r.courses.length}. Add a subject, level or topic to narrow the list.</p>` : ''}`
@@ -317,7 +321,7 @@ const status = r.status === 'ready'
       ? `Your registration holds are still active. InterfaceDNA cannot verify a payment or remove a university hold. You may confirm this simulated action: ${r.action || 'save a follow-up reminder'}.`
       : `You can review and confirm this simulated action: ${r.action || 'the request shown below'}.`]
   : r.status === 'info'
-    ? ['info', 'Here’s what the sources say.']
+    ? ['info', S.intent === 'record' ? 'Here’s your record.' : 'Here’s what the sources say.']
     : ['block', `This action isn’t available. ${r.reason || ''}`];
 
   const checkHtml = c => {
@@ -341,7 +345,7 @@ const status = r.status === 'ready'
         ${(r.metrics || []).length ? `<div class="metrics">${r.metrics.map(m => `<div class="metric${String(m.value).length > 14 ? ' long' : ''}"><strong>${esc(m.value)}</strong><span>${esc(m.label)}</span></div>`).join('')}</div>` : ''}
         ${coursesTable(r)}
         ${groups.map(([title, cs]) => `<section class="group"><h3>${esc(title)}</h3>${cs.map(checkHtml).join('')}</section>`).join('')}
-        ${S.receipt ? `<div class="alert ok" style="margin-top:22px"><strong>Already confirmed.</strong> Receipt <code>${esc(S.receipt)}</code>.</div>
+        ${S.receipt ? `<div class="alert ${S.cancelled ? 'warn' : 'ok'}" style="margin-top:22px"><strong>${S.cancelled ? 'You cancelled this request.' : 'Already confirmed.'}</strong> Receipt <code>${esc(S.receipt)}</code>.</div>
           <div class="actions"><a class="btn secondary" href="#/s/${esc(p.id)}">Back to dashboard</a></div>` : r.status === 'ready' ? `
           <section class="confirm-box" style="margin-top:22px"><h2>Confirm</h2>
             <p>${esc(r.action)}</p>
@@ -376,7 +380,7 @@ async function confirmAction(p) {
   $('confirm').disabled = true;
   try {
     const d = await api('/api/confirm', {session_id: S.sid, confirmation: true});
-    S.receipt = d.receipt; S.action = d.description; S.error = '';
+    S.receipt = d.receipt; S.action = d.description; S.error = ''; S.cancelled = false;
     S.profile = null;  // reload so My requests and the schedule show this request
     go(`#/s/${p.id}/done`);
   } catch (e) { S.error = e.message; viewResult(p); }
@@ -389,6 +393,26 @@ async function applyFault(mode) {
   } catch (e) { notify(e.message); $('failure').value = 'none'; }
 }
 
+// ---- Cancelling a request ----------------------------------------------------
+function bindCancel(p) {
+  $('main').querySelectorAll('[data-cancel]').forEach(btn => btn.addEventListener('click', () => {
+    const cell = btn.parentElement, receipt = btn.dataset.cancel;
+    cell.innerHTML = `<span class="small">Cancel this request?</span>
+      <button type="button" class="btn secondary" data-yes>Yes, cancel it</button>
+      <button type="button" class="linklike" data-keep>Keep it</button>`;
+    cell.querySelector('[data-keep]').addEventListener('click', () => route());
+    cell.querySelector('[data-yes]').addEventListener('click', async () => {
+      try {
+        await api('/api/requests/cancel', {student_id: p.id, receipt, confirmation: true});
+        if (S.receipt === receipt) S.cancelled = true;
+        S.profile = null;
+        notify('Request cancelled.');
+        route();
+      } catch (e) { notify(e.message); route(); }
+    });
+  }));
+}
+
 // ---- Step 5: receipt ---------------------------------------------------------
 function viewDone(p) {
   if (!S.receipt) return go(`#/s/${p.id}`, true);
@@ -398,10 +422,13 @@ function viewDone(p) {
       <h1 tabindex="-1">Request recorded</h1>
       <p>${esc(S.action)}</p>
       <p>Receipt <code>${esc(S.receipt)}</code></p>
-      <div class="alert info" style="text-align:left">Keep this receipt number for your records.</div>
+      ${S.cancelled ? '<div class="alert warn" style="text-align:left"><strong>This request was cancelled.</strong> It stays under My requests marked Cancelled.</div>'
+        : `<div class="alert info" style="text-align:left">Keep this receipt number for your records. Changed your mind?
+           <span><button type="button" class="linklike" data-cancel="${esc(S.receipt)}">Cancel this request</button></span></div>`}
       <div class="actions" style="justify-content:center"><a class="btn primary" href="#/s/${esc(p.id)}">Back to dashboard</a>
         <a class="btn secondary" href="#/">Choose another student</a></div>
     </section>`, 5);
+  bindCancel(p);
 }
 
 // ---- Policy sources page -----------------------------------------------------
