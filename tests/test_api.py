@@ -248,6 +248,51 @@ def test_clean_entities():
     m='Show me 3 credit IS courses for spring 2027 about data'
     e=server.clean_entities('course_search',{'subject':'is','credits':3,'term':'Spring 2027','keyword':'data','level':450},m)
     assert e=={'subject':'IS','credits':3,'term':'Spring 2027','keyword':'data'}
-    assert server.clean_entities('course_search',{'term':'Fall 2026','keyword':'robots'},m)=={}
+    assert server.clean_entities('course_search',{'term':'Fall 2026','keyword':'robots'},m)=={'term':'Spring 2027'}  # typed term wins
     assert server.clean_entities('policy',{'topic':'tuition hacks'},'refund?')=={}
     assert server.clean_entities('drop',{'course_code':'CS 411'},'drop CS 411')=={'course_code':'CS 411'}
+
+def test_edge_one_course_at_a_time(monkeypatch):
+    monkeypatch.setattr(server,'classify_live',stub('drop',{'course_code':'CS 411'}))
+    d=client.post('/api/start',json={'message':'drop CS 411 and CS 425','student_id':ALEX}).json()
+    assert d['state']=='blocked' and 'one course at a time' in d['result']['reason']
+
+def test_edge_unknown_term_in_question(monkeypatch):
+    monkeypatch.setattr(server,'classify_live',stub('course_search',{}))
+    d=client.post('/api/start',json={'message':'courses in fall 2030','student_id':ALEX}).json()
+    assert d['state']=='blocked' and 'Fall 2030 isn’t available' in d['result']['reason']
+
+def test_edge_numbers_as_text():
+    assert server.clean_entities('course_search',{'credits':'3','level':'400'},'3 credit 400 level')=={'credits':3,'level':400}
+    assert server.clean_entities('course_search',{'credits':True},'x')=={}
+
+def test_edge_course_in_other_term():
+    r=rules.evaluate('drop',ALEX,{'course_code':'CS 441'},term='Fall 2026')
+    assert 'on your Spring 2027 registration' in r['reason']
+
+def test_edge_pending_drop_counts(monkeypatch):
+    sid=find_student(lambda s,cur:s['level']=='UG' and s['visa'] is None and len(cur)>=4 and not db.list_requests(s['id']))['id']
+    a,b=[c['code'] for c in db.get_current(sid)][:2]
+    total=sum(c['credits'] for c in db.get_current(sid)); ca=db.get_enrollment(sid,a)['credits']
+    db.create_session('edge-1',sid,'drop','Fall 2026',{'course_code':a},'review')
+    db.complete_session('edge-1','edge-receipt','drop',{'description':'x','course_code':a})
+    r=rules.evaluate('drop',sid,{'course_code':b})
+    assert r['metrics'][1]['value']==total-ca and r['checks'][0]['title']=='Includes your pending drop request'
+    assert 'already requested to drop' in rules.evaluate('drop',sid,{'course_code':a})['reason']
+
+def test_edge_faults_on_new_question_types():
+    assert rules.evaluate('course_info',ALEX,{'course_code':'CS 425'},'missing_record')['status']=='blocked'
+    assert rules.evaluate('course_search',ALEX,{'subject':'CS'},'missing_record')['status']=='blocked'
+    assert rules.evaluate('policy',ALEX,{'topic':'refunds'},'policy_conflict')['status']=='blocked'
+
+def test_edge_rate_limit_message(monkeypatch):
+    class Busy(Exception): status_code=429
+    def boom(m): raise Busy()
+    monkeypatch.setattr(server,'classify_live',boom)
+    r=client.post('/api/start',json={'message':'Can I drop CS 411?','student_id':ALEX})
+    assert r.status_code==503 and 'busy' in r.json()['detail']
+
+def test_edge_typed_term_and_multi_drop():
+    assert server.clean_entities('drop',{'course_code':'CS 441'},'Can I drop CS 441 in spring 2027?')=={'course_code':'CS 441','term':'Spring 2027'}
+    assert 'one course at a time' in server.precheck('unknown','drop CS 411 and CS 425 please')
+    assert server.precheck('course_info','compare CS 411 and CS 412') is None

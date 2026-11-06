@@ -49,7 +49,11 @@ async function api(path, body) {
   const resp = await fetch(path, body ? {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)} : undefined);
   let data;
   try { data = await resp.json(); } catch { throw Error('The server returned an invalid response.'); }
-  if (!resp.ok) throw Error(typeof data.detail === 'string' ? data.detail : 'Request failed.');
+  if (!resp.ok) {
+    if (typeof data.detail === 'string') throw Error(data.detail);
+    const field = Array.isArray(data.detail) && data.detail[0]?.loc?.at(-1);
+    throw Error(field === 'message' ? 'Please describe your goal in 3 to 1,000 characters.' : 'Request failed. Please try again.');
+  }
   return data;
 }
 async function loadProfile(id) {
@@ -257,7 +261,7 @@ function viewAsk(p, task) {
 }
 async function analyze(p, task) {
   if (S.busy) return;
-  if (S.question.trim().length < 3) { S.error = 'Please describe your goal.'; return viewAsk(p, task); }
+  if (S.question.trim().length < 3) { S.error = 'Please describe your goal in 3 to 1,000 characters.'; return viewAsk(p, task); }
   Object.assign(S, {busy: true, error: '', sid: null, result: null, receipt: null});
   viewAsk(p, task);
   try {

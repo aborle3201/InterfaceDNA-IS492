@@ -80,6 +80,35 @@ def normalize_term(raw, message):
     return term if term in typed and rules.term_info(term) else None
 
 
+def as_int(value):
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str) and value.strip().isdigit():
+        return int(value)
+    return None
+
+
+def typed_terms(message):
+    return [f'{a.title()} {b}' for a, b in TERM.findall(message)]
+
+
+def precheck(intent, message):
+    """Reasons to stop before the rules run, based on what the student typed."""
+    codes = {f'{a.upper()} {b}' for a, b in COURSE.findall(message)}
+    wants_drop = intent == 'drop' or (intent == 'unknown' and any(
+        w in message.lower() for w in ('drop', 'withdraw')))
+    if wants_drop and len(codes) > 1:
+        return (f'Please ask about one course at a time. You mentioned '
+                f'{", ".join(sorted(codes))}.')
+    terms = typed_terms(message)
+    if intent != 'graduation' and terms and not any(rules.term_info(t) for t in terms):
+        available = ', '.join(t['term'] for t in rules.terms())
+        return f'Information for {terms[0]} isn’t available. Available terms: {available}.'
+    return None
+
+
 def clean_entities(intent, raw, message):
     """Keep only well-formed entities that fit the intent; the model's output
     is untrusted, so typed values (course, term, keyword) must be in the text."""
@@ -87,11 +116,13 @@ def clean_entities(intent, raw, message):
     if intent in ('drop', 'course_info'):
         out['course_code'] = normalize_course(raw.get('course_code'), message)
     if intent in ('drop', 'course_search', 'course_info', 'policy'):
-        out['term'] = normalize_term(raw.get('term'), message)
+        # A single term the student typed is used even if the model missed it.
+        known = [t for t in dict.fromkeys(typed_terms(message)) if rules.term_info(t)]
+        out['term'] = normalize_term(raw.get('term'), message) or (known[0] if len(known) == 1 else None)
     if intent == 'course_search':
         subject = str(raw.get('subject') or '').strip().upper()
         out['subject'] = subject if subject in db.subjects() else None
-        credits, level = raw.get('credits'), raw.get('level')
+        credits, level = as_int(raw.get('credits')), as_int(raw.get('level'))
         out['credits'] = credits if isinstance(credits, int) and 0 < credits <= 6 else None
         out['level'] = level if level in (100, 200, 300, 400, 500) else None
         keyword = str(raw.get('keyword') or '').strip().lower()
@@ -257,9 +288,12 @@ def start(body: Start):
         intent, entities, explanation, usage = classify_live(body.message)
     except Exception as exc:
         log.exception('Groq model call failed')
+        busy = getattr(exc, 'status_code', None) == 429
         raise HTTPException(
             503,
             detail=(
+                'The assistant is busy right now. Please wait a minute and try '
+                'again. No task was submitted.' if busy else
                 'Live model unavailable. Check the server configuration/API '
                 'quota and retry. No task was submitted.'
             ),
@@ -268,7 +302,9 @@ def start(body: Start):
     if not db.get_student(body.student_id):
         raise HTTPException(404, 'Student not found')
     term = entities.get('term') or known_term(body.term)  # a term in the question wins
-    result = rules.evaluate(intent, body.student_id, entities, term=term)
+    stop = precheck(intent, body.message)
+    result = (rules.blocked(stop) if stop else
+              rules.evaluate(intent, body.student_id, entities, term=term))
     sid = str(uuid.uuid4())
     state = 'review' if result['status'] == 'ready' else 'blocked'
     db.create_session(sid, body.student_id, intent, term, entities, state)

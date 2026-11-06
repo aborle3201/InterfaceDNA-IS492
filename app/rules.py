@@ -132,6 +132,12 @@ def evaluate(intent, student_id, entities, fault='none', on=None, term=None):
                   'graduation': lambda: graduation(student, fault, on),
                   'hold': lambda: hold(student, fault, on)}[intent]()
         return already_requested(result, student_id, intent, term, entities)
+    if fault == 'missing_record' and intent in ('course_search', 'course_info'):
+        return blocked('Your student record is unavailable right now, so course '
+                       'details can’t be matched to it. Please try again later.')
+    if fault == 'policy_conflict' and intent == 'policy':
+        return blocked('Two different versions of this policy were returned, so I’m '
+                       'not sure which applies. Check with the office that owns it.')
     if intent == 'course_search':
         return course_search(student, entities, term)
     if intent == 'course_info':
@@ -297,12 +303,27 @@ def drop(student, entities, fault, on, term):
     info = term_info(term)
     if not info:
         return blocked(f'Course information for {term} isn’t available.')
-    courses = db.get_term_courses(student['id'], term)
+    previous = db.find_request(student['id'], 'drop', term, {'course_code': code})
+    if previous:
+        return blocked(f'You already requested to drop {code} for {term} '
+                       f'(receipt {previous["receipt"][:8]}). It is listed under My requests.')
+    # Courses with a recorded drop request no longer count toward hours.
+    pending = {r['entities'].get('course_code') for r in db.list_requests(student['id'])
+               if r['intent'] == 'drop' and r['term'] == term}
+    courses = [c for c in db.get_term_courses(student['id'], term) if c['code'] not in pending]
     course = next((c for c in courses if c['code'] == code), None)
     if not course:
+        elsewhere = next((x for x in db.get_records(student['id']) if x['code'] == code), None)
+        hint = ''
+        if elsewhere and elsewhere['status'] == 'Completed':
+            hint = f' You completed {code} in {elsewhere["term"]}.'
+        elif elsewhere:
+            hint = (f' {code} is on your {elsewhere["term"]} '
+                    f'{"registration" if elsewhere["status"] == "Registered" else "schedule"}; '
+                    f'choose {elsewhere["term"]} in the term picker or name the term in your question.')
         return blocked(
             f'Your {term} schedule does not include {code}, '
-            'so there is nothing to drop. No action has been enabled.')
+            'so there is nothing to drop.' + hint)
     if fault == 'policy_conflict':
         return blocked(
             'Two different versions of the drop rules were returned, so I’m not '
@@ -319,6 +340,10 @@ def drop(student, entities, fault, on, term):
     r.metric(f'{term} hours {"registered" if registered else "now"}', before)
     r.metric('Hours after drop', after)
     r.fact(info['calendar'])
+    if pending:
+        r.check('info', 'Includes your pending drop request',
+                f'Hours are counted without {", ".join(sorted(pending))}, which you '
+                'already requested to drop.', blocks=False)
 
     if course['status'] == 'Completed' or on > ends:
         r.check('block', f'{term} has ended',
