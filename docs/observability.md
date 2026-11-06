@@ -21,3 +21,31 @@ Do not claim measured spending unless current prices and usage were reconciled.
 
 ## Current limitations and additions
 No distributed traces, trace IDs, durable metrics, per-user budget, structured event log, or dashboard are present. Before public release, add privacy-preserving request IDs, counters for error classes, retention rules, alerting and cost monitoring.
+
+---
+
+## Checkpoint 3 — Verification and Interpretation of Logs
+
+The integrated application was tested locally using pytest and FastAPI's TestClient, with 25 tests passing in the latest observed run on November 5, 2026.
+
+The automated tests use mocked model interpretation where appropriate, allowing deterministic validation of backend behavior without relying on Groq API availability.
+
+Live inference is evaluated separately through the model evaluation workflow and interactive application testing.
+
+### Verification Levels
+
+| Verification level | Evidence | Limitation |
+|---|---|---|
+| Backend regression | pytest and TestClient | Does not independently validate browser usability |
+| Policy-source verification | Source quotations and deadline-value checks | Source documents may become outdated |
+| Live model evaluation | Intent-classification evaluation cases | Model output may vary between runs |
+| UI evidence | Checkpoint 3 screenshots | Earlier screenshots reflect the previous prototype |
+| Operational logging | HTTP outcomes, latency, model usage, and errors | Not a production monitoring system |
+
+### Operational Interpretation
+
+A successful API response indicates that an application request completed according to the implemented code path. It does not establish that a university transaction occurred.
+
+Likewise, a synthetic confirmation receipt indicates a completed local workflow, not a modification to a real student information system.
+
+Observability remains focused on local debugging and classroom evaluation. Production deployment would require trace correlation, durable metrics, controlled log retention, and additional security review.
