@@ -149,9 +149,13 @@ All scenarios use synthetic student records; the university policies shown are r
 - **Expected:** The backend returns HTTP `503 Service Unavailable`, displays an appropriate error message, and does not silently substitute a fabricated model response.
 - **Verification status:** Covered by a mocked unit test (`test_model_failure_creates_no_session`). A live provider outage was not tested.
 
+---
+
 ### Automated Test Results
 
-Automated regression tests were executed using the FastAPI test client and pytest. Model classification was mocked for deterministic backend testing, while the application continued to use the actual session-management, validation, fault-injection, and confirmation logic.
+Automated regression testing was conducted using pytest and FastAPI's TestClient to verify InterfaceDNA's backend workflows, policy evaluation, session transitions, confirmation safeguards, and error-recovery behavior.
+
+The current implementation uses a SQLite database containing synthetic student records and course information derived from real UIUC sources. Tests exercise the deterministic application logic without requiring live Groq inference. Model responses are mocked where necessary to isolate backend behavior from external API availability.
 
 **Command executed:**
 
@@ -159,30 +163,32 @@ Automated regression tests were executed using the FastAPI test client and pytes
 python -m pytest tests -q
 ```
 
-**Result:**
+**Latest locally observed result (November 5, 2026):**
 
 ```text
-21 passed
+25 passed, 1 warning in 1.24s
 ```
 
-Result as of November 5, 2026, after the switch to real UIUC policies and synthetic students.
+The warning concerns the deprecated Starlette TestClient import path and does not indicate a failed test.
 
----
+The latest result was obtained after integrating the updated `live_demo` backend and test suite. Earlier screenshots showing 8 or 10 passing tests belong to the previous prototype implementation and are retained as historical development evidence.
 
 | Test category | Verification coverage | Result |
 |---|---|---|
-| Real course and policy data | Catalog course data, ISSS minimums, deterministic synthetic students | Passed |
-| Course-drop consequences | Credit change, ISSS full-time block, tuition range and refunds | Passed |
-| Graduation and registration holds | Degree requirements and holds for the featured students | Passed |
-| Failure handling | Conflicting policies, missing records, and service outage | Passed |
-| Live model API path (mocked) | Session initialization, confirmation and recovery | Passed |
-| Deadline validation | Registrar no-W deadlines on several dates; graduate petition cutoff | Passed |
-| Unverifiable drop | A drop whose deadline depends on an unknown part of term cannot be confirmed | Passed |
-| Citations | All 254 students × 3 journeys; every check cites a quoted source | Passed |
-| Maya missing-audit recovery | Block, deny confirmation, restore, and confirm | Passed |
-| Jordan service-outage recovery | Block, deny confirmation, restore, and confirm | Passed |
+| Course and policy data | Catalog data, policy references, and source-backed facts | Passed |
+| Synthetic student generation | Deterministic generation and validity of student records | Passed |
+| Course-drop validation | Credit consequences, enrollment eligibility, and full-time requirements | Passed |
+| Deadline enforcement | Registrar deadlines and graduate petition restrictions | Passed |
+| Graduation readiness | Undergraduate degree requirements and incomplete checks | Passed |
+| Registration holds | Synthetic hold records and associated rule evaluation | Passed |
+| Model-output validation | Course normalization and accepted intent/entity values | Passed |
+| Confirmation safeguards | Explicit confirmation, blocked requests, and duplicate prevention | Passed |
+| Missing-record recovery | Blocked graduation review, restoration, and confirmation | Passed |
+| Service-outage recovery | Blocked workflow and restoration after clearing the fault | Passed |
+| Policy source traceability | Citations and quoted source references | Passed |
+| Model failure handling | Rejection of failed inference without creating a valid session | Passed |
 
-**Evidence:** `validation/checkpoint3/error_recovery_tests_passed.png` (screenshot from the earlier 10-test run; not yet in the repository)
+**Verification scope:** These results establish that the tested backend behavior passed the locally executed regression suite. They do not independently establish browser usability, live provider reliability, or integration with university systems.
 
 ### Verification Summary
 
@@ -206,8 +212,23 @@ Result as of November 5, 2026, after the switch to real UIUC policies and synthe
 ### Correct fault-injection procedure
 **Analyze first, inject the failure second.** The `/api/start` call creates the session. The fault selector then calls `/api/fault` using its `session_id`; without a session there is nothing to mutate. This is correct behavior for an **interactive fault-injection demonstration**, but does not establish the system can withstand real third-party outages in production.
 
-## Automated verification
-`tests/test_api.py`: 21 tests passed (November 5, 2026). They include every one of the 254 synthetic students run through all three journeys, with each check's citation resolving to a quoted source, and no-W deadline outcomes on several dates. `app/tools/verify_sources.py`: all 49 policy and program quotes found verbatim on their cited pages, and every deadline date found in its quote.
+---
+
+## Automated Verification
+
+The latest locally executed Checkpoint 3 regression suite reported **25 passing tests** on November 5, 2026, following integration of the redesigned backend.
+
+The suite covers synthetic student records, real source-backed policy facts, course-drop rules, graduation checks, registration holds, confirmation safeguards, fault injection, recovery, and API behavior.
+
+The system also includes a separate source-verification process implemented in `app/tools/verify_sources.py`. The documented source-verification run checked 49 policy and program quotations against their cited PDF pages and verified the consistency of extracted deadline values.
+
+Automated application tests use mocked model responses where required. Live Groq inference and the 38-case intent evaluation are separate verification activities.
+
+The earlier 8-test and 10-test screenshots remain available in `validation/checkpoint3/` as historical evidence of the previous prototype.
+
+**Limitation:** Passing automated tests validates the scenarios included in the test suite; it does not establish that every UI workflow has been manually tested in the final redesigned portal.
+
+---
 
 ## Proposed CP4 benchmark alignment
 Compare the **same Alex/Maya/Jordan tasks** across (A) human-only policy portal, (B) general AI-only chatbot without verified records, (C) InterfaceDNA hybrid. Pre-register participant count and task order. Collect correct next-action rate, unsupported claims, completion time, clicks/steps, and explicit confirmation compliance. The actual participant count and benchmark results are not available yet.
