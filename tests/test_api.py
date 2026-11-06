@@ -340,3 +340,68 @@ def test_unverified_items_have_directions():
     r=rules.evaluate('drop',sid,{'course_code':db.get_current(sid)[0]['code']})
     w=next(c['where'] for c in r['checks'] if c['title'].startswith('Drop deadline depends'))
     assert w['url'].startswith('https://courses.illinois.edu/schedule/2026/fall/')
+
+
+def test_graduation_summary_does_not_guarantee_approval():
+    result = rules.evaluate('graduation', MAYA, {})
+
+    summary = result['summary']
+
+    assert 'Graduation is not guaranteed' in summary
+    assert '113' in summary
+    assert '17' in summary
+    assert '130' in summary
+    assert '123' in summary
+    assert 'graduation has been approved' in summary
+
+    assert result['status'] in ('ready', 'blocked', 'info')
+    assert result['action'] is None or result['action'] == 'Save graduation review plan'
+
+
+def test_hypothetical_course_failure_is_blocked(monkeypatch):
+    # Mock the AI classifier so this test is deterministic.
+    monkeypatch.setattr(
+        server,
+        'classify_live',
+        stub('graduation', {})
+    )
+
+    response = client.post(
+        '/api/start',
+        json={
+            'message': (
+                'What if I fail one of my current 3-credit courses? '
+                'Will I still be able to graduate in December?'
+            ),
+            'student_id': MAYA,
+            'term': 'Fall 2026'
+        }
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+    result = data['result']
+
+    # The hypothetical cannot be treated as a verified audit.
+    assert data['intent'] == 'graduation'
+    assert result['status'] == 'blocked'
+    assert data['state'] == 'blocked'
+
+    # The response explains the unsupported scenario.
+    assert 'hypothetical graduation scenario' in result['reason']
+    assert 'cannot currently recalculate' in result['reason']
+
+    # No graduation request should be confirmable.
+    assert result['action'] is None
+
+    confirmation = client.post(
+        '/api/confirm',
+        json={
+            'session_id': data['session_id'],
+            'confirmation': True
+        }
+    )
+
+    assert confirmation.status_code == 409
+    assert db.get_action(data['session_id']) is None

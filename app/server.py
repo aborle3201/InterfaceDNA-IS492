@@ -111,6 +111,37 @@ def typed_terms(message):
 
 def precheck(intent, message):
     """Reasons to stop before the rules run, based on what the student typed."""
+
+    # Detect hypothetical course-failure questions before evaluating
+    # the student's current graduation record.
+    text = message.lower()
+
+    hypothetical = re.search(
+        r'\b(?:what if|if i|if one|if my|suppose|assuming|imagine)\b',
+        text
+    )
+
+    course_failure = re.search(
+        r'\b(?:fail|fails|failed|failing)\b',
+        text
+    )
+
+    if intent == 'graduation' and hypothetical and course_failure:
+        return (
+            'This is a hypothetical graduation scenario. '
+            'InterfaceDNA cannot currently recalculate degree '
+            'requirements based on a course that might be failed. '
+            'The normal credit projection assumes current courses '
+            'are passed, so it should not be used to determine '
+            'eligibility under this scenario. '
+            'Failing a course could affect earned credits, '
+            'required courses, or GPA. '
+            'Please discuss the specific course and its impact '
+            'with your academic advisor. '
+            'No graduation decision or simulated request has '
+            'been recorded.'
+        )
+
     codes = {f'{a.upper()} {b}' for a, b in COURSE.findall(message)}
     wants_drop = intent == 'drop' or (intent == 'unknown' and any(
         w in message.lower() for w in ('drop', 'withdraw')))

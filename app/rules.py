@@ -616,11 +616,32 @@ def graduation(student, fault, on):
                 'Not included in this check; confirm with your academic advisor.',
                 blocks=False, where=('Your academic advisor', None))
 
-    summary = (
-        f'{missing} checked requirement(s) not yet covered by completed or current courses.'
-        if missing else
-        'Every checked requirement is met or in progress; on track if current courses are passed.')
+    
+    if missing:
+        summary = (
+            f'Graduation is not guaranteed. '
+            f'{missing} checked requirement(s) are not yet covered by '
+            f'completed or in-progress courses. '
+            f'Other degree requirements may also need verification. '
+            f'Contact your academic advisor for a complete degree audit.'
+        )
+    else:
+        summary = (
+            f'Graduation is not guaranteed. '
+            f'You have completed {done_hours} credit hours and have '
+            f'{now_hours} hours in progress. '
+            f'If you pass all current courses, you would have '
+            f'{done_hours + now_hours} hours toward the '
+            f'{prog["total_hours"]}-hour requirement. '
+            f'However, this does not establish that every degree '
+            f'requirement is satisfied or that graduation has been approved. '
+            f'Check the remaining unverified requirements and '
+            f'confirm your graduation application status with your '
+            f'academic advisor or Academic Office.'
+        )
+
     return r.result(summary, 'Save graduation review plan')
+
 
 
 # ---- Registration holds -----------------------------------------------------

@@ -311,9 +311,15 @@ function viewResult(p) {
   const sources = [...(r.sources || [])].sort((a, b) =>
     (order.includes(a.key) ? order.indexOf(a.key) : order.length) - (order.includes(b.key) ? order.indexOf(b.key) : order.length));
   const srcIndex = Object.fromEntries(sources.map((s, i) => [s.key, i + 1]));
-  const status = r.status === 'ready'
-    ? ['ok', 'You can review and confirm this request.']
-    : r.status === 'info' ? ['info', 'Here’s what the sources say.'] : ['block', `This action isn’t available. ${r.reason || ''}`];
+  
+const status = r.status === 'ready'
+  ? ['ok', S.intent === 'hold'
+      ? `Your registration holds are still active. InterfaceDNA cannot verify a payment or remove a university hold. You may confirm this simulated action: ${r.action || 'save a follow-up reminder'}.`
+      : `You can review and confirm this simulated action: ${r.action || 'the request shown below'}.`]
+  : r.status === 'info'
+    ? ['info', 'Here’s what the sources say.']
+    : ['block', `This action isn’t available. ${r.reason || ''}`];
+
   const checkHtml = c => {
     const [lbl, cls] = LEVEL[c.level] || LEVEL.info;
     const refs = (c.cites || []).map(k => srcIndex[k]).filter(Boolean);
