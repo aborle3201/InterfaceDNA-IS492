@@ -33,6 +33,70 @@ University rules, course data and degree requirements are quoted from real UIUC 
 - A simulated successful receipt is **not** proof of a real-world action.
 - **No UIUC branding.** The interface cites UIUC sources but must not use UIUC logos or present itself as an official university service.
 - **Receipts are not real.** The portal shows "Request recorded" with a receipt number, but nothing is sent to the university (see Presentation mode above).
+  
+---
+
+## Checkpoint 3 — Verification Boundaries and Responsible Demonstration
+
+### Separation of Responsibilities
+
+InterfaceDNA separates AI interpretation, institutional rule evaluation, and user authorization.
+
+The language model interprets the student's request and extracts relevant entities, but it does not independently determine institutional policy outcomes or execute university actions.
+
+Deterministic backend rules evaluate the available student and policy information. The interface communicates relevant findings, citations, and uncertainty to the student.
+
+Eligible simulated actions require explicit acknowledgment and server-side revalidation before recording a receipt.
+
+### Synthetic Records and Simulated Actions
+
+The implementation combines real, quoted UIUC policy information with fictional student records.
+
+The following are simulated:
+
+- Student profiles, transcripts, and enrollment histories.
+- Registration holds and individual student circumstances.
+- Action confirmation and receipt generation.
+- Policy conflicts, missing-record conditions, and service outages introduced through fault injection.
+
+A simulated receipt indicates only that the application recorded a local action. It is not evidence of a submitted course drop, cleared registration hold, approved graduation, or completed university transaction.
+
+### Presentation and Deployment Boundary
+
+The controlled classroom demonstration uses a student-portal-style interface to evaluate usability and workflow realism.
+
+The distinction between the prototype and an official university service must be disclosed to evaluators. If the application becomes publicly accessible, it should visibly identify its student records and transactions as simulated, rather than relying only on repository documentation.
+
+Real student information should not be entered into the prototype.
+
+### Interpretation of Automated Tests
+
+The integrated backend's latest locally observed regression suite passed 25 tests on November 5, 2026.
+
+These results support the implemented behaviors tested by the suite, including rule evaluation, blocked confirmation, duplicate-action prevention, and simulated recovery.
+
+The tests do not independently establish:
+
+- Reliability during real university-system outages.
+- Protection of real institutional records.
+- Production authentication or authorization.
+- Security against every prompt-injection attempt.
+- Compliance with all accessibility requirements.
+- Safe execution of actual university transactions.
+
+### Recovery and Confirmation Safeguards
+
+A blocked session cannot be completed through the normal confirmation endpoint.
+
+Clearing a simulated failure restores eligibility for review only when the deterministic rules permit it. Recovery does not itself constitute authorization or trigger execution.
+
+The backend revalidates applicable rules at confirmation time, reducing the risk of acting on an earlier eligibility decision after relevant conditions have changed.
+
+### Remaining Work
+
+Before any real-world integration, the project would require authentication, authorization, input sanitization, secure data handling, stronger operational monitoring, access-controlled persistence, and a formal review of institutional policies and integration permissions.
+
+---
 
 ## Required tests before submission
 1. Confirm false -> HTTP 400; blocked state -> HTTP 409; repeated confirmation -> HTTP 409.
