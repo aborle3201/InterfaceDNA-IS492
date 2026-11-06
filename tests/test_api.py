@@ -405,3 +405,11 @@ def test_hypothetical_course_failure_is_blocked(monkeypatch):
 
     assert confirmation.status_code == 409
     assert db.get_action(data['session_id']) is None
+
+def test_important_follows_selected_term():
+    spring=rules.important(ALEX,'Spring 2027')
+    assert not any('Fall 2026' in i['text'] or 'second 8 weeks' in i['title'] for i in spring)
+    assert any(i['title']=='F-1 full-time minimum: 12 hours' and 'registered for Spring 2027' in i['text'] for i in spring)
+    assert any('cancel Spring 2027' in i['title'] for i in spring)
+    assert [i for i in rules.important(ALEX,'Fall 2025') if 'request' not in i['title']]==[]  # requests show on every term
+    assert [i['title'] for i in rules.important(JORDAN,'Spring 2027')][:2]==['Hold: Immunization requirement','Hold: Financial encumbrance']

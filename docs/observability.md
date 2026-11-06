@@ -1,51 +1,53 @@
 # InterfaceDNA — Checkpoint 3 Observability
 
 ## What the current code records
-- Every HTTP request: route path, HTTP status, elapsed latency in milliseconds (FastAPI middleware).
-- Successful LLM call: classified intent, model name, prompt/input tokens, completion/output tokens, inference latency.
-- Failed model call: exception category; most recent corrected server variant logs exception tracebacks in the server console. **Review traces before sharing**, as remote errors can contain sensitive metadata.
-- Browser displays model name and token counts for observed successful calls.
+- **At startup:** the database path and the date the rules are evaluated on (the server date, or `INTERFACEDNA_TODAY` if set).
+- **Every HTTP request:** route path, HTTP status and elapsed latency in milliseconds (FastAPI middleware). Exceptions are logged with a traceback.
+- **Every successful model call:** classified intent, validated entities (course code, term, filters), model name, prompt and completion tokens, and inference latency.
+- **Every failed model call:** the exception with its traceback, labelled "Groq model call failed". The client sees a *busy* message for a rate limit (HTTP 429 from the provider) and an *unavailable* message otherwise. **Review traces before sharing**, as remote errors can contain sensitive metadata.
+- **In the browser:** the result page shows the model name next to the AI interpretation, the extracted intent, term and course.
+- **In the database:** sessions (intent, term, entities, state, active test scenario, timestamps) and confirmed actions (receipt, type, details, timestamp) persist in `app/data/interfacedna.db`, and the dashboard shows them under *My requests*.
 
 ## How to reproduce and debug
-1. In `app/`, run `python -m uvicorn server:app --reload`.
-2. Visit `/health`: confirms whether a key is configured; **does not** confirm model availability.
-3. Analyze a student question and verify `/api/start` returns HTTP 200 and logs model usage.
-4. Inject a fault and inspect `/api/fault` (expected block state).
-5. Attempt confirmation while blocked and verify no receipt appears; clearing fault should permit review again.
-6. If `/api/start` gives 503, check the server traceback; validate `.env`, model ID, rate limits and Groq access without exposing the credential.
+1. In `app/`, run `python -m uvicorn server:app --reload`, then check the startup log line for the database and rules date.
+2. Visit `/health`. It confirms whether a key is configured and the rules date; it **does not** confirm model availability.
+3. Build a page in the portal and verify `/api/start` returns HTTP 200 and logs an `inference intent=… entities=…` line.
+4. Open **Test scenarios**, inject a failure and check `/api/fault` returns a blocked state.
+5. Attempt confirmation while blocked and verify no receipt appears; clearing the scenario should permit review again.
+6. If `/api/start` gives 503, check the server traceback. Validate `.env`, the model ID, rate limits and Groq access without exposing the credential. On the free tier, wait a minute after a rate limit.
+7. Inspect stored state with `sqlite3 data/interfacedna.db "select * from sessions order by created_at desc limit 5;"`.
 
 ## Cost accounting (not yet automated)
-The code currently logs token counts, **not dollar cost**. To estimate cost per request, use the Groq provider's current price schedule and compute:
+The code logs token counts, **not dollar cost**. A model call with the current system prompt uses about 1,380 input tokens plus a variable number of output tokens (observed roughly 60 to 500, depending on how much the model reasons). To estimate cost per request, use the Groq provider's current price schedule:
 `estimated_usd = input_tokens / 1_000_000 * input_price_per_million + output_tokens / 1_000_000 * output_price_per_million`.
 Do not claim measured spending unless current prices and usage were reconciled.
 
 ## Current limitations and additions
-No distributed traces, trace IDs, durable metrics, per-user budget, structured event log, or dashboard are present. Before public release, add privacy-preserving request IDs, counters for error classes, retention rules, alerting and cost monitoring.
+There are no distributed traces, trace IDs, durable metrics, per-user budget, structured event log or dashboard. Before public release, add:
+- privacy-preserving request IDs
+- counters for error classes
+- retention rules
+- alerting
+- cost monitoring
 
 ---
 
 ## Checkpoint 3 — Verification and Interpretation of Logs
 
-The integrated application was tested locally using pytest and FastAPI's TestClient, with 25 tests passing in the latest observed run on November 5, 2026.
+The application is tested locally with pytest and FastAPI's TestClient: **48 tests pass** (November 6, 2026). The tests mock model interpretation, so backend behavior is validated without depending on Groq availability. Live inference is evaluated separately through `app/eval_intents.py` (38 cases, 37/38) and interactive testing.
 
-The automated tests use mocked model interpretation where appropriate, allowing deterministic validation of backend behavior without relying on Groq API availability.
-
-Live inference is evaluated separately through the model evaluation workflow and interactive application testing.
-
-### Verification Levels
+### Verification levels
 
 | Verification level | Evidence | Limitation |
 |---|---|---|
-| Backend regression | pytest and TestClient | Does not independently validate browser usability |
-| Policy-source verification | Source quotations and deadline-value checks | Source documents may become outdated |
-| Live model evaluation | Intent-classification evaluation cases | Model output may vary between runs |
-| UI evidence | Checkpoint 3 screenshots | Earlier screenshots reflect the previous prototype |
-| Operational logging | HTTP outcomes, latency, model usage, and errors | Not a production monitoring system |
+| Backend regression | pytest and TestClient (48 tests) | Does not independently validate browser usability |
+| Policy-source verification | `tools/verify_sources.py`: 74 quotations and every deadline date | Source documents may become outdated |
+| Live model evaluation | 38 intent-classification cases | Model output may vary between runs |
+| Browser checks | Headless-browser walkthroughs of the main flows, phone width and dark mode | Not every combination of student, term and question |
+| UI evidence | `validation/checkpoint3/` screenshots | Some reflect the previous prototype |
+| Operational logging | HTTP outcomes, latency, intent, entities, model usage and errors | Not a production monitoring system |
 
-### Operational Interpretation
+### Operational interpretation
+A successful API response means an application request completed according to the implemented code path. It does not mean a university transaction occurred. Likewise, a receipt indicates a completed local workflow, not a change to a real student information system.
 
-A successful API response indicates that an application request completed according to the implemented code path. It does not establish that a university transaction occurred.
-
-Likewise, a synthetic confirmation receipt indicates a completed local workflow, not a modification to a real student information system.
-
-Observability remains focused on local debugging and classroom evaluation. Production deployment would require trace correlation, durable metrics, controlled log retention, and additional security review.
+Observability is focused on local debugging and classroom evaluation. Production deployment would require trace correlation, durable metrics, controlled log retention and additional security review.

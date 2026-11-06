@@ -239,23 +239,29 @@ The goal is to determine whether adaptive interfaces improve task completion rat
 ## Repository Structure
 
 ```text
-InterfaceDNA/
-│
+InterfaceDNA-IS492/
 ├── README.md
-│
-├── literature/
-│   ├── BIBLIOGRAPHY.md
-│   └── [research papers]
-│
-├── reflections/
-│   ├── lastname_firstname.md
-│   └── ...
-│
+├── DESIGN_SPEC.md
+├── app/                      # Checkpoint 3 application (FastAPI + SQLite + Groq)
+│   ├── server.py             # API, model call, entity validation
+│   ├── rules.py              # deterministic rules, important items, directions
+│   ├── db.py                 # SQLite schema, seeding and queries
+│   ├── generate_students.py  # 254 seeded synthetic students
+│   ├── eval_intents.py       # live 38-case intent evaluation
+│   ├── index.html, assets/   # student portal UI
+│   ├── prompts/              # system prompt, settings, evaluation cases
+│   ├── sources/              # courses, offerings, policies, programs (from University docs)
+│   ├── tools/                # extract and verify source data
+│   └── INSTALL.md            # local setup
+├── University docs/          # source PDFs: calendars, catalogs, schedules, ISSS, refunds, Graduate College Handbook
+├── docs/                     # architecture, use cases, safety and privacy, observability
+├── tests/                    # backend test suite (48 tests)
+├── validation/               # Checkpoint 2 study, interviews, analyses; checkpoint3/ screenshots
+├── prototype/                # Checkpoint 2 static prototype
+├── literature/               # bibliography and papers
 ├── proposal/
-│   └── PROPOSAL.md
-│
-└── slides/
-    └── InterfaceDNA_Checkpoint1.pptx
+├── reflections/
+└── slides/                   # Checkpoint 1 and 2 decks
 ```
 
 ## Current Project Status
@@ -283,6 +289,15 @@ InterfaceDNA/
 - Refined the human-AI role partition and confirmation boundaries.
 - Developed the updated InterfaceDNA storyboard.
 - Completed individual validation reflections.
+
+### Checkpoint 3
+
+- Built the integrated portal on `live_demo`: live intent extraction, deterministic rules, SQLite, and a step-by-step student-services interface with a term picker.
+- Loaded real UIUC sources (calendars, Registrar deadlines, ISSS rules, refunds, Graduate College Handbook, catalogs, class schedules) with 74 automatically verified quotations.
+- Generated 254 reproducible synthetic students.
+- Added course drop, graduation, holds, course search, course details, policy questions, "Important for you", "Where to check" directions and request history.
+- 48 backend tests passing; live intent evaluation 37/38.
+- Documented architecture, use cases, safety and observability.
 
 ---
 
@@ -364,86 +379,82 @@ The goal for Checkpoint 3 is not simply to make InterfaceDNA more autonomous. It
 
 ## Checkpoint 3 — Implemented System and Results
 
-**Implementation snapshot:** November 5, 2026  
-**Branch:** `live_demo`
+**Implementation snapshot:** November 6, 2026  
+**Branch:** `live_demo` · **Run it:** see [app/INSTALL.md](app/INSTALL.md)
 
-Checkpoint 3 transformed InterfaceDNA from an initial goal-adaptive interface concept into an integrated, source-grounded academic workflow prototype.
+Checkpoint 3 turned InterfaceDNA from a goal-adaptive interface concept into an integrated, source-grounded student-services portal. Live generative AI interprets the student's goal; deterministic rules combine a synthetic student record with quoted UIUC sources; the page shows what matters for that student and where to check anything it can't verify; and consequential actions need explicit confirmation.
 
-The application combines live generative AI intent interpretation with deterministic rule evaluation, synthetic student records, a task-focused university portal interface, and explicit confirmation safeguards.
+### Implemented functionality
 
-### Implemented Functionality
+1. **Natural-language goal interpretation.** Groq-hosted inference (`openai/gpt-oss-120b`) identifies one of seven intents and extracts what the student typed:
+   - **intents:** drop, graduation, hold, course search, course details, policy, or out of scope;
+   - **details:** course code or name, term, subject, credit hours, level, topic.
+   It understands synonyms, abbreviations and relative terms such as "next spring".
+2. **Source-grounded university information.** Policy facts, deadlines, course data, class schedules and degree requirements come from the real UIUC documents in `University docs/`, with verbatim quotes and page references (74 quotes verified automatically).
+3. **Synthetic student records.** A reproducible set of 254 fictional students across CS BS, IS BS, CS MCS and Information Management MS, with transcripts, Fall 2026 enrollments, Spring 2027 registrations, visa status and holds.
+4. **Term picker.** Six terms: Fall 2025, Spring 2026, Fall 2026 (current), Winter 2027, Spring 2027 and Summer 2027. Schedules, key dates, drop checks and important items follow the selected term.
+5. **Deterministic academic rules.** The rules cover:
+   - **drops:** enrollment, ISSS minimums, no-W and refund deadlines by part of term, withdrawal and cancellation, the graduate petition cutoff, and pending requests;
+   - **graduation:** CS BS and IS BS requirements, with "Graduation is not guaranteed" wording;
+   - **registration:** holds and registration dates;
+   - **courses:** search and course details;
+   - **policy:** answers quoted directly from the sources.
+6. **Important for you.** Every result page and the dashboard lead with:
+   - the student's holds;
+   - the selected term's upcoming deadlines (urgent within 7 days);
+   - the F-1/J-1 minimum;
+   - missing registration;
+   - the graduation application;
+   - recorded requests.
+7. **Where to check.** Anything the sources can't verify points to the official place (the course's Course Explorer page, Registrar refund schedules, ISSS, Student Self-Service, the college office or the academic advisor). Out-of-scope questions get a guide to official pages instead of a dead end.
+8. **Explicit confirmation and request history.** Consequential actions need acknowledgment and server-side revalidation before a receipt is recorded. Requests appear under *My requests*, dropped courses are marked *Drop requested*, and duplicates are blocked.
+9. **Failure and recovery handling.** Test scenarios (conflicting policy versions, record unavailable, service outage) block every question type and recover to review without executing anything.
 
-The current implementation includes:
+### Supported question types
 
-1. **Natural-language goal interpretation:** Groq-hosted inference identifies supported academic intents and extracts relevant user-supplied entities.
+| Question type | Example | What the page shows |
+|---|---|---|
+| Course drop | "Can I drop CS 411?" / "can I quit my database class?" | Credit change, visa minimum, tuition range and refund, no-W deadline by part of term, withdrawal rules |
+| Graduation | "What do I still need to graduate?" | Requirement-by-requirement check against the 2026-2027 catalog, unverified items with the advisor, graduation application |
+| Holds | "Why can't I register?" | Holds, what they can block, registration dates, where to resolve them |
+| Course search | "3 credit courses I can take next spring" / "any AI courses?" | Matching courses from the Course Explorer schedules with credits, prerequisites and the student's record |
+| Course details | "What are the prerequisites for CS 425?" | Prerequisites, when offered, the student's record, whether it counts toward the degree |
+| Policy | "How many credits do international students need?" | The quoted policy text and the term's relevant dates |
+| Anything else | "Where can I get a parking permit?" | Important items plus a guide to official pages |
 
-2. **Source-grounded university information:** Course information, academic requirements, and policy rules are derived from real UIUC documents, with quoted evidence and source references.
+### Checkpoint 3 validation
 
-3. **Synthetic student records:** A reproducible dataset of 254 fictional students represents different programs, enrollment histories, registration statuses, and academic circumstances.
-
-4. **SQLite-backed application state:** Student information, course data, policy facts, sessions, and simulated action receipts are managed using SQLite.
-
-5. **Deterministic academic validation:** Python rules evaluate course-drop consequences, enrollment eligibility, deadlines, graduation requirements, and registration holds.
-
-6. **Task-focused interface composition:** The frontend presents relevant information through structured cards, grouped checks, warning states, and source references.
-
-7. **Explicit confirmation:** Consequential actions require user acknowledgment and backend revalidation before a simulated receipt can be recorded.
-
-8. **Failure and recovery handling:** Controlled missing-record, policy-conflict, and service-outage scenarios demonstrate blocked actions and recovery to review.
-   
----
-
-### Supported Academic Workflows
-
-| Workflow | Functionality |
+| Check | Result |
 |---|---|
-| Course drop | Evaluate enrollment, credit consequences, applicable deadlines, and student-specific restrictions |
-| Graduation readiness | Compare available undergraduate records against supported degree requirements |
-| Registration holds | Explain synthetic holds and source-backed registration information |
-| Course search | Retrieve relevant catalog information |
-| Course information | Present available course details |
-| Policy questions | Provide source-backed policy information with citations |
+| Backend tests (`python -m pytest tests -q`, November 6, 2026) | **48 passed** |
+| Source verification (`app/tools/verify_sources.py`) | **74/74** quotations found on their cited pages; every deadline date matches its quote |
+| Live intent evaluation (`app/eval_intents.py`) | **37/38**; the one failure (A06) is contained by the rules |
+| Browser checks | Main flows, term picker, important items, confirmation and *My requests*, phone width and dark mode |
 
----
-
-### Checkpoint 3 Validation
-
-The latest locally observed backend regression run on November 5, 2026 reported:
-
-```text
-25 passed, 1 warning in 1.24s
-```
-
-The tests cover synthetic records, academic validation, citation handling, confirmation safeguards, failure injection, recovery, and relevant API behavior.
-
-The separate live model evaluation was documented as 37 correct classifications out of 38 cases, with one remaining adversarial failure. This evaluation is distinct from the mocked backend regression suite.
-
-Source-verification tools were also used to validate quoted policy and program evidence against the corresponding source documents.
-
-### Evidence and Documentation
+### Evidence and documentation
 
 - [System architecture](docs/architecture.md)
-- [Use cases and recovery tests](docs/use-cases.md)
-- [Safety, privacy, and guardrails](docs/safety_privacy.md)
+- [Use cases, edge cases and recovery tests](docs/use-cases.md)
+- [Safety, privacy and guardrails](docs/safety_privacy.md)
 - [Observability](docs/observability.md)
 - [Local installation instructions](app/INSTALL.md)
-- [Checkpoint 3 validation screenshots](validation/checkpoint3/)
+- [Checkpoint 3 validation screenshots](validation/checkpoint3/): earlier builds and prompt tests; some reflect the previous prototype
 
-The screenshots include evidence from an earlier prototype implementation and should not be interpreted as complete manual verification of the redesigned portal.
+### Known limitations
 
-### Known Limitations
+- **Local prototype.** Student records are fictional, university sources are not refreshed automatically, and recorded actions do not modify university systems.
+- **Partial degree checks.** Only CS BS and IS BS are checked. Gen eds, focus areas, technical GPA and graduate programs are not.
+- **Unchecked prerequisites.** Prerequisites are shown but not checked against transcripts.
+- **Part of term unknown.** Each course's part of term isn't in the loaded schedules, so some undergraduate drops can't be decided; the page links to the course's Course Explorer page.
+- **Outside scope.** Production authentication, operational monitoring and integration with university systems.
 
-InterfaceDNA remains a local academic prototype. Student records are fictional, university data sources are not automatically refreshed, and recorded actions do not modify actual university systems.
+### Connection to the project research
 
-Degree-audit coverage is partial, course part-of-term information can be unavailable, and some institutional questions require human verification. Production authentication, operational monitoring, and integration with university systems remain outside the current implementation.
+Checkpoint 3 operationalizes the three primary gaps identified in Checkpoint 2:
 
-### Connection to the Project Research
-
-Checkpoint 3 operationalizes the three primary gaps identified during Checkpoint 2:
-
-- **Grounding:** Institutional facts originate from traceable sources rather than unsupported model generation.
-- **Human control:** Consequential actions remain subject to deterministic validation and explicit user confirmation.
-- **Attention management:** Task-focused views prioritize relevant consequences, uncertainty, and next steps over lengthy generic responses.
+- **Grounding:** institutional facts come from traceable, quoted sources, never from the model.
+- **Human control:** consequential actions require deterministic validation and explicit confirmation.
+- **Attention management:** each page leads with what matters for this student and where to act, instead of a long generic answer.
 
 The final evaluation will examine whether this hybrid approach improves task comprehension and decision quality compared with conventional portal navigation and general-purpose conversational AI.
 

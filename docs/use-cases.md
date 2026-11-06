@@ -1,234 +1,165 @@
-# InterfaceDNA — Checkpoint 3 Use Cases and Live Test Scripts
+# InterfaceDNA — Checkpoint 3 Use Cases and Test Scripts
 
-**University rules are real; students are synthetic.** Policies, course data and degree requirements are quoted from UIUC documents in `University docs/` (retrieved November 4, 2026), each shown with its source and page. Student records and all actions are synthetic. These scripts document actual code paths; the status of hands-on checks is specified separately.
+**University rules are real; students are synthetic.** Policies, deadlines, course data, class schedules and degree requirements are quoted from UIUC documents in `University docs/` (retrieved November 4–5, 2026), each shown with its source and page. Student records and all actions are synthetic. Expected results below are taken from the current code, evaluated on November 5–6, 2026 with the term picker on **Fall 2026** unless stated.
 
-## UC-01 — Alex Morgan (S00001): Can I drop CS 411?
-
-- **Setup:** Journey J1, student S00001, failure `None`. Alex is a synthetic F-1 Computer Science BS student enrolled in 14 hours for Fall 2026 (CS 341, CS 357, CS 374, CS 411).
-- **Input:** `Can I drop CS 411?`
-- **Live action:** Click **Analyze using live AI**. Groq extracts intent `drop` and course `CS 411`; the backend checks Alex's synthetic schedule against the real policy facts.
-- **Expected:** 14 hours now, 11 after the drop; CS 411 shown with its catalog title, *Database Systems*.
-  - **Blocks action — Contact ISSS before dropping below full time:** 11 is below the 12-hour minimum for F-1 undergraduates (ISSS, *Maintaining F-1/J-1 Status*, p. 2).
-  - **Note — Other effects to review** (Graduate College Handbook, p. 12).
-  - **Note — Tuition range changes from Range I to Range II, but no refund applies:** the refund deadlines (September 4 for POT 1, October 23 for POT B) have passed (Registrar, *Fall 2026 Academic Calendar*).
-  - **Not verified — Drop deadline depends on the course's part of term:** the undergraduate no-W deadline was October 16 for POT 1 and is November 13 for POT B; the class schedule does not give CS 411's part of term.
-- **Confirmation:** Not available.
-- **Observed (November 5, 2026):** Live Groq inference extracted `drop` / `CS 411`; the API returned `blocked` with the ISSS and part-of-term checks. Browser check pending.
-
-## UC-01b — Sam Rivera (S00004): I want to drop CS 440
-
-- **Setup:** Journey J1, student S00004. Sam is a synthetic domestic CS MCS student enrolled in CS 411, CS 412 and CS 440 (12 hours).
-- **Expected (November 5, 2026):** 12 → 8 hours; **Verified — Within the deadline to drop without a W** (graduate deadlines: November 13 for POT 1, December 4 for POT B); no refund because the refund deadlines have passed. Status `review`.
-- **Confirmation:** Check the acknowledgment and confirm; a synthetic receipt is recorded. After December 10, 2026 the same request is blocked because graduate add/drop requires a Graduate College petition.
-- **Observed (November 5, 2026):** Live Groq inference extracted `drop` / `CS 440`; review state; confirmation returned a synthetic receipt. Browser check pending.
-
-## UC-02 — Maya Patel (S00002): What do I still need to graduate?
-
-- **Setup:** Journey J2, student S00002. Maya is a synthetic Information Sciences BS student in her final semester.
-- **Input:** `What do I still need to graduate?`
-- **Expected:** `graduation` intent; 113 hours completed, 17 in progress, 123 required (catalog p. 471). **Needs attention — Apply to graduate in December:** the undergraduate deadline was September 4, 2026; after that date, contact your Academic Office. Every IS core course, the 51 School hours and both 2.50 GPA minimums are checked. Items the prototype cannot check (gen eds, programming proficiency, approved non-IS courses, catalog year) are listed as **Not verified** with a pointer to the academic advisor.
-- **Confirmation:** Save a **synthetic review plan**, not graduation approval.
-- **Observed (November 5, 2026):** Live classification and an on-track result through the API. Browser check pending.
-
-## UC-03 — Jordan Lee (S00003): Why can't I register?
-
-- **Setup:** Journey J3, student S00003. Jordan is a synthetic Computer Science BS student with two synthetic holds.
-- **Input:** `Why can't I register?`
-- **Expected:** `hold` intent; *Immunization requirement* and *Financial encumbrance* holds (categories from the Graduate College Handbook, p. 15); what holds can block, with the note that this description comes from the Graduate College Handbook; Spring 2027 instruction begins January 19, 2027 (2026-2027 Academic Calendar); priority registration began November 2 and open registration begins November 19, 2026 (Registrar, *Fall 2026 Academic Calendar*). Which office clears each hold is shown as **Not verified**, because the sources do not say.
-- **Confirmation:** Save a **synthetic reminder**; do not claim that any hold was cleared.
-- **Observed (November 5, 2026):** Live classification and both holds through the API. Browser check pending.
-
-## Failure and Recovery Tests
-
-InterfaceDNA includes controlled failure scenarios to evaluate how the application responds when verified student information is missing, policy sources conflict, or supporting services become unavailable. These tests focus on safe state transitions, preventing unsupported AI-generated conclusions, and ensuring that blocked actions cannot generate simulated receipts.
-
-All scenarios use synthetic student records; the university policies shown are real and quoted from UIUC sources, and every failure is simulated. Failures are introduced through the application's **Failure / edge case** selector after initializing a session.
+**How to run a scenario:** open http://127.0.0.1:8000, choose the student in the directory, set the term, then pick a service tile (or *Something else*) and enter the input. Press **Build my page**. Every result page starts with **Important for you**: the student's holds, the selected term's upcoming deadlines, the F-1/J-1 minimum, registration status, the graduation application and recorded requests. Items the sources can't verify show **Where to check**.
 
 ---
 
-### F-01 — Conflicting Course-Drop Policies
+## Core journeys
 
-- **Persona:** Alex
-- **Input:** `Can I drop CS 411?`
-- **Failure mode:** `policy_conflict`
-- **Expected:** The application blocks the request when the simulated fault reports two conflicting versions of the drop rules, and advises the student to consult the Registrar. No conflicting dates are invented.
-- **Safeguard:** No confirmation action or receipt is permitted while the workflow is blocked.
-- **Verification:** Covered by automated backend testing. The conflict scenario was also observed in earlier Checkpoint 3 testing.
-  
+### UC-01 — Alex Morgan (S00001): Can I drop CS 411?
+- **Setup:** S00001, a synthetic F-1 CS BS student with 14 hours in Fall 2026 (CS 341, CS 357, CS 374, CS 411). Tile: *Drop a course*.
+- **Expected:** 14 → 11 hours; CS 411 *Database Systems*. Status `blocked`.
+  - **Blocks action — Contact ISSS before dropping below full time:** 11 is below the 12-hour F-1 undergraduate minimum (ISSS, p. 2). Where to check: ISSS.
+  - **Not verified — Drop deadline depends on the course's part of term:** the no-W deadline was October 16 for POT 1 and is November 13 for POT B. Where to check: *CS 411 section details on Course Explorer* (link).
+  - **Note — Tuition range changes from Range I to Range II, but no refund applies:** refund deadlines (Sept 4, Oct 23) have passed. Where to check: Registrar refund schedules.
+- **Confirmation:** not available.
+
+### UC-01b — Sam Rivera (S00004): I want to drop CS 440
+- **Setup:** S00004, a domestic CS MCS student with CS 411, CS 412 and CS 440 (12 hours).
+- **Expected:** 12 → 8 hours; **Verified — Within the deadline to drop without a W** (graduate deadlines: Nov 13 for POT 1, Dec 4 for POT B); no refund. Status `review`.
+- **Confirmation:** tick the acknowledgment and confirm, which records a receipt. The request then appears under *My requests* on the dashboard, and CS 440 shows **Drop requested** in the schedule. After December 10, 2026 the same request is blocked: graduate add/drop needs a Graduate College petition.
+
+### UC-01c — Alex Morgan, term Spring 2027: Can I drop CS 441?
+- **Setup:** term picker on **Spring 2027**, or ask "Can I drop CS 441 in spring 2027?" with the picker on Fall (a term in the question overrides the picker).
+- **Expected:** "Dropping CS 441 would take your Spring 2027 registration from 16 to 13 hours." Stays at the F-1 minimum; within every Spring deadline because the term has not started; tuition range stays Range I. Status `review`. *Important for you* shows Spring items only: open registration Nov 19, cancellation Jan 18, refund deadlines, and the F-1 check against 16 registered hours.
+
+### UC-02 — Maya Patel (S00002): What do I still need to graduate?
+- **Setup:** S00002, IS BS, final semester. Tile: *Graduation check*.
+- **Expected:** 113 hours completed, 17 in progress, 123 required (catalog p. 471). Every IS core course, the 51 School hours and both 2.50 GPA minimums are checked. The summary opens with **"Graduation is not guaranteed."**, gives the credit projection (130 hours if current courses are passed), and says to confirm with the academic advisor or Academic Office. Unchecked items (gen eds, programming proficiency, approved non-IS courses, catalog year) are *Not verified* with *Where to check: Your academic advisor*. **Important for you:** *Apply to graduate in December*: the deadline was September 4, 2026; contact your Academic Office.
+- **Confirmation:** save a graduation review plan (not graduation approval).
+
+### UC-03 — Jordan Lee (S00003): Why can't I register?
+- **Setup:** S00003, CS BS with two synthetic holds and no Spring 2027 registration.
+- **Expected:** *Immunization requirement* and *Financial encumbrance* holds; Spring 2027 registration dates (priority began Nov 2, open Nov 19); what holds can block (Graduate College Handbook, labelled for undergraduates). *Which office clears each hold* is *Not verified* with *Where to check: Registration section of Student Self-Service*. The status banner says the holds are still active and that the portal cannot verify a payment or remove a hold.
+- **Confirmation:** save a reminder; no hold is cleared.
+
+## Question types beyond the core journeys
+
+| ID | Student / term | Input | Expected |
+|---|---|---|---|
+| UC-04 | Any, Spring 2027 | "Show me 3 credit courses I can take in spring 2027" | *Courses for Spring 2027*: about 140 courses from the CS, IS, CSE and TE schedules that list 3 credit hours, with prerequisites and *Available* or the student's record. Sources: the Course Explorer schedules |
+| UC-05 | Alex | "any AI courses next spring" | *next spring* → Spring 2027; *AI* matches CS 440 *Artificial Intelligence* and TE 468 *Transforming Marketing with AI* |
+| UC-06 | Alex | "What are the prerequisites for CS 425?" | Course details: prerequisites (catalog), offered Fall 2026 and Spring 2027, not taken, eligible CS BS technical elective on the team-project list |
+| UC-07 | Alex | "can I quit my database class?" | Course name resolved from Alex's own schedule to CS 411; same result as UC-01 |
+| UC-08 | Any | "How many credits do international students need?" | Policy answer quoting the ISSS full-time rule, the ISSS exceptions and the tuition ranges |
+| UC-09 | Jordan | "Where can I get a parking permit?" | *Here's where to look*: Jordan's important items plus a guide to ISSS, refunds, both Registrar calendars, Course Explorer, the catalog, Self-Service and the academic advisor |
+| UC-10 | Alex | "what if I fail CS 374, can I still graduate?" | Stopped before the rules: "This is a hypothetical graduation scenario…", with advice to discuss it with the academic advisor; no projection or request |
+
+## Edge cases
+
+| ID | Input / action | Expected |
+|---|---|---|
+| E-01 | "drop CS 411 and CS 425" | "Please ask about one course at a time." |
+| E-02 | "show me IS courses for fall 2030" | "Information for Fall 2030 isn't available", plus the available terms |
+| E-03 | "courses next fall" | "Information for next fall isn't available" (Fall 2027 has no calendar) |
+| E-04 | Alex on Fall: "Can I drop CS 441?" | "Your Fall 2026 schedule does not include CS 441… CS 441 is on your Spring 2027 registration; choose Spring 2027 in the term picker or name the term in your question." |
+| E-05 | Sam: confirm the CS 440 drop, then ask to drop CS 412 | Counts from 8 hours, not 12 (8 → 4), with *Includes your pending drop request* |
+| E-06 | Sam: ask to drop CS 440 again | "You already requested to drop CS 440 for Fall 2026 (receipt …)" |
+| E-07 | Empty or over-1,000-character question | "Please describe your goal in 3 to 1,000 characters." |
+| E-08 | Free-tier rate limit hit | "The assistant is busy right now. Please wait a minute and try again." |
+| E-09 | S00085 (only CS 128): "Can I drop CS 128?" | *Dropping your only course is a withdrawal*, with the October 16 deadline |
+| E-10 | Any student, term Fall 2025: drop a course taken then | "Fall 2025 has ended" |
+
 ---
 
-### F-02 — Missing Graduation Audit (Maya)
+## Failure and recovery tests
 
-- **Persona:** Maya
-- **Input:** `What do I still need to graduate?`
-- **Failure mode:** `missing_record`
+Failures are introduced through the **Test scenarios** panel (collapsed at the bottom of a result page) after a page has been built. Every failure is simulated.
 
+### F-01 — Conflicting policy versions
+- **Persona:** Alex. **Input:** `Can I drop CS 411?` **Scenario:** *Conflicting policy versions*.
+- **Expected:** blocked: "Two different versions of the drop rules were returned, so I'm not sure which applies. Ask the Office of the Registrar before proceeding." No conflicting dates are invented. The same scenario on a policy question blocks the policy answer.
+- **Verification:** `test_failures_block`, `test_edge_faults_on_new_question_types`.
+
+### F-02 — Record unavailable (Maya)
 **Test procedure:**
-1. Select **J2 Graduation** with the failure setting `None`.
-2. Analyze Maya's graduation question using live Groq inference.
-3. Verify that the degree requirements are displayed with individual names, statuses, and supporting details.
-4. Open **Test scenarios** and select **Record unavailable**.
-5. Verify that the system enters a blocked state.
-6. Confirm that the acknowledgment and confirmation controls are unavailable.
-7. Verify that no simulated receipt is generated.
+1. As Maya, build the graduation page (*Test scenarios* set to *None*).
+2. Verify the requirement cards show names, statuses and details.
+3. Choose **Record unavailable**.
+4. Verify the page is blocked, confirmation controls are gone and no receipt is created.
 
-**Expected behavior:** The system displays `Your degree audit is unavailable right now, so graduation status can’t be determined. Please try again later.` and prevents the workflow from proceeding without verified degree-audit information.
+**Expected:** "Your degree audit is unavailable right now, so graduation status can't be determined. Please try again later." The same scenario also blocks course search and course details, because they use the student's record.
 
-**Automated verification:** `test_maya_missing_audit_recovery` confirms that `/api/fault` returns a blocked state and `/api/confirm` rejects the action with HTTP `409 Conflict`, without producing a receipt.
+**Verification:** `test_maya_missing_audit_recovery` (blocked state, HTTP 409 on confirm, no receipt).
 
----
-
-### F-03 — Synthetic Records-Service Outage (Jordan)
-
-- **Persona:** Jordan
-- **Input:** `Why can't I register?`
-- **Failure mode:** `service_outage`
-
+### F-03 — Records-service outage (Jordan)
 **Test procedure:**
-1. Select **J3 Registration hold** with the failure setting `None`.
-2. Analyze Jordan's registration question.
-3. Verify that the two synthetic holds are displayed.
-4. Open **Test scenarios** and select **Service outage**.
-5. Verify that the application displays the service-unavailable warning.
-6. Confirm that the workflow becomes blocked and confirmation is unavailable.
-7. Verify that no simulated receipt is generated.
+1. As Jordan, build the holds page.
+2. Choose **Service outage**.
+3. Verify the outage message appears, confirmation is unavailable and no receipt is created.
 
-**Expected behavior:** The system displays `The student records service is unavailable. Please try again later; no action was taken.` and prevents any simulated advising-review request while the outage condition remains active.
+**Expected:** "The student records service is unavailable. Please try again later; no action was taken."
 
-**Automated verification:** `test_confirm_flow` (Jordan) verifies the blocked state and confirms that attempting to call `/api/confirm` returns HTTP `409 Conflict`, without a receipt.
+**Verification:** `test_confirm_flow` (blocked, HTTP 409, no receipt).
 
----
-
-### F-04 — Recovery After Clearing an Injected Failure
-
-**Objective:** Verify that the application can restore a previously blocked workflow once the simulated failure is cleared.
-
+### F-04 — Recovery after clearing a failure
 **Test procedure:**
-1. Start a valid Maya or Jordan workflow.
-2. Introduce the corresponding failure through the dropdown.
-3. Confirm the workflow enters the blocked state.
-4. Change **Failure / edge case** back to `None` without resetting the session.
-5. Verify that the original synthetic student information returns.
-6. Confirm that explicit acknowledgment is still required before performing a simulated action.
+1. After F-02 or F-03, set the scenario back to **None** without rebuilding the page.
+2. Verify the original page returns.
+3. Verify the acknowledgment is required again before confirming.
 
-**Expected recovery behavior:**
+**Expected:** the backend moves from `blocked` to `review`; nothing is executed automatically.
 
-- **Maya:** The verified graduation requirements reappear with their individual names, statuses, and details.
-- **Jordan:** Both registration holds reappear with the Spring 2027 registration dates.
-- **Workflow state:** The backend transitions from `blocked` to `review`.
-- **Human confirmation:** The application does not automatically execute an action when the failure is cleared.
+**Verification:** `test_maya_missing_audit_recovery`, `test_confirm_flow`.
 
-**Automated verification:** `test_maya_missing_audit_recovery` and `test_confirm_flow` confirm that clearing the fault restores the `review` state, and both verify successful synthetic confirmation after recovery.
+### F-05 — Backend confirmation protection
+**Test procedure:** create a session with `POST /api/start`, inject a failure with `POST /api/fault`, then call `POST /api/confirm` with `confirmation: true`.
 
----
+**Expected:** HTTP 409; no receipt; no completed state. `confirmation: false` gives HTTP 400, and a repeated confirmation gives HTTP 409.
 
-### F-05 — Backend Confirmation Protection
+**Verification:** `test_confirm_flow`, `test_unverified_drop_cannot_be_confirmed`.
 
-**Objective:** Ensure that blocked actions cannot bypass frontend restrictions through direct API calls.
+### F-06 — Live model unavailable
+- **Expected:** HTTP 503 with "Live model unavailable… No task was submitted." (or the *busy* message on a rate limit); no fabricated response and no session.
+- **Verification:** `test_model_failure_creates_no_session`, `test_edge_rate_limit_message` (mocked). A live provider outage was not tested.
 
-**Test procedure:**
-1. Create a valid session using `POST /api/start`.
-2. Inject a missing-record or service-outage condition using `POST /api/fault`.
-3. Confirm that the backend session state is `blocked`.
-4. Attempt to confirm the blocked session through `POST /api/confirm` with `confirmation: true`.
-5. Inspect the HTTP response and verify that no receipt was returned.
-
-**Expected behavior:**
-- HTTP status: `409 Conflict`
-- Error: `Task is not confirmable in current state`
-- No receipt generated
-- No transition to a completed state
-
-**Automated verification:** Both the Maya and Jordan recovery tests validate these confirmation safeguards. A blocked request cannot be completed until the failure condition is cleared and the backend returns to the review state.
+**Procedure note:** build the page first, then inject the failure. `/api/start` creates the session that `/api/fault` changes. This demonstrates the safeguards, not resilience against real outages.
 
 ---
 
-### F-06 — Live Model Unavailability
-
-- **Scenario:** Groq model inference fails or becomes unavailable.
-- **Expected:** The backend returns HTTP `503 Service Unavailable`, displays an appropriate error message, and does not silently substitute a fabricated model response.
-- **Verification status:** Covered by a mocked unit test (`test_model_failure_creates_no_session`). A live provider outage was not tested.
-
----
-
-### Automated Test Results
-
-Automated regression testing was conducted using pytest and FastAPI's TestClient to verify InterfaceDNA's backend workflows, policy evaluation, session transitions, confirmation safeguards, and error-recovery behavior.
-
-The current implementation uses a SQLite database containing synthetic student records and course information derived from real UIUC sources. Tests exercise the deterministic application logic without requiring live Groq inference. Model responses are mocked where necessary to isolate backend behavior from external API availability.
-
-**Command executed:**
+## Automated verification
 
 ```bash
 python -m pytest tests -q
 ```
 
-**Latest locally observed result (November 5, 2026):**
+**Result (November 6, 2026):** `48 passed, 1 warning`. The warning concerns the deprecated Starlette TestClient import path.
 
-```text
-25 passed, 1 warning in 1.24s
-```
+| Test category | Coverage |
+|---|---|
+| Real data | Catalog courses (including extraction fixes), policy facts, every student × every journey cited to a quoted source |
+| Synthetic students | Deterministic generation; credits within catalog ranges; current enrollments on the Fall 2026 schedules |
+| Drops | ISSS minimum, enrollment by term, withdrawal, no-W and refund deadlines on several dates, graduate petition, Spring registration drops, past terms, pending drops, duplicates |
+| Graduation and holds | CS BS / IS BS checks, "not guaranteed" summary, hypothetical failure stop, holds and registration dates |
+| New question types | Course search with synonyms, course details, policy answers as quotes |
+| Input handling | Entity cleaning, typed and relative terms, course names, multi-course drops, unknown terms, numeric text |
+| Important items | Per student and per selected term; directions on unverified items; out-of-scope guide |
+| Safeguards | Explicit confirmation, blocked confirmation, recovery, test scenarios on every question type, model failure and rate limit |
 
-The warning concerns the deprecated Starlette TestClient import path and does not indicate a failed test.
+Source verification (`app/tools/verify_sources.py`) separately checks all **74** policy and program quotations against their cited PDF pages and every deadline date against its quote. The live intent evaluation (38 cases, 37/38) is separate from these tests.
 
-The latest result was obtained after integrating the updated `live_demo` backend and test suite. Earlier screenshots showing 8 or 10 passing tests belong to the previous prototype implementation and are retained as historical development evidence.
+**Screenshots:** `validation/checkpoint3/` holds the earlier 8- and 10-test runs from the previous prototype, plus Anisha's prompt-test screenshots from November 5. Some of those file names contain `validation:checkpoint3:` as part of the name.
 
-| Test category | Verification coverage | Result |
-|---|---|---|
-| Course and policy data | Catalog data, policy references, and source-backed facts | Passed |
-| Synthetic student generation | Deterministic generation and validity of student records | Passed |
-| Course-drop validation | Credit consequences, enrollment eligibility, and full-time requirements | Passed |
-| Deadline enforcement | Registrar deadlines and graduate petition restrictions | Passed |
-| Graduation readiness | Undergraduate degree requirements and incomplete checks | Passed |
-| Registration holds | Synthetic hold records and associated rule evaluation | Passed |
-| Model-output validation | Course normalization and accepted intent/entity values | Passed |
-| Confirmation safeguards | Explicit confirmation, blocked requests, and duplicate prevention | Passed |
-| Missing-record recovery | Blocked graduation review, restoration, and confirmation | Passed |
-| Service-outage recovery | Blocked workflow and restoration after clearing the fault | Passed |
-| Policy source traceability | Citations and quoted source references | Passed |
-| Model failure handling | Rejection of failed inference without creating a valid session | Passed |
-
-**Verification scope:** These results establish that the tested backend behavior passed the locally executed regression suite. They do not independently establish browser usability, live provider reliability, or integration with university systems.
-
-### Verification Summary
-
-| Scenario | Expected outcome | Automated test status |
-|---|---|---|
-| Conflicting course-drop policies | Block unsafe request | Passed |
-| Maya missing graduation audit | Block request and reject confirmation | Passed |
-| Jordan records-service outage | Block request and reject confirmation | Passed |
-| Maya recovery after selecting `None` | Restore verified graduation review | Passed |
-| Jordan recovery after selecting `None` | Restore two registration-hold records | Passed |
-| Confirmation during blocked state | HTTP 409; no receipt | Passed |
-| Successful confirmation after recovery | Synthetic action permitted | Passed |
-| Groq model-provider failure | HTTP 503; no fabricated response | Passed (mocked) |
-
-### Safety Considerations and Limitations
-
-* The error-recovery tests demonstrate that InterfaceDNA separates AI-based intent interpretation from deterministic validation of synthetic student records against quoted university rules. When critical information is missing or supporting services become unavailable, the backend blocks the workflow instead of allowing unsupported conclusions or actions.
-* The system enforces a confirmation boundary at the backend, meaning blocked actions cannot generate simulated receipts even when confirmation is attempted directly through the API. Once the injected failure is removed, the application restores the verified review state without automatically executing an action.
-* These tests use fictional student records and application-controlled fault injection. They validate the implementation's state transitions and safeguards but do not establish production resilience against actual university-system outages. No real university records are accessed or modified during testing.
-
-### Correct fault-injection procedure
-**Analyze first, inject the failure second.** The `/api/start` call creates the session. The fault selector then calls `/api/fault` using its `session_id`; without a session there is nothing to mutate. This is correct behavior for an **interactive fault-injection demonstration**, but does not establish the system can withstand real third-party outages in production.
-
----
-
-## Automated Verification
-
-The latest locally executed Checkpoint 3 regression suite reported **25 passing tests** on November 5, 2026, following integration of the redesigned backend.
-
-The suite covers synthetic student records, real source-backed policy facts, course-drop rules, graduation checks, registration holds, confirmation safeguards, fault injection, recovery, and API behavior.
-
-The system also includes a separate source-verification process implemented in `app/tools/verify_sources.py`. The documented source-verification run checked 49 policy and program quotations against their cited PDF pages and verified the consistency of extracted deadline values.
-
-Automated application tests use mocked model responses where required. Live Groq inference and the 38-case intent evaluation are separate verification activities.
-
-The earlier 8-test and 10-test screenshots remain available in `validation/checkpoint3/` as historical evidence of the previous prototype.
-
-**Limitation:** Passing automated tests validates the scenarios included in the test suite; it does not establish that every UI workflow has been manually tested in the final redesigned portal.
+**Limitation:** passing tests validates the scenarios in the suite; the browser checks covered the main flows but not every combination.
 
 ---
 
 ## Proposed CP4 benchmark alignment
-Compare the **same Alex/Maya/Jordan tasks** across (A) human-only policy portal, (B) general AI-only chatbot without verified records, (C) InterfaceDNA hybrid. Pre-register participant count and task order. Collect correct next-action rate, unsupported claims, completion time, clicks/steps, and explicit confirmation compliance. The actual participant count and benchmark results are not available yet.
+Compare the **same Alex/Maya/Jordan/Sam tasks** across:
+
+| Condition | Description |
+|---|---|
+| (A) Human only | The policy portal alone |
+| (B) AI only | A general chatbot without verified records |
+| (C) Hybrid | InterfaceDNA |
+
+Pre-register the participant count and task order. Collect:
+- correct next-action rate
+- unsupported claims
+- completion time
+- clicks/steps
+- explicit confirmation compliance
+
+The participant count and benchmark results are not available yet.

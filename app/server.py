@@ -341,7 +341,7 @@ def student(student_id: str, term: str = db.CURRENT_TERM):
         'term_credits': sum(c['credits'] for c in courses),
         'holds': db.get_active_holds(student_id),
         'requests': db.list_requests(student_id),
-        'important': rules.important(student_id),
+        'important': rules.important(student_id, term),
         'key_dates': rules.key_dates(s['level'], term),
         'rules_date': rules.today().isoformat(),
     }
@@ -386,7 +386,7 @@ def start(body: Start):
         usage['output_tokens'],
         (time.perf_counter() - tic) * 1000,
     )
-    result['important'] = rules.important(body.student_id)
+    result['important'] = rules.important(body.student_id, term)
     return {
         'session_id': sid,
         'term': term,
@@ -411,7 +411,7 @@ def fault(body: Fault):
         term=sess['term'])
     state = 'review' if result['status'] == 'ready' else 'blocked'
     if body.mode not in ('missing_record', 'service_outage'):  # needs the student record
-        result['important'] = rules.important(sess['student_id'])
+        result['important'] = rules.important(sess['student_id'], sess['term'])
     if not db.update_session(body.session_id, state, body.mode):
         raise HTTPException(409, 'Cannot mutate completed session')
     return {'state': state, 'result': result, 'session_id': body.session_id}

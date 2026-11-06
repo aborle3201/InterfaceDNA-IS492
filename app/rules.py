@@ -916,13 +916,14 @@ def policy(student, e, term, on):
 
 # ---- What matters for this student right now ---------------------------------
 
-def important(student_id, on=None, horizon=21):
-    """Items this student should know about regardless of what they asked:
-    holds, near deadlines, visa minimums, registration status, graduation
+def important(student_id, term=None, on=None, horizon=21, upcoming_count=5):
+    """Items this student should know about for the term they are looking at,
+    regardless of what they asked: holds, the term's next deadlines, the visa
+    minimum against that term's hours, registration status, the graduation
     application and pending requests. Each has an urgency and where to act."""
-    on = on or today()
-    student = db.get_student(student_id)
-    if not student:
+    on, term = on or today(), term or db.CURRENT_TERM
+    student, info = db.get_student(student_id), term_info(term)
+    if not student or not info:
         return []
     level, items = student['level'], []
 
@@ -936,48 +937,53 @@ def important(student_id, on=None, horizon=21):
             f'{h["detail"]} Holds may prohibit registration changes, receiving a transcript '
             'or graduating.', 'Registration section of Student Self-Service')
 
-    current = db.get_current(student_id)
-    hours = sum(c['credits'] for c in current)
-    if student['visa'] in VISAS:
+    courses = [c for c in db.get_term_courses(student_id, term) if c['status'] != 'Completed']
+    hours = sum(c['credits'] for c in courses)
+    upcoming = info['status'] == 'upcoming'
+    if student['visa'] in VISAS and full_term(term) and info['status'] != 'past':
         minimum = db.get_fact('isss_full_time')['values'][level]
+        verb = 'registered for' if upcoming else 'in'
         add('warn' if hours < minimum else 'info', f'{student["visa"]} full-time minimum: {minimum} hours',
-            f'You have {hours} hours in {db.CURRENT_TERM}. Contact ISSS before the semester '
+            f'You have {hours} hours {verb} {term}. Contact ISSS before the semester '
             'begins, or before dropping below full time.', 'ISSS', ISSS_URL)
 
-    prog, finishing = db.get_program(student['program']), False
-    if prog.get('audit_supported'):
+    # Graduation application for the term in which the student's hours reach the total.
+    prog, finishing_before = db.get_program(student['program']), False
+    if prog.get('audit_supported') and info['status'] != 'past':
         records = db.get_records(student_id)
         done = sum(x['credits'] for x in records if x['status'] == 'Completed' and x['grade'] != 'F')
-        finishing = done + hours >= prog['total_hours']
-        if finishing:
-            apply = dated('apply_graduate', level, db.CURRENT_TERM)
+        earlier = sum(x['credits'] for x in records if x['status'] != 'Completed'
+                      and x['term'] != term and term_info(x['term'])
+                      and term_info(x['term'])['begins'] < info['begins'])
+        finishing_before = done + earlier >= prog['total_hours']
+        if not finishing_before and done + earlier + hours >= prog['total_hours']:
+            apply = dated('apply_graduate', level, term)
             if apply:
                 passed = on > date.fromisoformat(apply['date'])
-                add('warn' if passed else 'urgent', f'Apply to graduate in {apply["conferral"]}',
-                    f'Your hours reach {prog["total_hours"]} if current courses are passed. The '
-                    f'application deadline {"was" if passed else "is"} {fmt(apply["date"])}.',
+                add('warn' if passed else 'urgent' if (date.fromisoformat(apply['date']) - on).days <= 7 else 'soon',
+                    f'Apply to graduate in {apply["conferral"]}',
+                    f'Your hours reach {prog["total_hours"]} in {term} if your courses are passed. '
+                    f'The application deadline {"was" if passed else "is"} {fmt(apply["date"])}.',
                     'Your Academic Office' if passed else 'Student Self-Service')
 
-    nxt = next((t for t in terms(on) if t['status'] == 'upcoming' and full_term(t['term'])), None)
-    if nxt and not holds and not finishing and not db.get_term_courses(student_id, nxt['term']):
-        opens = [d for d in key_dates(level, db.CURRENT_TERM, on)
-                 if 'registration' in d['label'].lower() and nxt['term'] in d['label']]
-        add('info', f'Not registered for {nxt["term"]} yet',
-            'You have no courses registered for next term.'
+    if upcoming and full_term(term) and not holds and not finishing_before and not courses:
+        opens = [d for d in key_dates(level, term, on) if 'registration' in d['label'].lower()]
+        add('info', f'Not registered for {term} yet',
+            f'You have no courses registered for {term}.'
             + ''.join(f' {d["label"]}: {d["display"]}{" (passed)" if d["past"] else ""}.' for d in opens),
             'Student Self-Service')
 
-    seen = set()
-    for term in (db.CURRENT_TERM, nxt['term'] if nxt else None):
-        for d in key_dates(level, term, on) if term else []:
-            days = (date.fromisoformat(d['date']) - on).days
-            # Both calendars list registration openings; show each date once.
-            key = (d['date'], 'registration' in d['label'].lower() or d['label'])
-            if 0 <= days <= horizon and key not in seen:
-                seen.add(key)
-                add('urgent' if days <= 7 else 'soon', d['label'],
-                    f'{d["display"]} — {"today" if days == 0 else f"in {days} day" + ("s" if days != 1 else "")}.',
-                    f'{d["source"]["publisher"]}: {d["source"]["title"]}', d['source']['url'])
+    # The term's next deadlines: within three weeks for the current term, the
+    # next few for an upcoming term, none for a past term.
+    shown = 0
+    for d in key_dates(level, term, on):
+        days = (date.fromisoformat(d['date']) - on).days
+        if days < 0 or (not upcoming and days > horizon) or shown >= upcoming_count:
+            continue
+        shown += 1
+        add('urgent' if days <= 7 else 'soon' if days <= horizon else 'info', d['label'],
+            f'{d["display"]} — {"today" if days == 0 else f"in {days} day" + ("s" if days != 1 else "")}.',
+            f'{d["source"]["publisher"]}: {d["source"]["title"]}', d['source']['url'])
 
     requests = db.list_requests(student_id)
     if requests:
@@ -985,7 +991,6 @@ def important(student_id, on=None, horizon=21):
             'Listed under My requests on your dashboard with their receipts.')
     order = {'urgent': 0, 'warn': 1, 'soon': 2, 'info': 3}
     return sorted(items, key=lambda i: order[i['urgency']])
-
 
 GUIDE = [
     ('Visa and full-time enrollment', 'International Student and Scholar Services (ISSS)', ISSS_URL),
