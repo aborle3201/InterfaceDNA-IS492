@@ -76,7 +76,7 @@ def normalize_term(raw, message):
     if not m:
         return None
     term = f'{m[1].title()} {m[2]}'
-    typed = {f'{a.title()} {b}' for a, b in TERM.findall(message)}
+    typed = set(typed_terms(message))
     return term if term in typed and rules.term_info(term) else None
 
 
@@ -90,8 +90,23 @@ def as_int(value):
     return None
 
 
+RELATIVE = re.compile(r'\b(this|next|coming|upcoming)\s+(fall|spring|summer|winter|semester|term)\b', re.I)
+
+
 def typed_terms(message):
-    return [f'{a.title()} {b}' for a, b in TERM.findall(message)]
+    """Terms the student named: 'spring 2027', or relative ones like 'next
+    spring', 'this fall' or 'next semester', resolved against today's date."""
+    out = [f'{a.title()} {b}' for a, b in TERM.findall(message)]
+    terms = rules.terms()
+    for when, what in RELATIVE.findall(message):
+        what = what.lower()
+        if what in ('semester', 'term'):  # the next Fall or Spring semester
+            pool = [t for t in terms if t['status'] == 'upcoming' and rules.full_term(t['term'])]
+        else:
+            pool = [t for t in terms if t['term'].lower().startswith(what)
+                    and (t['status'] == 'upcoming' or (when.lower() == 'this' and t['status'] == 'current'))]
+        out.append(pool[0]['term'] if pool else f'{when.lower()} {what}')  # unknown -> reported
+    return out
 
 
 def precheck(intent, message):
@@ -109,12 +124,31 @@ def precheck(intent, message):
     return None
 
 
+def resolve_name(intent, student_id, entities, term):
+    """Turn 'my database class' into a course code using the student's own
+    courses (or, for course details, the catalog). Never guesses between several."""
+    own = [r for r in db.get_records(student_id) if intent == 'course_info' or r['term'] == term]
+    codes = rules.resolve_course_name(entities['course_name'], own)
+    if not codes and intent == 'course_info':
+        codes = rules.resolve_course_name(entities['course_name'], db.list_courses())
+    if len(codes) == 1:
+        entities['course_code'] = codes[0]
+        return None
+    if len(codes) > 1:
+        shown = ', '.join(codes[:8]) + (' …' if len(codes) > 8 else '')
+        return f'“{entities["course_name"]}” matches several courses ({shown}). Which one do you mean?'
+    return None
+
+
 def clean_entities(intent, raw, message):
     """Keep only well-formed entities that fit the intent; the model's output
     is untrusted, so typed values (course, term, keyword) must be in the text."""
     out = {}
     if intent in ('drop', 'course_info'):
         out['course_code'] = normalize_course(raw.get('course_code'), message)
+        name = str(raw.get('course_name') or '').strip()
+        if not out['course_code'] and 2 < len(name) <= 60 and name.lower() in message.lower():
+            out['course_name'] = name
     if intent in ('drop', 'course_search', 'course_info', 'policy'):
         # A single term the student typed is used even if the model missed it.
         known = [t for t in dict.fromkeys(typed_terms(message)) if rules.term_info(t)]
@@ -126,7 +160,7 @@ def clean_entities(intent, raw, message):
         out['credits'] = credits if isinstance(credits, int) and 0 < credits <= 6 else None
         out['level'] = level if level in (100, 200, 300, 400, 500) else None
         keyword = str(raw.get('keyword') or '').strip().lower()
-        out['keyword'] = keyword if 2 < len(keyword) <= 40 and keyword in message.lower() else None
+        out['keyword'] = keyword if 2 <= len(keyword) <= 40 and keyword in message.lower() else None
     if intent == 'policy':
         out['topic'] = raw.get('topic') if raw.get('topic') in TOPICS else None
     # A drop always carries its course key so duplicate requests compare equal.
@@ -276,6 +310,7 @@ def student(student_id: str, term: str = db.CURRENT_TERM):
         'term_credits': sum(c['credits'] for c in courses),
         'holds': db.get_active_holds(student_id),
         'requests': db.list_requests(student_id),
+        'important': rules.important(student_id),
         'key_dates': rules.key_dates(s['level'], term),
         'rules_date': rules.today().isoformat(),
     }
@@ -303,6 +338,8 @@ def start(body: Start):
         raise HTTPException(404, 'Student not found')
     term = entities.get('term') or known_term(body.term)  # a term in the question wins
     stop = precheck(intent, body.message)
+    if not stop and intent in ('drop', 'course_info') and entities.get('course_name'):
+        stop = resolve_name(intent, body.student_id, entities, term)
     result = (rules.blocked(stop) if stop else
               rules.evaluate(intent, body.student_id, entities, term=term))
     sid = str(uuid.uuid4())
@@ -318,6 +355,7 @@ def start(body: Start):
         usage['output_tokens'],
         (time.perf_counter() - tic) * 1000,
     )
+    result['important'] = rules.important(body.student_id)
     return {
         'session_id': sid,
         'term': term,
@@ -341,6 +379,8 @@ def fault(body: Fault):
         sess['intent'], sess['student_id'], sess['entities'], body.mode,
         term=sess['term'])
     state = 'review' if result['status'] == 'ready' else 'blocked'
+    if body.mode not in ('missing_record', 'service_outage'):  # needs the student record
+        result['important'] = rules.important(sess['student_id'])
     if not db.update_session(body.session_id, state, body.mode):
         raise HTTPException(409, 'Cannot mutate completed session')
     return {'state': state, 'result': result, 'session_id': body.session_id}

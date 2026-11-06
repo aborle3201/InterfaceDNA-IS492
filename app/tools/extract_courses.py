@@ -14,6 +14,7 @@ import collections
 import json
 import pathlib
 import re
+import unicodedata
 
 from pypdf import PdfReader
 
@@ -47,8 +48,8 @@ MANUAL = {
     'TE 450': ('Startups: Incorporation, Funding, Contracts, & Intellectual Property', '3', 476),
 }
 
-ENTRY = re.compile(
-    r'(?m)^([A-Z]{2,4}) (\d{3})   (.+?)   credit: (.+?)\s*Hours?\.', re.S)
+ENTRY = re.compile(  # the separators may sit on either side of a line break
+    r'(?m)^([A-Z]{2,4}) (\d{3})\s*\u2002\s*(.+?)\s*\u2002\s*credit:\s*(.+?)\s*Hours?\.', re.S)
 ROW = re.compile(
     r'(?m)^([A-Z]{2,5}) (\d{3}) ([A-Z&][^\n]{2,80}?) (\d(?: or \d| to \d)?)\s*$')
 PAGE = re.compile(r'<<PAGE (\d+)>>')
@@ -86,11 +87,11 @@ def listing_courses(name):
         lo, hi = credit_range(credits)
         courses.append({
             'code': f'{m[1]} {m[2]}',
-            'title': ' '.join(m[3].split()),
+            'title': unicodedata.normalize('NFKC', ' '.join(m[3].split())),
             'credits_text': credits,
             'credits_min': lo,
             'credits_max': hi,
-            'prerequisite': prereq[1] if prereq else None,
+            'prerequisite': unicodedata.normalize('NFKC', prereq[1]) if prereq else None,
             'source': {'document': name, 'page': page_at(text, m.start())},
         })
     return courses

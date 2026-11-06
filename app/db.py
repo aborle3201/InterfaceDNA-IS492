@@ -248,6 +248,11 @@ def get_program(code):
         return json.loads(row['data']) if row else None
 
 
+def list_courses():
+    with transaction() as conn:
+        return [dict(r) for r in conn.execute('SELECT code, title FROM courses')]
+
+
 def get_course(code):
     with transaction() as conn:
         row = conn.execute('SELECT * FROM courses WHERE code = ?', (code,)).fetchone()
@@ -378,7 +383,8 @@ def list_requests(student_id):
 def find_request(student_id, intent, term, entities):
     """An already-confirmed request for the same task, if any."""
     return next((r for r in list_requests(student_id)
-                 if r['intent'] == intent and r['term'] == term and r['entities'] == entities),
+                 if r['intent'] == intent and r['term'] == term
+                 and r['entities'].get('course_code') == entities.get('course_code')),
                 None)
 
 

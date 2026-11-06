@@ -296,3 +296,47 @@ def test_edge_typed_term_and_multi_drop():
     assert server.clean_entities('drop',{'course_code':'CS 441'},'Can I drop CS 441 in spring 2027?')=={'course_code':'CS 441','term':'Spring 2027'}
     assert 'one course at a time' in server.precheck('unknown','drop CS 411 and CS 425 please')
     assert server.precheck('course_info','compare CS 411 and CS 412') is None
+
+def test_synonyms_in_search():
+    r=rules.evaluate('course_search',ALEX,{'subject':'CS','keyword':'ai'},term='Fall 2026')
+    assert 'CS 440' in {c['code'] for c in r['courses']}
+    r=rules.evaluate('course_search',ALEX,{'subject':'CS','keyword':'databases'},term='Fall 2026')
+    assert 'CS 411' in {c['code'] for c in r['courses']}
+
+def test_course_name_resolution():
+    e={'course_name':'database class'}
+    assert server.resolve_name('drop',ALEX,e,'Fall 2026') is None and e['course_code']=='CS 411'
+    e={'course_name':'computer science'}
+    assert 'several courses' in server.resolve_name('course_info',ALEX,e,'Fall 2026')
+    assert server.clean_entities('drop',{'course_name':'database class'},'can I quit my database class')=={'course_code':None,'course_name':'database class'}
+
+def test_relative_terms_and_short_keywords():
+    assert server.typed_terms('what can I take next semester')==['Spring 2027']
+    assert server.typed_terms('courses this fall')==['Fall 2026']
+    assert 'next fall isn’t available' in server.precheck('course_search','courses next fall')
+    assert server.clean_entities('course_search',{'keyword':'AI','term':'Spring 2027'},'any AI courses next spring')=={'keyword':'ai','term':'Spring 2027'}
+
+def test_catalog_extraction_fixes():
+    assert db.get_course('CS 464')['credits_text']=='3' and db.get_course('CS 465')['title']=='User Interface Design'
+    assert all(len(c['title'])<=80 and 'ﬁ' not in c['title'] for c in db.list_courses())
+
+def test_important_for_student():
+    titles=[i['title'] for i in rules.important(JORDAN)]
+    assert titles[:2]==['Hold: Immunization requirement','Hold: Financial encumbrance']
+    maya=rules.important(MAYA)
+    assert maya[0]['title']=='Apply to graduate in December' and not any('Not registered' in i['title'] for i in maya)
+    alex=rules.important(ALEX,on=date(2026,11,10))
+    assert any(i['urgency']=='urgent' and 'without a W' in i['title'] for i in alex)  # Nov 13 is 3 days away
+    assert any(i['title']=='F-1 full-time minimum: 12 hours' for i in alex)
+
+def test_unanswerable_question_points_somewhere(monkeypatch):
+    monkeypatch.setattr(server,'classify_live',stub('unknown',{}))
+    d=client.post('/api/start',json={'message':'Where is the library?','student_id':JORDAN}).json()
+    r=d['result']
+    assert r['status']=='info' and r['important'] and any(c['where'] and c['where']['url'] for c in r['checks'])
+
+def test_unverified_items_have_directions():
+    sid=find_student(lambda s,cur:s['level']=='UG' and s['visa'] is None and len(cur)>=3)['id']
+    r=rules.evaluate('drop',sid,{'course_code':db.get_current(sid)[0]['code']})
+    w=next(c['where'] for c in r['checks'] if c['title'].startswith('Drop deadline depends'))
+    assert w['url'].startswith('https://courses.illinois.edu/schedule/2026/fall/')

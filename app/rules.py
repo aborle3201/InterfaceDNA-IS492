@@ -13,12 +13,24 @@ an action only when status is 'ready'.
 from __future__ import annotations
 
 import os
+import unicodedata
 from datetime import date, datetime
 
 import db
 from generate_students import GRADES
 
 VISAS = ('F-1', 'J-1')
+ISSS_URL = 'https://isss.illinois.edu/students/f1j1-nonimmstatus/'
+REFUNDS_URL = 'https://www.registrar.illinois.edu/tuition-fees/refunds/'
+COURSE_EXPLORER = 'https://courses.illinois.edu/'
+
+
+def section_url(term, code):
+    """Course Explorer page for one course in one term (same address pattern as
+    the schedule pages in University docs/)."""
+    season, year = term.split()
+    subject, number = code.split()
+    return f'{COURSE_EXPLORER}schedule/{year}/{season.lower()}/{subject}/{number}'
 LEVEL_WORD = {'UG': 'undergraduate', 'GR': 'graduate'}
 POT = {'1': 'full semester (POT 1)', 'A': 'first 8 weeks (POT A)',
        'B': 'second 8 weeks (POT B)'}
@@ -86,13 +98,15 @@ class Report:
         }
         return key
 
-    def check(self, level, title, text, cites=(), blocks=None):
+    def check(self, level, title, text, cites=(), blocks=None, where=None):
+        """`where` = (label, url or None): the official place to check or act."""
         for key in cites:
             if key not in self.sources:
                 self.fact(key)
         self.checks.append({
             'level': level, 'title': title, 'text': text, 'cites': list(cites),
             'blocks': level in ('block', 'unknown') if blocks is None else blocks,
+            'where': {'label': where[0], 'url': where[1]} if where else None,
         })
 
     def result(self, summary, action, status=None):
@@ -144,10 +158,7 @@ def evaluate(intent, student_id, entities, fault='none', on=None, term=None):
         return course_info(student, entities)
     if intent == 'policy':
         return policy(student, entities, term, on)
-    return blocked(
-        'I can help with dropping a course, finding courses, course details, '
-        'graduation requirements, registration holds, and university policies '
-        'and deadlines. Try asking about one of those.')
+    return general(student, term)
 
 
 def already_requested(result, student_id, intent, term, entities):
@@ -389,7 +400,7 @@ def drop(student, entities, fault, on, term):
                     f'minimum for {student["visa"]} {LEVEL_WORD[level]} '
                     'students. ISSS must be contacted first; failing to do so may '
                     'result in termination of immigration status.',
-                    cites)
+                    cites, where=('International Student and Scholar Services (ISSS)', ISSS_URL))
             if student['assistantship']:
                 r.check('info', 'Possible exception',
                         'ISSS lists automatic exceptions for some students with '
@@ -415,13 +426,14 @@ def drop(student, entities, fault, on, term):
                     'A refund for a lower range requires dropping by the refund deadline '
                     f'for the course’s part of term ({pot_dates(refunds, pots)}), and '
                     'those dates have passed.',
-                    refund_cites + ['drop_deadlines_by_part_of_term'])
+                    refund_cites + ['drop_deadlines_by_part_of_term'],
+                    where=('Registrar refund schedules', REFUNDS_URL))
         elif rb != ra:
             r.check('info', f'Tuition range changes from {rb} to {ra}',
                     'In range-based tuition programs, the refund is the full difference '
                     'between the two ranges if the drop is made by the refund deadline '
                     f'for the course’s part of term ({pot_dates(refunds, pots)}).',
-                    refund_cites)
+                    refund_cites, where=('Registrar refund schedules for exact amounts', REFUNDS_URL))
         else:
             r.check('info', f'Tuition range stays {rb}',
                     'In range-based tuition programs, no refund is available for '
@@ -441,7 +453,7 @@ def drop(student, entities, fault, on, term):
     if not (parts and no_w):
         r.check('unknown', 'Drop deadline not available',
                 f'Drop deadlines for {term} aren’t available here. Check the '
-                'Registrar’s academic calendar.', [])
+                'Registrar’s academic calendar.', [], where=('Office of the Registrar academic calendar', None))
     else:
         cites = [parts['key'], *sorted({no_w[p]['key'] for p in pots})]
         still_open = [p for p in pots if on <= date.fromisoformat(no_w[p]['date'])]
@@ -456,12 +468,13 @@ def drop(student, entities, fault, on, term):
         elif not still_open:
             r.check('block', 'The deadline to drop without a W has passed',
                     dates + ' To ask about dropping after these dates, contact your '
-                    'college office.', cites)
+                    'college office.', cites, where=('Your college office', None))
         else:
             r.check('unknown', 'Drop deadline depends on the course’s part of term',
                     f'{code} is on the {term} class schedule, but its part of '
                     'term isn’t available here. ' + dates + ' Check the Section Details on '
-                    'Course Explorer.', cites + ['drop_deadlines_by_part_of_term'])
+                    'Course Explorer.', cites + ['drop_deadlines_by_part_of_term'],
+                    where=(f'{code} section details on Course Explorer', section_url(term, code)))
 
     summary = (f'Dropping {code} would take your {term} registration from {before} to {after} hours.'
                if registered else
@@ -595,12 +608,13 @@ def graduation(student, fault, on):
                  f'The deadline to apply to graduate in {apply["conferral"]} was {fmt(deadline)}; '
                  'after that date, contact your Academic Office.')
                 + ' Applications are made through Student Self-Service.',
-                [apply['key']], blocks=False)
+                [apply['key']], blocks=False,
+                where=('Student Self-Service' if on <= deadline else 'Your Academic Office', None))
 
     for item in prog['not_evaluated']:
         r.check('unknown', item,
                 'Not included in this check; confirm with your academic advisor.',
-                blocks=False)
+                blocks=False, where=('Your academic advisor', None))
 
     summary = (
         f'{missing} checked requirement(s) not yet covered by completed or current courses.'
@@ -645,7 +659,8 @@ def hold(student, fault, on):
             ['holds_general'])
     r.check('unknown', 'Which office clears each hold',
             'Check the hold details in the Registration section of Student '
-            'Self-Service.', blocks=False)
+            'Self-Service.', blocks=False,
+            where=('Registration section of Student Self-Service', None))
     return r.result(
         f'{len(holds)} active hold(s) on your record may block '
         f'{spring["term"]} registration.',
@@ -653,6 +668,47 @@ def hold(student, fault, on):
 
 
 # ---- Courses ----------------------------------------------------------------
+
+ABBREVIATIONS = {
+    'ai': 'artificial intelligence', 'ml': 'machine learning', 'nlp': 'natural language',
+    'hci': 'human computer interaction', 'ui': 'user interface', 'ux': 'user',
+    'os': 'operating system', 'db': 'database', 'dbms': 'database', 'viz': 'visualization',
+    'dataviz': 'data visualization', 'stats': 'statistics', 'algo': 'algorithm',
+    'algos': 'algorithm', 'calc': 'calculus', 'econ': 'economics', 'psych': 'psychology',
+    'iot': 'internet of things', 'swe': 'software engineering', 'security': 'secur',
+}
+FILLER = {'class', 'classes', 'course', 'courses', 'my', 'the', 'a', 'an', 'in', 'on',
+          'of', 'and', 'for', 'about', 'intro', 'introduction', 'to', 'subject', 'subjects'}
+
+
+def stems(text):
+    """Lower-case word stems with abbreviations expanded: 'Databases' -> 'database'."""
+    words = []
+    text = unicodedata.normalize('NFKC', text)  # PDF ligatures: 'ﬁ' -> 'fi'
+    for w in ''.join(ch if ch.isalnum() else ' ' for ch in text.lower()).split():
+        words += ABBREVIATIONS.get(w, w).split()
+    out = []
+    for w in words:
+        if w in FILLER:
+            continue
+        for suffix, repl in (('ies', 'y'), ('ses', 's'), ('s', '')):
+            if len(w) > 3 and w.endswith(suffix) and not w.endswith('ss'):
+                w = w[: -len(suffix)] + repl
+                break
+        out.append(w)
+    return out
+
+
+def title_matches(words, title):
+    """Every meaningful word the student used appears (as a prefix) in the title."""
+    wanted, have = stems(words), stems(title)
+    return bool(wanted) and all(any(h.startswith(w) or w.startswith(h) for h in have if len(h) > 2)
+                                for w in wanted)
+
+
+def resolve_course_name(name, rows):
+    """Course codes in `rows` whose title matches what the student called the course."""
+    return sorted({r['code'] for r in rows if title_matches(name, r['title'])})
 
 def record_status(student_id):
     """Course code -> how the student has it on record (completed, enrolled, registered)."""
@@ -691,7 +747,7 @@ def course_search(student, e, term):
                 continue
             if e.get('level') and int(code.split()[1]) // 100 * 100 != e['level']:
                 continue
-            if e.get('keyword') and e['keyword'] not in title.lower():
+            if e.get('keyword') and not title_matches(e['keyword'], title):
                 continue
             rows.append({'code': code, 'title': title,
                          'credits': c['credits_text'] if c else None,
@@ -714,7 +770,8 @@ def course_search(student, e, term):
                 blocks=False)
     r.check('unknown', 'Prerequisites aren’t checked',
             'Prerequisites are shown as listed in the catalog. Confirm you meet them '
-            'before registering.', blocks=False)
+            'before registering.', blocks=False,
+            where=('Section details on Course Explorer', COURSE_EXPLORER))
     if unknown_credits:
         r.check('unknown', 'Some courses have no credit hours here',
                 f'{len(unknown_credits)} listed course(s) have no credit hours in the catalog '
@@ -834,3 +891,102 @@ def policy(student, e, term, on):
         r.metric('Term', term)
     return r.result(f'{label}' + (f' — {term}' if words else '') + ', quoted from university sources.',
                     None, status='info')
+
+
+# ---- What matters for this student right now ---------------------------------
+
+def important(student_id, on=None, horizon=21):
+    """Items this student should know about regardless of what they asked:
+    holds, near deadlines, visa minimums, registration status, graduation
+    application and pending requests. Each has an urgency and where to act."""
+    on = on or today()
+    student = db.get_student(student_id)
+    if not student:
+        return []
+    level, items = student['level'], []
+
+    def add(urgency, title, text, where=None, url=None):
+        items.append({'urgency': urgency, 'title': title, 'text': text,
+                      'where': {'label': where, 'url': url} if where else None})
+
+    holds = db.get_active_holds(student_id)
+    for h in holds:
+        add('warn', f'Hold: {h["type"]}',
+            f'{h["detail"]} Holds may prohibit registration changes, receiving a transcript '
+            'or graduating.', 'Registration section of Student Self-Service')
+
+    current = db.get_current(student_id)
+    hours = sum(c['credits'] for c in current)
+    if student['visa'] in VISAS:
+        minimum = db.get_fact('isss_full_time')['values'][level]
+        add('warn' if hours < minimum else 'info', f'{student["visa"]} full-time minimum: {minimum} hours',
+            f'You have {hours} hours in {db.CURRENT_TERM}. Contact ISSS before the semester '
+            'begins, or before dropping below full time.', 'ISSS', ISSS_URL)
+
+    prog, finishing = db.get_program(student['program']), False
+    if prog.get('audit_supported'):
+        records = db.get_records(student_id)
+        done = sum(x['credits'] for x in records if x['status'] == 'Completed' and x['grade'] != 'F')
+        finishing = done + hours >= prog['total_hours']
+        if finishing:
+            apply = dated('apply_graduate', level, db.CURRENT_TERM)
+            if apply:
+                passed = on > date.fromisoformat(apply['date'])
+                add('warn' if passed else 'urgent', f'Apply to graduate in {apply["conferral"]}',
+                    f'Your hours reach {prog["total_hours"]} if current courses are passed. The '
+                    f'application deadline {"was" if passed else "is"} {fmt(apply["date"])}.',
+                    'Your Academic Office' if passed else 'Student Self-Service')
+
+    nxt = next((t for t in terms(on) if t['status'] == 'upcoming' and full_term(t['term'])), None)
+    if nxt and not holds and not finishing and not db.get_term_courses(student_id, nxt['term']):
+        opens = [d for d in key_dates(level, db.CURRENT_TERM, on)
+                 if 'registration' in d['label'].lower() and nxt['term'] in d['label']]
+        add('info', f'Not registered for {nxt["term"]} yet',
+            'You have no courses registered for next term.'
+            + ''.join(f' {d["label"]}: {d["display"]}{" (passed)" if d["past"] else ""}.' for d in opens),
+            'Student Self-Service')
+
+    seen = set()
+    for term in (db.CURRENT_TERM, nxt['term'] if nxt else None):
+        for d in key_dates(level, term, on) if term else []:
+            days = (date.fromisoformat(d['date']) - on).days
+            # Both calendars list registration openings; show each date once.
+            key = (d['date'], 'registration' in d['label'].lower() or d['label'])
+            if 0 <= days <= horizon and key not in seen:
+                seen.add(key)
+                add('urgent' if days <= 7 else 'soon', d['label'],
+                    f'{d["display"]} — {"today" if days == 0 else f"in {days} day" + ("s" if days != 1 else "")}.',
+                    f'{d["source"]["publisher"]}: {d["source"]["title"]}', d['source']['url'])
+
+    requests = db.list_requests(student_id)
+    if requests:
+        add('info', f'{len(requests)} request(s) on record',
+            'Listed under My requests on your dashboard with their receipts.')
+    order = {'urgent': 0, 'warn': 1, 'soon': 2, 'info': 3}
+    return sorted(items, key=lambda i: order[i['urgency']])
+
+
+GUIDE = [
+    ('Visa and full-time enrollment', 'International Student and Scholar Services (ISSS)', ISSS_URL),
+    ('Refunds and tuition charges', 'Registrar: Refunds of Registration Charges', REFUNDS_URL),
+    ('Fall 2026 deadlines', 'Registrar: Fall 2026 Academic Calendar',
+     'https://www.registrar.illinois.edu/fall-2026-academic-calendar/'),
+    ('Spring 2027 deadlines', 'Registrar: Spring 2027 Academic Calendar',
+     'https://www.registrar.illinois.edu/spring-2027-academic-calendar/'),
+    ('Class schedules and sections', 'Course Explorer', COURSE_EXPLORER),
+    ('Degree requirements', 'Academic Catalog', 'http://catalog.illinois.edu/'),
+    ('Holds and registration', 'Registration section of Student Self-Service', None),
+    ('Questions about your degree plan', 'Your academic advisor', None),
+]
+
+
+def general(student, term):
+    """A question the portal can't answer directly: say so, then point to the
+    official places for each kind of question."""
+    r = Report()
+    for topic, where, url in GUIDE:
+        r.check('info', topic, f'Check {where}.', blocks=False, where=(where, url))
+    return r.result(
+        'I can’t answer that question directly here. I can help with dropping a course, '
+        'finding courses, course details, graduation requirements, holds, and policies and '
+        'deadlines. For anything else, start with the official pages below.', None, status='info')

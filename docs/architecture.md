@@ -49,6 +49,9 @@ flowchart TD
 | Model evaluation | `app/eval_intents.py` runs 38 cases in `app/prompts/intent_eval.json` (typical, edge, adversarial) against the live model | Small set; one run per case |
 | Observability | Python logging middleware plus model token usage | No stored monitoring dashboard or computed dollar cost |
 
+## Important items and directions
+Every result page and the dashboard start with **Important for you** (`rules.important()`): active holds, Registrar deadlines within 21 days (*Urgent* within 7 days), the F-1/J-1 full-time minimum, a missing next-term registration, the graduation application when the student's hours reach the degree total, and recorded requests. Anything the sources can't verify carries a **Where to check** direction: the course's Course Explorer page, the Registrar refund schedules, ISSS, the Registration section of Student Self-Service, the college office or the academic advisor. Links use only addresses that appear in the source documents or follow the Course Explorer address pattern. A question outside the portal's scope gets the important items plus a guide to the official pages instead of a dead end.
+
 ## Database schema
 | Table | Contents | Origin |
 |---|---|---|

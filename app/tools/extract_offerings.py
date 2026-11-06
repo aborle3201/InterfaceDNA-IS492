@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import pathlib
 import re
+import unicodedata
 
 from pypdf import PdfReader
 
@@ -43,7 +44,7 @@ def course_titles(text, subject):
 def main():
     terms = {}
     for pdf in sorted(DOCS.glob('*Schedule*.pdf')):
-        text = '\n'.join(p.extract_text() or '' for p in PdfReader(pdf).pages)
+        text = unicodedata.normalize('NFKC', '\n'.join(p.extract_text() or '' for p in PdfReader(pdf).pages))
         head = HEADER.search(text)
         if not head:
             raise SystemExit(f'No Course Explorer header in {pdf.name}')

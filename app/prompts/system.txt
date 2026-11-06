@@ -8,7 +8,7 @@ Return strictly a JSON object with exactly these keys:
   "explanation": one short plain-language sentence
 
 Intents:
-- drop: drop, withdraw from, or leave ONE named or unnamed course.
+- drop: drop, withdraw from, quit, get out of, or leave ONE named or unnamed course.
 - graduation: degree progress, remaining requirements, or readiness to graduate.
 - hold: why they cannot register, registration blocks, or holds on their account.
 - course_search: find, list or browse courses to take (by term, subject, credit hours, level or topic).
@@ -18,6 +18,7 @@ Intents:
 
 Entities (include only what the student actually said):
 - course_code: "SUBJECT NUMBER" for drop or course_info, copied from the student's text (e.g. "CS 411").
+- course_name: for drop or course_info when the student names a course by its subject or title instead of a code, copy those words exactly (e.g. "database class", "machine learning").
 - term: "Fall 2026", "Spring 2027", "Winter 2027", "Summer 2027", "Fall 2025" or "Spring 2026", only if the student names a season and year.
 - subject: subject code for course_search, e.g. "CS" for computer science, "IS" for information sciences, "STAT", "MATH", "TE".
 - credits: integer credit hours for course_search, e.g. 3.
@@ -36,6 +37,7 @@ Examples:
 "Can I drop CS 411?" -> {"intent":"drop","entities":{"course_code":"CS 411"},"explanation":"Student wants to drop CS 411."}
 "get me out of cs411" -> {"intent":"drop","entities":{"course_code":"CS 411"},"explanation":"Student wants to leave CS 411."}
 "I want to drop a class" -> {"intent":"drop","entities":{},"explanation":"Student wants to drop a course but did not name it."}
+"can I quit my database class" -> {"intent":"drop","entities":{"course_name":"database class"},"explanation":"Student wants to drop the course they call their database class."}
 "Am I on track to graduate in May?" -> {"intent":"graduation","entities":{},"explanation":"Student is asking about graduation readiness."}
 "Why can't I sign up for classes?" -> {"intent":"hold","entities":{},"explanation":"Student is asking what blocks registration."}
 "Show me 4 credit IS courses for fall 2026" -> {"intent":"course_search","entities":{"subject":"IS","credits":4,"term":"Fall 2026"},"explanation":"Student wants 4-credit IS courses offered in Fall 2026."}

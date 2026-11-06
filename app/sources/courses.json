@@ -865,7 +865,7 @@
  },
  {
   "code": "CS 440",
-  "title": "Arti\ufb01cial Intelligence",
+  "title": "Artificial Intelligence",
   "credits_text": "3 or 4",
   "credits_min": 3,
   "credits_max": 4,
@@ -1045,7 +1045,19 @@
  },
  {
   "code": "CS 464",
-  "title": "Topics in Societal and Ethical Impacts of Computer Technology credit: 3 Hours. (https://courses.illinois.edu/schedule/terms/CS/464/) Topics selected from key current areas of impact of computer technology on aspects of society and ethics such as: freedom versus the rule of law in cyberspace; social discourse; privacy; livelihoods and automation; fairness; security; political change; business models; technology divide. 3 undergraduate hours. No graduate credit. May be repeated if topics vary. Credit is not given towards a degree from multiple offerings of this course, if those offerings have signi\ufb01cant overlap, as determined by the CS department. Prerequisite: CS 225. One of CS 210 or CS 211 or ECE 316 or PHIL 316. One of CS 361 or STAT 400 or STAT 200. Restricted to students with senior standing. CS 465 User Interface Design",
+  "title": "Topics in Societal and Ethical Impacts of Computer Technology",
+  "credits_text": "3",
+  "credits_min": 3,
+  "credits_max": 3,
+  "prerequisite": "CS 225.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 7
+  }
+ },
+ {
+  "code": "CS 465",
+  "title": "User Interface Design",
   "credits_text": "4",
   "credits_min": 4,
   "credits_max": 4,
@@ -1153,7 +1165,7 @@
  },
  {
   "code": "CS 476",
-  "title": "Program Veri\ufb01cation",
+  "title": "Program Verification",
   "credits_text": "3 or 4",
   "credits_min": 3,
   "credits_max": 4,
@@ -1189,7 +1201,19 @@
  },
  {
   "code": "CS 481",
-  "title": "Advanced Topics in Stochastic Processes & Applications credit: 3 or 4 Hours. (https://courses.illinois.edu/schedule/terms/ CS/481/) Same as IE 410. See IE 410. CS 482 Simulation",
+  "title": "Advanced Topics in Stochastic Processes & Applications",
+  "credits_text": "3 or 4",
+  "credits_min": 3,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 9
+  }
+ },
+ {
+  "code": "CS 482",
+  "title": "Simulation",
   "credits_text": "3 or 4",
   "credits_min": 3,
   "credits_max": 4,
@@ -1229,7 +1253,7 @@
   "credits_text": "0 to 4",
   "credits_min": 0,
   "credits_max": 4,
-  "prerequisite": "As speci\ufb01ed for each topic offering, see Class Schedule or departmental course description.",
+  "prerequisite": "As specified for each topic offering, see Class Schedule or departmental course description.",
   "source": {
    "document": "CS courses.pdf",
    "page": 9
@@ -1325,7 +1349,7 @@
   "credits_text": "4",
   "credits_min": 4,
   "credits_max": 4,
-  "prerequisite": "Offerings in separate semesters may specify additional prerequisites each term, depending on the speci\ufb01c topic offered.",
+  "prerequisite": "Offerings in separate semesters may specify additional prerequisites each term, depending on the specific topic offered.",
   "source": {
    "document": "CS courses.pdf",
    "page": 9
@@ -1405,7 +1429,7 @@
  },
  {
   "code": "CS 519",
-  "title": "Scienti\ufb01c Visualization",
+  "title": "Scientific Visualization",
   "credits_text": "4",
   "credits_min": 4,
   "credits_max": 4,
@@ -1721,7 +1745,7 @@
   "credits_text": "4",
   "credits_min": 4,
   "credits_max": 4,
-  "prerequisite": "As speci\ufb01ed for each topic offering, see Schedule or departmental course description.",
+  "prerequisite": "As specified for each topic offering, see Schedule or departmental course description.",
   "source": {
    "document": "CS courses.pdf",
    "page": 12
@@ -1729,7 +1753,19 @@
  },
  {
   "code": "CS 562",
-  "title": "Advanced Topics in Security, Privacy, and Machine Learning credit: 4 Hours. (https://courses.illinois.edu/schedule/terms/CS/562/) Advanced topics in security and privacy problems in machine learning systems, selected from areas of current research such as: adversarial machine learning, differential privacy, game theory enabled defenses, robust learning methods, machine learning based cybercrime analysis, network intrusion detection, and malware analysis, and machine learning interpretation techniques. May be repeated if topics vary. Credit is not given towards a degree from multiple offerings of this course if those offerings have signi\ufb01cant overlap, as determined by the CS department. Prerequisite: One of CS 446 or ECE 449 and one of CS 463 or ECE 424, or equivalent courses, by consent of instructor. Additional prerequisites or corequisites may be speci\ufb01ed each term. See section information. CS 563 Advanced Computer Security",
+  "title": "Advanced Topics in Security, Privacy, and Machine Learning",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": "One of CS 446 or ECE 449 and one of CS 463 or ECE 424, or equivalent courses, by consent of instructor.",
+  "source": {
+   "document": "CS courses.pdf",
+   "page": 12
+  }
+ },
+ {
+  "code": "CS 563",
+  "title": "Advanced Computer Security",
   "credits_text": "4",
   "credits_min": 4,
   "credits_max": 4,
@@ -1829,7 +1865,7 @@
   "credits_text": "2 to 4",
   "credits_min": 2,
   "credits_max": 4,
-  "prerequisite": "As speci\ufb01ed for each topic offering, see Schedule or departmental course description.",
+  "prerequisite": "As specified for each topic offering, see Schedule or departmental course description.",
   "source": {
    "document": "CS courses.pdf",
    "page": 13
@@ -1897,7 +1933,7 @@
  },
  {
   "code": "CS 584",
-  "title": "Embedded System Veri\ufb01cation",
+  "title": "Embedded System Verification",
   "credits_text": "4",
   "credits_min": 4,
   "credits_max": 4,
@@ -1909,7 +1945,7 @@
  },
  {
   "code": "CS 585",
-  "title": "Hardware Veri\ufb01cation",
+  "title": "Hardware Verification",
   "credits_text": "4",
   "credits_min": 4,
   "credits_max": 4,
@@ -1949,7 +1985,7 @@
   "credits_text": "0 to 4",
   "credits_min": 0,
   "credits_max": 4,
-  "prerequisite": "As speci\ufb01ed for each topic offering, see Class Schedule or departmental course description.",
+  "prerequisite": "As specified for each topic offering, see Class Schedule or departmental course description.",
   "source": {
    "document": "CS courses.pdf",
    "page": 13
@@ -2117,7 +2153,7 @@
   "credits_text": "3",
   "credits_min": 3,
   "credits_max": 3,
-  "prerequisite": "This course is intended for \ufb01rst and second year students.",
+  "prerequisite": "This course is intended for first and second year students.",
   "source": {
    "document": "IS courses.pdf",
    "page": 1
@@ -2441,7 +2477,7 @@
   "credits_text": "3",
   "credits_min": 3,
   "credits_max": 3,
-  "prerequisite": "Statistical tools that are fundamental for \ufb01nancial modeling, analyzing \ufb01nancial data and further studies in \ufb01nancial engineering.",
+  "prerequisite": "Statistical tools that are fundamental for financial modeling, analyzing financial data and further studies in financial engineering.",
   "source": {
    "document": "IS courses.pdf",
    "page": 3
@@ -3737,7 +3773,7 @@
   "credits_text": "0 to 8",
   "credits_min": 0,
   "credits_max": 8,
-  "prerequisite": "Admission to Certi\ufb01cate of Advanced Study program in library and information science; submission of \"Request to Enroll in IS 559 - CAS Project\" form.",
+  "prerequisite": "Admission to Certificate of Advanced Study program in library and information science; submission of \"Request to Enroll in IS 559 - CAS Project\" form.",
   "source": {
    "document": "IS courses.pdf",
    "page": 13
@@ -3745,14 +3781,26 @@
  },
  {
   "code": "IS 560",
-  "title": "Social Science Research in Library and Information Science credit: 4 Hours. (https://courses.illinois.edu/schedule/terms/IS/560/) Introduces students to the fundamentals of doing social science research in LIS. Students will learn how to frame a research problem, choose an appropriate research method, apply it, and write up the research for presentation and publication. Information listed in this catalog is current as of 06/2026 <<PAGE 14>> 14 IS - Information Sciences IS 561 Use and Users of Information",
+  "title": "Social Science Research in Library and Information Science",
+  "credits_text": "4",
+  "credits_min": 4,
+  "credits_max": 4,
+  "prerequisite": null,
+  "source": {
+   "document": "IS courses.pdf",
+   "page": 13
+  }
+ },
+ {
+  "code": "IS 561",
+  "title": "Use and Users of Information",
   "credits_text": "4",
   "credits_min": 4,
   "credits_max": 4,
   "prerequisite": "IS 505.",
   "source": {
    "document": "IS courses.pdf",
-   "page": 13
+   "page": 14
   }
  },
  {

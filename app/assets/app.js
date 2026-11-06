@@ -197,7 +197,7 @@ function viewDashboard(p) {
     ${crumbs(['Students', '#/'], [p.name])}
     <div class="page-head"><div><h1 tabindex="-1">Welcome, ${esc(p.name.split(' ')[0])}</h1>
       <p>${esc(p.program_name)} · ${esc(level(p.level))} · ${esc(p.term)}</p></div></div>
-    ${p.holds.length ? `<div class="alert warn"><strong>${p.holds.length} active hold(s)</strong> may block ${esc('Spring 2027')} registration. Use <em>Registration &amp; holds</em> below to see what they mean.</div>` : ''}
+    ${importantCard(p.important, 'Needs your attention')}
     <div class="grid two">
       <div>
         <section class="card"><h2>What would you like to do?</h2>
@@ -281,7 +281,17 @@ function heading() {
   if (S.intent === 'course_info') return S.entities.course_code || 'Course details';
   if (S.intent === 'course_search') return `Courses for ${S.resultTerm}`;
   return {graduation: 'Your graduation requirements', hold: 'Your registration holds',
-    policy: 'University policies and deadlines'}[S.intent] || 'We couldn’t match that request';
+    policy: 'University policies and deadlines'}[S.intent] || 'Here’s where to look';
+}
+const URGENCY = {urgent: ['Urgent', 'block'], warn: ['Needs attention', 'warn'], soon: ['Coming up', 'info'], info: ['Good to know', 'ok']};
+const whereHtml = w => w ? `<div class="where">Where to check: ${w.url ? `<a href="${esc(w.url)}" target="_blank" rel="noopener">${esc(w.label)}</a>` : `<strong>${esc(w.label)}</strong>`}</div>` : '';
+function importantCard(items, title = 'Important for you') {
+  if (!items || !items.length) return '';
+  return `<section class="card important"><h2>${esc(title)}</h2>${items.map(i => {
+    const [label, cls] = URGENCY[i.urgency] || URGENCY.info;
+    return `<div class="imp ${cls}"><div><span class="badge ${cls}">${esc(label)}</span> <strong>${esc(i.title)}</strong></div>
+      <p>${esc(i.text)}</p>${whereHtml(i.where)}</div>`;
+  }).join('')}</section>`;
 }
 function coursesTable(r) {
   if (!r.courses) return '';
@@ -307,7 +317,7 @@ function viewResult(p) {
   const checkHtml = c => {
     const [lbl, cls] = LEVEL[c.level] || LEVEL.info;
     const refs = (c.cites || []).map(k => srcIndex[k]).filter(Boolean);
-    return `<article class="check ${c.level}"><h4>${esc(c.title)} <span class="badge ${cls}">${esc(lbl)}</span></h4><p>${esc(c.text)}</p>
+    return `<article class="check ${c.level}"><h4>${esc(c.title)} <span class="badge ${cls}">${esc(lbl)}</span></h4><p>${esc(c.text)}</p>${whereHtml(c.where)}
       ${refs.length ? `<div class="refs">Source ${refs.map(n => `<button type="button" class="linklike" data-src="${n}" aria-label="Show source ${n}">[${n}]</button>`).join('')}</div>` : ''}</article>`;
   };
   const groups = GROUPS.map(([title, test]) => [title, (r.checks || []).filter(test)]).filter(([, cs]) => cs.length);
@@ -319,6 +329,7 @@ function viewResult(p) {
       <span class="badge">term: ${esc(S.resultTerm || S.term)}</span><span class="badge">intent: ${esc(S.intent)}</span>${S.entities.course_code ? `<span class="badge">course: ${esc(S.entities.course_code)}</span>` : ''}
       ${S.usage ? `<span>· ${esc(S.usage.model)}</span>` : ''}</div>
     <div class="alert ${status[0]}" role="status"><strong>${esc(status[1])}</strong></div>
+    ${importantCard(r.important)}
     <div class="grid two">
       <div>
         ${(r.metrics || []).length ? `<div class="metrics">${r.metrics.map(m => `<div class="metric${String(m.value).length > 14 ? ' long' : ''}"><strong>${esc(m.value)}</strong><span>${esc(m.label)}</span></div>`).join('')}</div>` : ''}

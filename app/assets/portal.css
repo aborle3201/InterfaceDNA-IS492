@@ -225,6 +225,11 @@ blockquote { margin: 8px 0 0; padding: 8px 12px; border-left: 3px solid var(--li
   .mainnav { order: 3; flex-basis: 100%; }
   .card, .hero { padding: 18px; }
 }
+.important { border-left: 4px solid var(--accent); }
+.imp { padding: 10px 0; border-top: 1px solid var(--line); }
+.imp:first-of-type { border-top: 0; }
+.imp p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.where { font-size: 13px; margin-top: 6px; }
 .linklike { background: none; border: 0; padding: 0 3px 0 0; color: var(--accent); cursor: pointer; font: inherit; text-decoration: underline; }
 h1:focus, main:focus { outline: none; }
 .metric.long strong { font-size: 15px; }
