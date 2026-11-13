@@ -18,6 +18,7 @@ University rules, deadlines, course data, class schedules and degree requirement
 | Rules applied to the wrong students or term | Deadlines carry the levels and term they apply to; graduate-only rules (e.g. the petition cutoff) apply to graduate students only; Winter applies to undergraduates only; important items follow the selected term | `test_grad_petition_after_dec_10`; `test_terms_and_key_dates`; `test_important_follows_selected_term` |
 | Model-invented course, term or filter | Course codes, terms and keywords are kept only if the student typed them; course names are resolved only against the student's own courses or the catalog, and the portal asks when several match; subjects, credits, levels and topics must be from fixed sets | `test_normalize_course`; `test_clean_entities`; `test_course_name_resolution`; `test_edge_numbers_as_text` |
 | Ambiguous or out-of-range requests | A drop naming several courses asks for one at a time; a term with no calendar is reported as unavailable rather than answered for another term | `test_edge_one_course_at_a_time`; `test_edge_unknown_term_in_question`; `test_relative_terms_and_short_keywords` |
+| Instructions to ignore or override the rules | Detected before the rules run; the page says the request can't be performed and nothing can be confirmed; a warning is logged | `test_instruction_override_is_refused` |
 | Invalid model intent | Allowlist of eight intents; anything else is rejected with HTTP 503 and no session | Source inspection; `test_model_failure_creates_no_session` |
 | Action without consent | Explicit checkbox and server confirmation flag; `review` state required; every rule rechecked at confirmation; one action per session | `test_confirm_flow` |
 | Missing record / outage / conflict | Test scenarios block drops, graduation, holds, course search, course details and policy answers instead of inferring | `test_failures_block`; `test_edge_faults_on_new_question_types` |
@@ -35,7 +36,7 @@ University rules, deadlines, course data, class schedules and degree requirement
 - **Synthetic grades use the standard 4-point scale.** The catalog confirms only A = 4.00.
 - **PII sanitization is not fully implemented.** The goal text is sent to the Groq API; students must not enter real identifiers or personal records. Production deployment requires input redaction, authentication, consent and a retention policy.
 - **Rate limiting and abuse protection are not implemented** on the server; only the provider's free-tier limit applies.
-- **Prompt-injection defenses are partial.** The model only extracts an intent and entities and cannot invoke university tools. One adversarial evaluation case (A06) can still steer the extracted course; the rules then block it because the course is not an enrollment.
+- **Prompt-injection defenses are partial.** The model only extracts an intent and entities and cannot invoke university tools. Messages that ask the portal to ignore or override its rules are stopped with a "can't be performed" message, but this check matches known phrasings and a reworded attempt can get past it. In that case the model can still be steered to a different course (evaluation case A06), and the rules then block it because the course is not an enrollment.
 - **Local data store.** Sessions and receipts are stored in a local SQLite file (`app/data/interfacedna.db`) with no access control or retention policy; rebuilding the database clears them.
 - **Receipts are not real.** The portal shows "Request recorded" with a receipt number, but nothing is sent to the university.
 - **No UIUC branding.** The interface cites UIUC sources but must not use UIUC logos or present itself as an official university service.
@@ -64,7 +65,7 @@ A receipt indicates only that the application recorded a local action. It is not
 The classroom demonstration uses a student-portal interface to evaluate usability and workflow realism. Evaluators must be told that it is a prototype and not an official university service. If the application becomes publicly accessible, it should visibly identify its records and transactions as simulated. Real student information should not be entered.
 
 ### Interpretation of automated tests
-The regression suite passes 51 tests (November 6, 2026). These cover the implemented behaviours:
+The regression suite passes 52 tests (November 6, 2026). These cover the implemented behaviours:
 - rule evaluation and blocked confirmation;
 - duplicate prevention and pending drops;
 - important items and directions;

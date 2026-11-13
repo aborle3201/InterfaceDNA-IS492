@@ -121,8 +121,29 @@ def typed_terms(message):
     return out
 
 
+# Messages that try to change how the portal works instead of asking about it.
+OVERRIDE = re.compile(
+    r'\b(?:ignore|disregard|forget|override|bypass|skip)\b[^.?!]{0,40}?'
+    r'\b(?:instructions?|rules?|checks?|policy|policies|restrictions?|validation|system|prompt|guidelines?)\b'
+    r'|\b(?:system|developer) (?:prompt|mode|message)\b'
+    r'|\byou are now\b|\bpretend (?:you are|to be)\b|\bjailbreak\b'
+    r'|\bact as (?:an? |the )?(?:admin|administrator|registrar|advisor|developer|dean)\b'
+    r'|\b(?:approve|confirm|allow|process) (?:it|this|my \w+(?: \w+)?) (?:anyway|regardless|no matter)\b'
+    r'|\b(?:intent|course_code)\s*[=:]|\b(?:status|action)\s*=',
+    re.I)
+
+OVERRIDE_REPLY = (
+    'This request can’t be performed. Your message asked the portal to ignore, '
+    'change or skip its rules. Every request is checked against university '
+    'policy and your record, and those checks can’t be turned off. Ask your '
+    'question again in your own words, without those instructions.')
+
+
 def precheck(intent, message):
     """Reasons to stop before the rules run, based on what the student typed."""
+    if OVERRIDE.search(message):
+        log.warning('instruction-override attempt stopped intent=%s', intent)
+        return OVERRIDE_REPLY
 
     # Detect hypothetical course-failure questions before evaluating
     # the student's current graduation record.

@@ -255,7 +255,7 @@ InterfaceDNA-IS492/
 │   └── INSTALL.md            # local setup
 ├── University docs/          # source PDFs: calendars, catalogs, schedules, ISSS, refunds, Graduate College Handbook
 ├── docs/                     # architecture, use cases, safety and privacy, observability
-├── tests/                    # backend test suite (51 tests)
+├── tests/                    # backend test suite (52 tests)
 ├── validation/               # Checkpoint 2 study, interviews, analyses; checkpoint3/ screenshots
 ├── prototype/                # Checkpoint 2 static prototype
 ├── literature/               # bibliography and papers
@@ -296,7 +296,7 @@ InterfaceDNA-IS492/
 - Loaded real UIUC sources (calendars, Registrar deadlines, ISSS rules, refunds, Graduate College Handbook, catalogs, class schedules) with 81 automatically verified quotations.
 - Generated 254 reproducible synthetic students.
 - Added course drop, graduation, holds, your own courses and record, course search, course details, policy questions, "Important for you", "Where to check" directions and request history.
-- 51 backend tests passing; live intent evaluation 37/38 plus 4 record cases passing.
+- 52 backend tests passing; live intent evaluation 37/38 plus 4 record cases passing.
 - Documented architecture, use cases, safety and observability.
 
 ---
@@ -427,7 +427,7 @@ Checkpoint 3 turned InterfaceDNA from a goal-adaptive interface concept into an 
 
 | Check | Result |
 |---|---|
-| Backend tests (`python -m pytest tests -q`, November 6, 2026) | **51 passed** |
+| Backend tests (`python -m pytest tests -q`, November 6, 2026) | **52 passed** |
 | Source verification (`app/tools/verify_sources.py`) | **81/81** quotations found on their cited pages; every deadline date matches its quote |
 | Live intent evaluation (`app/eval_intents.py`) | **37/38** on the 38-case run (the one failure, A06, is contained by the rules); the 4 later record cases passed |
 | Browser checks | Main flows, term picker, important items, confirmation and *My requests*, phone width and dark mode |

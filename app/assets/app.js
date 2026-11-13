@@ -317,11 +317,12 @@ function viewResult(p) {
   const srcIndex = Object.fromEntries(sources.map((s, i) => [s.key, i + 1]));
   
 const status = r.status === 'ready'
-  ? ['ok', S.intent === 'hold'
-      ? `Your registration holds are still active. InterfaceDNA cannot verify a payment or remove a university hold. You may confirm this simulated action: ${r.action || 'save a follow-up reminder'}.`
-      : `You can review and confirm this simulated action: ${r.action || 'the request shown below'}.`]
+  ? ['ok', `You can review and confirm this simulated action: ${r.action || 'the request shown below'}.`]
   : r.status === 'info'
-    ? ['info', S.intent === 'record' ? 'Here’s your record.' : 'Here’s what the sources say.']
+    ? ['info', S.intent === 'record' ? 'Here’s your record.'
+        : S.intent === 'hold' ? 'Here’s what we found. This portal can’t verify payments or remove holds; contact the office that placed each hold.'
+        : S.intent === 'graduation' ? 'Here’s where you stand. This is a check, not an application; to apply or get a full audit, see the directions below.'
+        : 'Here’s what the sources say.']
     : ['block', `This action isn’t available. ${r.reason || ''}`];
 
   const checkHtml = c => {

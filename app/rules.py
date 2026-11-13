@@ -671,7 +671,7 @@ def graduation(student, fault, on):
             f'academic advisor or Academic Office.'
         )
 
-    return r.result(summary, 'Save graduation review plan')
+    return r.result(summary, None, status='info')
 
 
 
@@ -716,7 +716,7 @@ def hold(student, fault, on):
     return r.result(
         f'{len(holds)} active hold(s) on your record may block '
         f'{spring["term"]} registration.',
-        f'Save a reminder to resolve {len(holds)} hold(s) before {spring["term"]}')
+        None, status='info')
 
 
 # ---- Courses ----------------------------------------------------------------

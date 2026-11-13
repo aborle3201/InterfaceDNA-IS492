@@ -28,12 +28,12 @@
 ### UC-02 — Maya Patel (S00002): What do I still need to graduate?
 - **Setup:** S00002, IS BS, final semester. Tile: *Graduation check*.
 - **Expected:** 113 hours completed since Spring 2023, 17 in progress, 0 remaining after current courses (of the 123 required, catalog p. 471). Every IS core course, the 51 School hours and both 2.50 GPA minimums are checked. The summary opens with **"Graduation is not guaranteed."**, gives the credit projection (130 hours if current courses are passed), and says to confirm with the academic advisor or Academic Office. Unchecked items (gen eds, programming proficiency, approved non-IS courses, catalog year) are *Not verified* with *Where to check: Your academic advisor*. **Important for you:** *Apply to graduate in December*: the deadline was September 4, 2026; contact your Academic Office.
-- **Confirmation:** save a graduation review plan (not graduation approval).
+- **Confirmation:** none. The graduation check is information only; applying to graduate and the full audit go through Student Self-Service and the advisor.
 
 ### UC-03 — Jordan Lee (S00003): Why can't I register?
 - **Setup:** S00003, CS BS with two synthetic holds and no Spring 2027 registration.
 - **Expected:** *Immunization requirement* and *Financial encumbrance* holds; Spring 2027 registration dates (priority began Nov 2, open Nov 19); what holds can block (Graduate College Handbook, labelled for undergraduates). *Which office clears each hold* is *Not verified* with *Where to check: Registration section of Student Self-Service*. The status banner says the holds are still active and that the portal cannot verify a payment or remove a hold.
-- **Confirmation:** save a reminder; no hold is cleared.
+- **Confirmation:** none. The page explains the holds and where to resolve them; the portal cannot clear a hold.
 
 ## Question types beyond the core journeys
 
@@ -128,7 +128,7 @@ Failures are introduced through the **Test scenarios** panel (collapsed at the b
 python -m pytest tests -q
 ```
 
-**Result (November 6, 2026):** `51 passed, 1 warning`. The warning concerns the deprecated Starlette TestClient import path.
+**Result (November 6, 2026):** `52 passed, 1 warning`. The warning concerns the deprecated Starlette TestClient import path.
 
 | Test category | Coverage |
 |---|---|

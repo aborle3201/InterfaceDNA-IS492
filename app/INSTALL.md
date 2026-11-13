@@ -65,7 +65,7 @@ Known gap: the class schedules list courses but not each section's part of term 
 
 ## Tests and evaluation
 
-**Tests:** from the repository root, `python -m pytest tests -q` (51 tests). Tests use a temporary database and never call the real LLM.
+**Tests:** from the repository root, `python -m pytest tests -q` (52 tests). Tests use a temporary database and never call the real LLM.
 
 **Model evaluation:** from `app/`, `python eval_intents.py` sends the 42 cases in `prompts/intent_eval.json` (typical, edge and adversarial, including filters such as term, credits and topic) to the live model and reports accuracy by category. The full 38-case run scored 37/38; the four record cases added later (R01–R04) passed live. This is prompt engineering plus evaluation, not fine-tuning. The script waits 12 seconds between calls to stay under the free-tier rate limit.
 
